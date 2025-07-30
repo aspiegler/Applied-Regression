@@ -13,7 +13,7 @@ format:
     code-links:
       - text: Link to Interactive Quarto version
         icon: file-code
-        href: https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Appendix/A-Getting-Started-with-RStudio.qmd
+        href: https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Appendix/A-Getting-Started-with-Rstudio.qmd
 editor: source
 execute:
   eval: true
