@@ -22,8 +22,6 @@ warning: false
 license: "CC BY-NC-SA"
 ---
 
-<!-- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://githubtocolab.com/aspiegler/Applied-Regression/blob/main/Chap1/01-Foundations-of-R.ipynb) <nbsp> -->
-
 The Quarto file used to generate the html file can be downloaded by clicking on the Code Links beneath the Table of Contents.
 
 
@@ -76,7 +74,8 @@ You can find links to download both R and RStudio at <https://posit.co/download/
 
 ---
 
-![R logo](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/128px-R_logo.svg.png?20240131042527){width="10%"}
+![R logo](https://upload.wikimedia.org/wikipedia/commons/1/1b/R_logo.svg){width="10%"}
+
 
 [R](https://www.r-project.org/) is a free software environment for statistical computing and graphics.
 It compiles and runs on a wide variety of UNIX platforms, Windows and MacOS.
@@ -86,7 +85,7 @@ It compiles and runs on a wide variety of UNIX platforms, Windows and MacOS.
 
 ---
 
-![Posit logo](https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Posit_logo.svg/64px-Posit_logo.svg.png?20240517055706){width="10%"}
+![Posit logo](https://upload.wikimedia.org/wikipedia/commons/7/7a/Posit_logo.svg){width="20%"}
 
 [Posit](https://posit.co/) is software company that mainly develops open-source data science tools.
 They "help the world make sense of data".
@@ -100,7 +99,7 @@ Their mission is to create open-source software for data science, scientific res
 
 ---
 
-![RStudio Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/RStudio_logo_flat.svg/128px-RStudio_logo_flat.svg.png?20190314020554){width="10%"}
+![RStudio Logo](https://upload.wikimedia.org/wikipedia/commons/d/d0/RStudio_logo_flat.svg){width="20%"}
 
 [RStudio](https://posit.co/products/open-source/rstudio/) is an integrated development environment, or IDE, for R programming, which you can download from <https://posit.co/download/rstudio-desktop/>.
 
@@ -110,7 +109,7 @@ Their mission is to create open-source software for data science, scientific res
 
 ---
 
-![Quarto Logo](https://quarto.org/quarto.png){width="10%"}
+![Quarto Logo](https://quarto.org/quarto.png){width="20%"}
 
 [Quarto](https://quarto.org/) provides a unified authoring framework for data science, combining your code, its results, and your prose.
 Quarto documents are fully reproducible and support dozens of output formats, like PDFs, Word files, presentations, and more.
@@ -125,7 +124,7 @@ Quarto documents are fully reproducible and support dozens of output formats, li
 
 ---
 
-![Markdown Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Markdown-blue-solid.svg/128px-Markdown-blue-solid.svg.png?20201013215934){width="10%"}
+![Markdown Logo](https://upload.wikimedia.org/wikipedia/commons/e/ee/Markdown-blue-solid.svg){width="10%"}
 
 [Markdown](https://www.markdownguide.org/) is a lightweight markup language that you can use to add formatting elements to plain text documents.
 Created by John Gruber in 2004, Markdown is now one of the world's most popular markup languages.
