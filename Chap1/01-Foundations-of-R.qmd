@@ -1,0 +1,359 @@
+---
+title: "Module 1: Foundations of R"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+    code-links:
+      - text: Link to Interactive Quarto version
+        icon: file-code
+        href: https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Chap1/01-Foundations-of-R.qmd
+editor: source
+execute:
+  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+<!-- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://githubtocolab.com/aspiegler/Applied-Regression/blob/main/Chap1/01-Foundations-of-R.ipynb) <nbsp> -->
+
+The Quarto file used to generate the html file can be downloaded by clicking on the Code Links beneath the Table of Contents.
+
+
+# R Foundations
+
+---
+
+Meaningful data analysis requires the use of computer software. 
+
+R statistical software is one of the most popular tools for data analysis both in academia and the broader workforce. In this module, we will attempt to lay a foundation of basic knowledge and skills with R that you will need for data analysis. This is not an exhaustive guide to R, and many other important aspects of using R (like plotting) will be discussed later, as needed.
+
+## Additional Reading
+
+---
+
+- See [Appendix A: Getting Started with RStudio](https://aspiegler.github.io/Applied-Regression/A-Getting-Started-with-Rstudio.html) for more background information about R, RStudio, Quarto, and Markdown.
+- See the [RStudio User Guide](https://docs.posit.co/ide/user) for a comprehensive overview of all of RStudio's features
+- Resources for Quarto:
+  - [Getting started with Quarto tutorial](https://quarto.org/docs/get-started/hello/rstudio.html).
+  - A more comprehensive [Quarto guide](https://quarto.org/docs/guide/)
+- Resources for Markdown:
+  - [Markdown Guide: Basic Syntax Guide](https://www.markdownguide.org/basic-syntax/)
+  - [Markdown Guide: Cheatsheet](https://www.markdownguide.org/cheat-sheet/)
+  - [Quarto Markdown Basics Guide](https://quarto.org/docs/authoring/markdown-basics.html)
+
+
+# Installing R and RStudio
+
+---
+
+To install R and RStudio on your computer, you need to so in two steps (and the order is important):
+
+1.  First download and install R
+2.  Then download and install RStudio.
+
+You can find links to download both R and RStudio at <https://posit.co/download/rstudio-desktop/>.
+
+-   Be sure you choose the correct operating system.
+-   Be sure you choose the most up to date version of R and RStudio that is *compatible with your operating system*.
+    -   The most recent release may not be compatible with your computer if your computer is running an older operating system.
+    -   If you have an older computer, be sure to check the system requirements before choosing which version/release to download.
+-   I am happy to assist any students with process in office hours or over Zoom.
+
+
+# The Ingredients
+
+---
+
+## The Programing Laguage: R
+
+---
+
+![R logo](https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/R_logo.svg/128px-R_logo.svg.png?20240131042527){width="10%"}
+
+[R](https://www.r-project.org/) is a free software environment for statistical computing and graphics.
+It compiles and runs on a wide variety of UNIX platforms, Windows and MacOS.
+
+
+## The Software Developers: Posit
+
+---
+
+![Posit logo](https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/Posit_logo.svg/64px-Posit_logo.svg.png?20240517055706){width="10%"}
+
+[Posit](https://posit.co/) is software company that mainly develops open-source data science tools.
+They "help the world make sense of data".
+Their mission is to create open-source software for data science, scientific research, and technical communication.
+
+-   We can download a FREE desktop version at <https://posit.co/download/rstudio-desktop/>.
+-   A cloud based version of RStudio is available at <https://posit.cloud/>, though for this course I recommend downloading both R and RStudio locally on your computer.
+
+
+## The Software: RStudio 
+
+---
+
+![RStudio Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/RStudio_logo_flat.svg/128px-RStudio_logo_flat.svg.png?20190314020554){width="10%"}
+
+[RStudio](https://posit.co/products/open-source/rstudio/) is an integrated development environment, or IDE, for R programming, which you can download from <https://posit.co/download/rstudio-desktop/>.
+
+-   If you'd like a comprehensive overview of all of RStudio's features, see the RStudio User Guide at <https://docs.posit.co/ide/user>.
+
+## File Management: Quarto
+
+---
+
+![Quarto Logo](https://quarto.org/quarto.png){width="10%"}
+
+[Quarto](https://quarto.org/) provides a unified authoring framework for data science, combining your code, its results, and your prose.
+Quarto documents are fully reproducible and support dozens of output formats, like PDFs, Word files, presentations, and more.
+
+-   Getting started with Quarto tutorial: <https://quarto.org/docs/get-started/hello/rstudio.html>.
+-   A comprehensive guide is available at <https://quarto.org/docs/guide/>.
+
+
+
+
+## Formatting Narrative Text: Markdown
+
+---
+
+![Markdown Logo](https://upload.wikimedia.org/wikipedia/commons/thumb/e/ee/Markdown-blue-solid.svg/128px-Markdown-blue-solid.svg.png?20201013215934){width="10%"}
+
+[Markdown](https://www.markdownguide.org/) is a lightweight markup language that you can use to add formatting elements to plain text documents.
+Created by John Gruber in 2004, Markdown is now one of the world's most popular markup languages.
+
+-   [Markdown Guide: Basic Syntax Guide](https://www.markdownguide.org/basic-syntax/)
+-   [Markdown Guide: Cheatsheet](https://www.markdownguide.org/cheat-sheet/)
+-   [Quarto Markdown Basics Guide](https://quarto.org/docs/authoring/markdown-basics.html)
+
+The raw Quarto code used to generate the html file can be obtained by toggling the "Code" box in the upper-right corner of the html file and selecting "Download Rmd" (which actually downloads a Quarto file `*.qmd`)
+
+
+# Navigating the Panes of an RStudio Window
+
+---
+
+-   **Console**: Where the code is executed.
+-   **Script Window**: Where you prepare commands to be executed. **This is the main pane!**
+-   **Workspace**: Where you can see all the objects in your workspace and your command history.
+-   **Files/Plot/Packages/Help**: Where you navigate between directories, view plots, manage packages, and **get help**.
+
+![The Panes of an RStudio Window](https://docs.posit.co/ide/user/ide/get-started/images/rstudio-panes-labeled.jpeg){width="75%"}
+
+## Source and Visual Mode
+
+---
+
+When working with Markdown documents such as Quarto (`*.qmd`) and RMarkdown (`*.Rmd`) in RStudio, there are two available modes to view the document, namely [**Source**]{style="color:dodgerblue"} and [**Visual**]{style="color:dodgerblue"}.
+We can switch between the two viewing modes by selecting the buttons on the top-left of the document toolbar.
+
+-   Source mode: View raw, unrendered Markdown.
+    -   [Markdown Guide: Basic Syntax Guide](https://www.markdownguide.org/basic-syntax/)
+    -   [Markdown Guide: Cheatsheet](https://www.markdownguide.org/cheat-sheet/)
+-   Visual: View the rendered output of Markdown.
+-   There is an [**Outline**]{style="color:dodgerblue"} button on the top-right of the document toolbar which opens a table of contents.
+
+## Inserting R Code Chunks
+
+---
+
+Code chunks are also called code cells or code blocks.
+We can insert a new code chunk in various ways.
+
+-   We can type \`\`\` {r} on a new line to insert a new R code chunk (in either Source or View mode), enter code, and then close the code chunk by typing \`\`\` on a new line .
+-   If working in Visual mode, you can use the Insert drop down menu in the tool bar.
+-   In visual mode we can use keyboard shortcuts `Shift+Ctrl+\` on PC and `Shift+Command+\` on Mac.
+
+```{r}
+x <- seq(1, 4, 0.5)  # creates the vector 1, 1.5, 2, ..., 3.5, 4
+mean(x)  # compute mean of vector x
+```
+
+```{r}
+# if you have not installed dplyr, run the command
+# install.packages("dplyr") to install the package locally
+library(dplyr)
+```
+
+```{r}
+mean(storms$wind). # compute mean wind speed
+```
+
+### Running Code Chunks
+
+---
+
+-   Running a single code cell can be done similar to Colab:
+    -   Click the play button in the upper right corner of the code cell.
+    -   Keyboard shortcuts: `Shift + Ctrl + Enter` on PC or `Shift + Command + Return` on Mac.
+-   We can also use the Run button on right side of the toolbar for additional options.
+-   We can also access the various run options in the `Code` menu.
+
+## Question 1 
+
+---
+
+In the space below, insert a new R code chunk. Then enter code to compute the number of seconds in a (non-leap) year.
+
+
+### Solution to Question 1
+
+---
+
+<br>  
+<br>  
+
+## Installing, Loading, Managing Packages
+
+---
+
+-   We only need to install a package with the `install.packages()` function once!
+    -   Source files are **permanently** downloaded into appropriate folders (either locally or on Posit Cloud).
+    -   Install packages in the Console below as opposed to in script or Quarto file.
+    -   We can view a list of all available packages in the `Packages` tab in the Output Pane.
+-   We still need to load a package with the `library()` function each time we start a new session in order to be able to access scripts, data, and other files in the package.
+-   Each loaded package appears with a check mark in the `Packages` tab in the Output Pane.
+-   We we open a new document that requires certain packages we have not installed, we often get asked if we would like to install all the required packages in a pop up!
+    -   The will run `install.packages()` but you will still need to load them with `library()`.
+
+
+## Question 2
+
+---
+
+Practice installing and loading a package by doing the following:
+
+1. Install the set of `faraway` package by running an `install.packages()` command **from the Console below**.
+2. Load the `faraway` package by inserting a code chunk and using a `library()` command.
+
+::: {.callout-note}
+The package `faraway` will now be permanently installed locally onto your computer. You do not need to run the `install.packages()` again. However, each time you start a new R session you will need to load the package with a `library()` command.
+:::
+
+### Solution to Question 2
+
+---
+
+<br>  
+<br>  
+
+
+## Accessing Help Manuals
+
+---
+
+There are a number of ways to get help in R.
+
+If we know the command for which you want help, run `?command` or `help(command)` in the Console. 
+
+- For example, `?lm` opens help documentation for the function `lm()`.
+- We can also open help documentation for data sets, package names, object classes, and so on (if they exist).
+
+If we want to search the documentation for a certain *topic*, then execute `??topic` in the Console.
+
+## Question 3 
+
+---
+
+
+Open the help documentation for:
+
+- The function `lm`.
+- The package `faraway`.
+- The dataframe `storms` from the `dplyr` package.
+- The dataframe `txhousing` from the `ggplot2` package.
+
+### Solution to Question 3
+
+---
+
+<br>  
+<br>  
+
+## The Strange Heading: Quarto YAML
+
+---
+
+Quarto provides a rich set of YAML metadata keys to describe *front matter* details such as the title and author.
+
+-   Quarto help with front matter: <https://quarto.org/docs/authoring/front-matter.html>
+-   In addition to front matter, we can also set other options such as whether to display R code, whether to run the code when rendering, and what output (if any) to display from the code.
+- Below is an example of the YAML used in this document:
+
+```
+---
+title: "Module 1: Foundations of R"  
+author: 
+  - name: "Adam Spiegler"  
+    affiliation: "University of Colorado Denver" 
+format: 
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true  # create a single html file when rendering to html
+    code-links:  # adds a link to the Quarto version below TOC
+      - text: Link to Interactive Quarto version  
+        icon: file-code  
+        href: https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Chap1/01-Foundations-of-R.qmd
+editor: source  # use visual to open in visual mode by default
+execute:
+  eval: false  # no code cells will be run when rendering
+title-block-banner: true  
+warning: false  # warning messages not be displayed when rendered
+license: "CC BY-NC-SA"  
+---
+```
+
+## Question 4
+
+---
+
+Update the author in the YAML from my name to yours.Play around with other YAML features of your choice. Then click the `render` button to render the Quarto document to an html file.
+
+::: {.callout-tip}
+See [Quarto help with YAML front matter](https://quarto.org/docs/authoring/front-matter.html).
+:::
+
+### Solution to Question 4
+
+----
+
+Edit YAML at start of document accordingly
+
+<br>  
+
+
+# Rendering to Other File Types
+
+---
+
+[Pandoc](https://pandoc.org/) is a tool for converting files from one markup format into another.
+Pandoc supports a huge array of output formats, all of which can be used with Quarto.
+
+-   To use any Pandoc format set the `format` option in the YAML section.
+    -   The most universal file format is `html`, so we will use that as our default.
+    -   You can also convert to a static pdf or word document as well as to an interactive Jupyter notebook that we can open in Colab.
+-   To convert to the indicated `format`, we can use any of the methods below:
+-   Click on the Render button on the toolbar.
+-   From the menu options, select `File/Render Document`.
+-   Keyboard shortcut: `Shift + Ctrl + K` on PC and `Shift + Command + K` on Mac.
+-   A new document is created by default in the same folder as the Quarto file.
+-   By default, the new file is opened on your computer.
+-   Or you may see an error message in the Console.
+
+![Render Workflow](https://quarto.org/docs/get-started/hello/images/rstudio-qmd-how-it-works.png){width="90%"}
+
+
+
+
+
