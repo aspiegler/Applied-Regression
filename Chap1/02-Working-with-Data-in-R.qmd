@@ -1,0 +1,889 @@
+---
+title: "Module 2: Working with Data in R"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+    code-links:
+      - text: Link to Interactive Quarto version
+        icon: file-code
+        href: https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Chap1/02-Working-with-Data-in-R.qmd
+editor: source
+execute:
+  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+
+The Quarto file used to generate the html file can be downloaded by clicking on the Code Links beneath the Table of Contents.
+
+
+## Additional Reading
+
+---
+
+- See [Getting Started with RStudio](https://aspiegler.github.io/Applied-Regression/A-Getting-Started-with-Rstudio.html) for more background information about R, RStudio, LaTeX, and Markdown.
+
+- See [Fundamentals of Working with Data](https://aspiegler.github.io/Applied-Regression/B-Intro-to-Vectors-Dataframes.html) for more details about working with data structures in R.
+
+- See [Chapter 7: Logical Indexing](https://bookdown.org/ndphillips/YaRrr/logical-indexing.html#counts-and-percentages-from-logical-vectors) from *YaRrr! The Pirate’s Guide to R*.
+
+
+# Data Structures
+
+---
+
+R operates on <span style="color:dodgerblue">**data structures**</span>. A data structure is simply some sort of “container” that holds certain kinds of information
+
+
+R has 5 basic data structures:
+
+-   <span style="color:dodgerblue">**vector**</span>: One dimensional object of a single data type.
+-   <span style="color:dodgerblue">**matrix**</span>: Two dimensional object of a single data type.
+-   <span style="color:dodgerblue">**array**</span>: $n$ dimensional object of a single data type.
+-   <span style="color:dodgerblue">**data frame**</span>: Two dimensional object where each column can be a
+    different data type.
+-   <span style="color:dodgerblue">**list**</span>: An object that contains elements of different types like (and possibly another list inside it).
+
+
+Note the following important distinction:
+
+- Vectors, matrices, and arrays are *homogeneous* objects that can only store a single data type at a time.
+- Data frames and lists can store *multiple* data types.
+
+[See R documentation](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#List-objects) for more info on data structures.
+
+
+# Data Types and Vectors
+
+----
+
+R has 6 basic (atomic) [data
+types](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Basic-types):
+
+1.  <span style="color:dodgerblue">**character**</span>: collections of characters. E.g., `"a"`, `"hello world!"`
+2.  <span style="color:dodgerblue">**double**</span>: decimal numbers. e.g., `1.2`, `1.0`
+3.  <span style="color:dodgerblue">**integer**</span>: whole numbers. In R, you must add `L` to the end of a number to specify it as an integer. E.g., `1L` is an integer but `1` is a double.
+4.  <span style="color:dodgerblue">**logical**</span>: Boolean values, `TRUE` and `FALSE`
+5.  <span style="color:dodgerblue">**complex**</span>: complex numbers. E.g., `1+3i`
+6.  <span style="color:dodgerblue">**raw**</span>: a type to hold raw bytes.
+
+
+## Other Important Object Types
+
+---
+
+There are other important types of objects in R that are not basic. We will discuss a few. The [R Project manual](https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Basic-types) provides additional information about available types.
+
+
+## Checking Data Types with `typeof()`
+
+---
+
+The `typeof()` function returns the R internal type or storage mode of any object.
+
+Consider the following commands and output:
+
+```{r}
+#| eval: true
+# determine basic data type
+typeof(1)
+typeof(1L)
+typeof("hello world!")
+```
+
+
+## Checking Data Types with Logical `is.[data_type]()` Functions
+
+---
+
+R also has `is.[data_type]()` functions that return a logical `TRUE` or `FALSE` depending on whether the object is or is not the specified data type. For each data type, there is corresponding function: `is.character()`, `is.double()`, `is.integer()`, `is.logical()`, `is.complex()`, and `is.raw()`. There is also a function `is.numeric()` that will return `TRUE` if the object is either a decimal or integer and returns `FALSE` otherwise.
+
+
+## Question 1
+
+---
+
+Without running the command, determine the output of each of the commands. Then run the code cell below to check your answers.
+
+
+### Solution to Question 1
+
+---
+
+- `is.numeric("hello world!")` gives the output ??.
+- `is.numeric(1)` gives the output ??.
+- `is.numeric(1L)` gives the output ??.
+
+
+```{r}
+# run code chunk to check your answers
+is.numeric("hello world!")
+is.numeric(1)
+is.numeric(1L)
+```
+
+
+# Creating Vectors 
+
+---
+
+## The Combine Function `c()`
+
+---
+
+The most basic way to create a vector is the combine function `c()`. The following commands create vectors of type numeric, character, and logical, respectively.
+
+
+```{r}
+#| eval: true
+x1 <- c(1, 2, 5.3, 6, -2, 4)  # create a numeric (double) vector
+x2 <- c("one", "two", "three")  # create a character vector
+x3 <- c(TRUE, TRUE, FALSE, TRUE)  # create a logical vector
+x4 <- c(TRUE, 3.4, "hello")  # create a vector of different data types?
+```
+
+
+::: {.callout-caution}
+In R we use `<-` for the assignment operator, not the `=` character which used to set options inside functions. See the Appendix for more information.
+:::
+
+We can use the `typeof()` function to check the data type of a vector (which must be a single data type).
+
+```{r}
+#| eval: true
+# check the type of data structure of an object
+typeof(x1)
+typeof(x2)
+typeof(x3)
+typeof(x4)
+```
+
+## Checking Data Structures with `is.[data_structure]()`
+
+---
+
+We can check the data structure of an object using commands such as `is.vector()`, `is.list()`, `is.matrix()`, and so on.
+
+```{r}
+#| eval: true
+# checks data structure of objects
+is.list(x1)
+is.vector(x2)
+```
+
+
+## Question 2
+
+---
+
+What would the outputs of the commands `is.list(x4)` and `is.list(x4)` be? Without running the commands, enter your answer in the text cell below. Then check your answers by running the code cell below the solution text cell.
+
+
+### Solution to Question 2
+
+---
+
+- The output of `is.list(x4)` is ??.
+- The output of `is.vector(x4)` ??.
+
+
+```{r}
+# run code chunk to check your answers
+is.list(x4)
+is.vector(x4)
+```
+
+## Creating a Vector Integers with a:b
+
+---
+
+R provides several functions for creating vectors with certain patterns.
+
+- The code `a:b` creates a vector of all integers from `a` to `b` (inclusive of both `a` and `b`).
+
+```{r}
+#| eval: true
+# creates vector of all integers
+# starting from 5 up to and including 11
+5:11
+```
+
+::: {.callout-caution}
+In R `a:b` is inclusive of both endpoints. This is not the case in all programming languages. For example, in Python `a:b` would generate integers from `a` (inclusive) up to but NOT including `b` (exclusive).
+:::
+
+
+```{r}
+#| eval: true
+typeof(5:11)
+```
+
+## Creating Vectors with `seq()`
+
+---
+
+The `seq()` (sequence) function is used to create an equidistant series of numeric values. 
+
+- `seq(from = 1, to = 10, by = 2)` creates a sequence of numbers from 1 to 10 in increments of 2
+   - Note the last element in the vector is the number 9 (not 10).
+   - The value `from`, `to`, or `by` can be a decimal or integer value.
+
+```{r}
+#| eval: true
+seq(from = 1, to = 10, by = 2)
+```
+
+- The names of the inputs (`from`, `to`, and `by`) is optional and typically not indicated to make the code more brief.
+- The ordering of the inputs is very important!
+
+```{r}
+#| eval: true
+# a more concise way to write code
+seq(1, 10, 2)
+```
+
+### Using `len` instead of `by`
+
+---
+
+Instead of specifying the increment between successive values in the vector, we can use the `len` argument instead to indicate how many values we want our vector to contain. Then R will determine the increment accordingly. There are other options for creating vectors with the `seq()` function. Run the command `?seq` in the Console below if you are curious about more details. 
+
+```{r}
+#| eval: true
+seq(1, 10, len = 19)
+```
+
+
+## Creating Vectors with `rep()`
+
+---
+
+The `rep` (replicate) function can be used to create a vector by replicating values.
+Some examples:
+
+```{r}
+#| eval: true
+rep(1:3, times = 3)  # replicate the sequence `1, 2, 3` three times
+rep(c("trt1", "trt2", "trt3"), times = 1:3)  # replicates `"trt1"` once, `"trt2"` twice, and `"trt3"` three times.
+rep(1:3, each = 3)  # replicates each element of the sequence 1, 2, 3 three times.
+```
+
+
+## Extracting parts of a vector
+
+---
+
+Subsets of the elements of a vector can be extracted by appending an index vector in square brackets `[]` to the name of the vector .
+
+Let's create the numeric vector 2, 4, 6, 8, 10, 12, 14, 16.
+
+```{r}
+#| eval: true
+# define a sequence 2, 4, ..., 16
+a <- seq(2, 16, by = 2)
+a
+``` 
+
+We can extract non-contiguous elements such as the 2nd, 4th, and 6th elements of `a` as follows:
+
+```{r}
+#| eval: true
+# extract a non-contiguous subset of a vector
+a[c(2, 4, 6)]
+```
+
+::: {.callout-caution}
+R starts with index 1 which is different from Python which indexes starting from 0.
+:::
+
+We can extract contiguous elements such as all elements from the 2nd to the 6th of `a` as follows:
+
+```{r}
+#| eval: true
+# extract a contiguous subset of a vector
+a[2:6]
+```
+
+
+
+We can access all elements in `a` *EXCEPT* the 2nd, 4th, and 6th using the minus (`-`) sign in front of the index vector.
+
+```{r}
+#| eval: true
+# extract a subset of all entries except a non-contiguous subset
+a[-c(2, 4, 6)]
+```
+
+
+
+We can  access all elements in `a` except elements 3 through 6 as follows:
+
+```{r}
+#| eval: true
+# extract a subset of all entries except a contiguous subset
+a[-(3:6)]
+```
+
+
+# Functions
+
+---
+
+
+A function is an object that performs a certain action or set of actions based on object(s) it receives from its inputs. Functions usually take in some sort of data structure (value, vector, dataframe etc.) and return a result.
+
+- The inputs are called <span style="color:dodgerblue">**arguments**</span> such as:
+  - The object (data structure) on which the function carries out a task.
+  - Specifications that alter the way the function operates (e.g. options) and stores a set of output(s).
+- The <span style="color:dodgerblue">**defaults**</span> represent standard values and/or options that the author of the function specified as being appropriate for typical cases.
+- Help documentation often specifies available options and their corresponding defautls.
+
+
+## A Dictionary of Useful Functions
+
+---
+
+Below is a brief list of commonly used functions with vector inputs `x` and `y`:
+
+- `c(x, y)`: combine vectors `x` and `y` into a single vector
+- `length(x)`: return the number of elements in `x`
+- `sum(x)`: sum the elements in `x`
+- `mean(x)`: compute the mean of the elements in `x`
+- `median(x)`: compute the median of the elements in `x`
+- `min(x)`: compute the minimum value in `x`
+- `max(x)`: compute the maximum value in `x`
+- `quantile(x, probs = q)`: compute the $q^\text{th}$ quantile of `x`
+- `fivenum(x)`: compute five number summary of `x`
+- `var(x)`: compute the sample variance of elements in `x`
+- `sd(x)`: compute the sample standard deviation of the elements in `x`
+- `range(x)`: determine the range (minimum and maximum) of the elements in `x`
+- `sqrt(x)`: compute the square root of each element in `x`
+- `log(x)`: compute the (natural) logarithm of the elements in `x`
+- `summary(x)`: provide a summary (that depends on the data type) of `x`
+- `str(x)`: provides information about the structure of `x`.
+
+
+## Question 3
+
+---
+
+Enter a command using that performs the action indicated by each comment and run the code cell. Compare your output with the output of classmates nearby.
+
+### Solution to Question 3
+
+---
+
+```{r}
+x <- rexp(20, 100, 15) # random sample of 20 values from N(100, 15)
+
+# length of x
+# sum of x
+# sample mean of x
+# sample variance of x
+# sample standard deviation of x
+# range of x
+# square root of each element in x
+# summary of x
+# structure of x
+```
+
+
+# Data Frames
+
+--- 
+
+A <span style="color:dodgerblue">**data frame**</span> is two-dimensional data object and is the fundamental data structure used by most of R's libraries of functions and data sets. Tabular data is tidy if:
+
+- Each row corresponds to a different observation and
+- Each column corresponds to a different variable stored as a vector of possibly different data types.
+- Each column vector must be a single data type.
+
+
+## Creating Data Frames from Scratch
+
+---
+
+Data frames are created by passing vectors into the `data.frame()` function.
+
+- First we assign each variable (column) to a separate vector.
+- Then we assign the variables to the data frame using the `data.frame()` function.
+
+Consider the following example:
+
+
+```{r}
+#| eval: true
+# define the variables as separate vectors
+d <- c(2L, 4L, 6L, 8L)  # vector of integers (note 2L is the integer 2)
+e <- c(2, 2.1, 2.2, 2.3)  # vector of decimals (note 2 is a decimal)
+f <- c("red", "white", "blue", NA)  # vector of characters with one missing value
+g <- c(TRUE, TRUE, TRUE, FALSE)  # vector of logicals
+
+# create a data frame named df with 4 columns
+df <- data.frame(d, e, f, g)
+
+# print the date frame df to screen
+df
+```
+
+
+
+## Checking Data Structure
+
+---
+
+- The `is.matrix(x)` function tests whether or not an object `x` is a matrix.
+- The `is.vector(x)` function test whether `x` is a vector.
+- The `is.data.frame(x)` function test whether `x` is a data frame.
+
+
+```{r}
+#| eval: true
+is.matrix(df)
+is.vector(df)
+is.data.frame(df)
+```
+
+
+### Naming Column Headers
+
+---
+
+
+In R, object names must start with a letter, and an only contain letters, numbers, `_`, and/or `.`. 
+The columns of a data frame can be renamed using the `names()` function on the data frame.
+
+```{r}
+#| eval: true
+# name columns of data frame
+names(df) <- c("id", "measure", "color", "passed")
+df
+```
+
+::: {.callout-note}
+Object names should be descriptive but brief since each time we refer to the object we do not want to type a lot of characters. When we want to use multiple words to describe an object, we recommend using the `snake_case` method:
+
+- Use lowercase letters.
+- Separate words with the underscore character, `_`.
+- If needed, abbreviate longer words.
+:::
+
+
+The columns of a data frame can be named when you are first creating the
+data frame by using `[new_name] = [orig_vec_name]` for each vector of
+data.
+
+
+```{r}
+#| eval: true
+# create data frame with better column names
+df2 <- data.frame(id = d, measure = e, color = f, passed = g)
+df2
+```
+
+
+## Extracting a Single Column By Name with `$`
+
+---
+
+The column vectors of a data frame may be extracted using `$` and specifying the name of the desired vector.
+
+
+```{r}
+#| eval: true
+# access the color column of data frame df
+df$color
+```
+
+
+## Slicing Rows and Columns By Indexing
+
+---
+
+Part of a data frame can also be extracted by thinking of at as a general matrix and specifying the desired rows or columns in square brackets `[ , ]` after the object name.
+
+- We first indicate the row indices we want to slice inside the square brackets, followed by a comma, and then we indicate the column indices.
+  - For a continuous range of rows or columns, we use a semicolon.
+  - For a non-continuous range of rows or columns, we enter the indices as a vector using the syntax `c(index1, index2, ...)`.
+  - To exclude specified rows and/or columns we can use the `-` operator as we did with vectors.
+
+::: {.callout-caution}
+R starts with index 1 which is different from Python which indexes starting from 0.
+:::
+
+For example, if we had a data frame named `df`:
+
+- `df[6, ]` would slice row 6 of `df` and include all columns.
+- `df[3:8, ]` would slice all rows 3 thru 8 of `df` and include all columns.
+- `df[c(1, 5, 9), 4]` slice rows 1, 5 and 9 of `df` and keep only column 4 of those rows.
+- `df[, c(1, 8)]` would keep all rows and slice only columns 1 and 8 of `df`.
+- `df[1:4, 2:6]` would slice rows 1 thru 4 of columns 2 thru 6 of `df`.
+
+## Question 4
+
+---
+
+Let data frame `df` be the data frame defined above. What would be the output of the following commands? Explain what the output would be in the text cell, then run the code cells below to check your work.
+
+
+## Solution to Question 4
+
+---
+
+a.  `df[2, ]` gives the output ??.
+b.  `df[, 2]` will gives the output ??.
+c.  `df[1:2, -c(1,3)]` gives the output ??.
+
+<br>
+
+Then run each code cell to check your answers.
+
+```{r}
+df[2, ]
+```
+
+```{r}
+df[, 2]
+```
+
+```{r}
+ df[1:2, -c(1,3)]
+```
+
+<br>  
+<br>  
+
+## Extracting Multiple Columns by Name
+
+----
+
+If you need to select multiple columns of a data frame by name, you can pass a character vector with column names in the column position of `[]`.
+
+```{r}
+#| eval: true
+# extract the id, color,and passed columns of df
+df[, c("id", "color", "passed")]
+```
+
+```{r}
+#| eval: true
+# another way to extract the id, color, and passed columns of df
+df[, c(1, 3, 4)]  
+```
+
+```{r}
+#| eval: true
+# another way to extract the id, color, and passed columns of df
+df[, -2] 
+```
+
+
+# Logical Statements
+
+---
+
+Sometimes we need to know if the elements of an object satisfy certain
+conditions. This can be determined using the logical operators `<`,
+`<=`, `>`, `>=`, `==`, `!=`.
+
+- `<` means strictly less than.
+- `<=` means less than or equal to.
+- `>` means strictly greater than.
+- `>=` means greater than or equal to
+- `==` means equal to.
+- `!=` means NOT equal to.
+
+
+
+## Vectors and Logical Statements
+
+---
+
+Consider the vector `a` defined in the code cell below.
+
+```{r}
+#| eval: true
+a <- seq(2, 16, by = 2) # creating the vector a
+```
+
+ 
+Execute the following commands and see what we get!
+
+```{r}
+a > 10
+a <= 4
+a == 10
+a != 10
+```
+
+
+## Subsetting Data Frames with Logical Statements
+
+---
+
+Consider the data frame `df` defined earlier.
+
+```{r}
+#| eval: true
+df
+```
+
+
+We can use a logical statement as an index to extract certain entries from a vector or data frame. For example, if we want to to know the `color` (column 3), `passed` (column 4) that have a `color` not equal to "blue" in the data frame we assigned to `df`, then:
+
+-   We use a logical index for the row to extract just the rows that have a `color` value not equal to "blue".
+-   We indicate we want to keep just columns 3 and 4 with the column index `3:4`.
+
+```{r}
+#| eval: true
+df[df$color != "blue", 3:4]
+```
+
+## Question 5
+
+---
+
+
+Determine the output of the following commands. Then run the code cells below to check your answers.
+
+### Solution to Question 5
+
+---
+
+- `df$measure >= 2.2` gives the output ??.
+- `df[df$measure >= 2.2, ]` gives the output ??.
+- `df[df$measure >= 2.2, -c(1,3)]` gives the output ??.
+
+
+<br>  
+
+```{r}
+# run to check your answer
+df$measure >= 2.2
+```
+
+
+```{r}
+# run to check your answer
+df[df$measure >= 2.2, ]
+```
+
+
+```{r}
+# run to check your answer
+df[df$measure >= 2.2, -c(1,3)]
+```
+
+<br>  
+<br>  
+
+## And and Or Statements
+
+--- 
+
+More complicated logical statements can be made using `&` and `|`.
+
+- `&` means “and”
+    - Both statements must be true for `state1 & state2` to return `TRUE`.
+- `|` means “or”
+    - Only one of the the two statements must be true for `state1 | state2` to return `TRUE`.
+    - If both statements are true in an “or” statement, the statement is also `TRUE`.
+
+Below is a summary of “and” and “or” logic:
+
+- `TRUE & TRUE` returns `TRUE`
+- `FALSE & TRUE` returns `FALSE`
+- `FALSE & FALSE` returns `FALSE`
+- `TRUE | TRUE` returns `TRUE`
+- `FALSE | TRUE` returns `TRUE`
+- `FALSE | FALSE` returns `FALSE`
+
+```{r}
+# relationship between logicals & (and), | (or)
+TRUE & TRUE
+FALSE & TRUE
+FALSE & FALSE
+TRUE | TRUE
+FALSE | TRUE
+FALSE | FALSE
+```
+
+
+We define the vector `a` from earlier again.
+
+```{r}
+#| eval: true
+a <- seq(2, 16, by = 2) # creating the vector a
+```
+
+Run the following commands in R and see what you get.
+
+```{r}
+# complex logical statements
+(a > 6) & (a <= 10)
+(a <= 4) | (a >= 12)
+```
+
+## Subsetting with And/Or Logical Statements
+
+---
+
+Logical statements can be used to return parts of an object satisfying the appropriate criteria. Specifically, we pass logical statements within the square brackets used to access part of a data structure.
+
+## Question 6 
+
+---
+
+Insert an R code chunk and enter a commond that subsets all entries in the data frame `df` that have `color`  equal to "red" or `measure` strictly greater than $2.2$. Also, exclude the `id` column in your subset.
+
+
+### Solution to Question 6
+
+---
+
+Insert an R code chunk and answer the question.
+
+<br>  
+<br>  
+
+
+# Slicing Data with the `subset()` Function
+
+---
+
+As the name implies, the `subset()` function in base R is a really useful function for subsetting! We can open the help documentation with `?subset` to learn how to apply this function. Below are some examples of different ways we may want to subset the `df` data frame.
+
+```{r}
+#| eval: true
+# keeps all variables for observations with passed equal to TRUE
+subset(df,  # name of data frame
+       passed == TRUE)  # logical condition
+```
+
+
+```{r}
+#| eval: true
+# keeps only the color and passed columns
+subset(df,  # name of data frame
+       select = c(color, passed),  # column(s) to select
+       passed == TRUE)  # logical condition
+```
+
+
+```{r}
+#| eval: true
+# stores object as a vector instead of a data frame
+subset(df,  # name of data frame
+       select = color,  # column(s) to select
+       passed == TRUE,  # logical condition
+       drop = TRUE)  # store object as a vector not a data frame
+```
+
+
+
+# Ecosystem Debate
+
+---
+
+The `dplyr` package in the `tidyverse` has a `filter()` function that works very similarly to the base R function `subset()`. We will typically work with **base** R, which are commands and functions R offers by default.
+
+```{r}
+#| eval: true
+# if you have not already installed packages from the tidyverse
+# in the console below first run the command install.packages("tidyverse")
+library(tidyverse)
+```
+
+```{r}
+#| eval: true
+# keeps all columns
+filter(df, passed == TRUE)
+```
+
+
+The **tidyverse** ([https://www.tidyverse.org](https://www.tidyverse.org)) is a collection of R packages that provides a unified framework for data manipulation and visualization.
+
+Since this course focuses more on modeling than data manipulation, I will typically focus on approaches in **base** R. I will use functions from the **tidyverse** when it greatly simplifies analysis, data manipulation, or visualization.
+
+
+# Appendix A: Assignment of Objects in R
+
+---
+
+In R we create new <span style="color:dodgerblue">**objects**</span> with the assignment operator `<-`.
+
+
+::: {.callout-caution}
+In R we use `<-` for the assignment operator, not the `=` character which used to set options inside functions.
+:::
+
+
+```{r}
+#| eval: true
+# create vector of integers from 1 to 9 with increments of 2
+# assigns vector to `x`
+# nothing printed to screen
+x <- seq(1, 9, 2)
+```
+
+
+# Appendix B: Printing Output to Screen
+
+---
+
+Although we do not see any output after running the previous code cell, the green check mark to the left of the play button indicates the code has successfully run.
+
+- We have stored the sequence of integers to vector `x`.
+- If we would like to see the value that is being stored in a `x`,  we need to instruct Python to **print the output to the screen**.
+- We can simply type the variable name `x` in a code cell to see the contents stored in `x`.
+
+Note that the value of `x` is not printed, it's just stored. If you want to view the value, type `x` in a code chunk or in the Console below.
+
+```{r}
+#| eval: true
+x  # printing the output stored in x
+```
+
+```{r}
+#| eval: true
+# assing vector to x
+# then display on screen
+x <- seq(1, 9, 2)
+x
+```
+
+## Printing with `( )`
+
+---
+
+If we enclose a command in a pair rounded parentheses `( )`, then output of the command inside the parentheses will executed and printed to the screen.
+
+```{r}
+#| eval: true
+# enclosing command in parentheses assigns and prints to screen
+(x <- seq(1, 9, 2))
+```
+
+## Printing with `print()`
+
+---
+
+If we enclose a command in a pair rounded parentheses `( )`, then output of the command inside the parentheses will executed and printed to the screen.
+
+```{r}
+#| eval: true
+# the print command works too!
+x <- seq(1, 9, 2)
+print(x)
+```
+
+
