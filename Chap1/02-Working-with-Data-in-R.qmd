@@ -30,6 +30,8 @@ The Quarto file used to generate the html file can be downloaded by clicking on 
 
 ---
 
+- [Chapter 1 R Foundations](https://jfrench.github.io/LinearRegression/r-foundations.html) from A Progressive Introduction to Linear Model
+
 - See [Getting Started with RStudio](https://aspiegler.github.io/Applied-Regression/A-Getting-Started-with-Rstudio.html) for more background information about R, RStudio, LaTeX, and Markdown.
 
 - See [Fundamentals of Working with Data](https://aspiegler.github.io/Applied-Regression/B-Intro-to-Vectors-Dataframes.html) for more details about working with data structures in R.

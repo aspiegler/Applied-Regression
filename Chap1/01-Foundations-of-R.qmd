@@ -37,6 +37,7 @@ R statistical software is one of the most popular tools for data analysis both i
 
 ---
 
+- [Chapter 1 R Foundations](https://jfrench.github.io/LinearRegression/r-foundations.html) from A Progressive Introduction to Linear Models
 - See [Appendix A: Getting Started with RStudio](https://aspiegler.github.io/Applied-Regression/A-Getting-Started-with-Rstudio.html) for more background information about R, RStudio, Quarto, and Markdown.
 - See the [RStudio User Guide](https://docs.posit.co/ide/user) for a comprehensive overview of all of RStudio's features
 - Resources for Quarto:
