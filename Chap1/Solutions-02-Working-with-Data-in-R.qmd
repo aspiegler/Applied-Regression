@@ -1,5 +1,5 @@
 ---
-title: "Module 2: Working with Data in R"
+title: "Solutions Module 2: Working with Data in R"
 author: 
   - name: "Adam Spiegler"
     affiliation: "University of Colorado Denver"
@@ -121,12 +121,13 @@ Without running the command, determine the output of each of the commands. Then 
 
 ---
 
-- `is.numeric("hello world!")` gives the output ??.
-- `is.numeric(1)` gives the output ??.
-- `is.numeric(1L)` gives the output ??.
+- `is.numeric("hello world!")` gives the output `FALSE` since it is a character and not a numeric.
+- `is.numeric(1)` gives the output `TRUE` since it is a numeric (a decimal).
+- `is.numeric(1L)` gives the output `TRUE` since it is a numeric (an integer).
 
 
 ```{r}
+#| eval: true
 # run code chunk to check your answers
 is.numeric("hello world!")
 is.numeric(1)
@@ -169,6 +170,16 @@ typeof(x3)
 typeof(x4)
 ```
 
+::: {.callout-caution}
+`x4` seems to have 3 different data types (a logical, character, and decimal). However, since vectors can only store a single data type, all are converted to characters. For example, the logical `TRUE` becomes the character `"TRUE"`.
+:::
+
+
+```{r}
+#| eval: false
+x4
+```
+
 ## Checking Data Structures with `is.[data_structure]()`
 
 ---
@@ -187,22 +198,26 @@ is.vector(x2)
 
 ---
 
-What would the outputs of the commands `is.list(x4)` and `is.vector(x4)` be? Without running the commands, enter your answer in the text cell below. Then check your answers by running the code cell below the solution text cell.
+What would the outputs of the commands `is.list(x3)` and `is.vector(x4)` be? Without running the commands, enter your answer in the text cell below. Then check your answers by running the code cell below the solution text cell.
 
 
 ### Solution to Question 2
 
 ---
 
-- The output of `is.list(x4)` is ??.
-- The output of `is.vector(x4)` ??.
+- The output of `is.list(x4)` is `FALSE` since the `c()` function creates a vector, not a list.
+- The output of `is.vector(x4)` is `TRUE` since the `c()` function creates a vector. 
 
 
 ```{r}
+#| eval: true
 # run code chunk to check your answers
 is.list(x4)
 is.vector(x4)
 ```
+
+<br>  
+
 
 ## Creating a Vector Integers with a:b
 
@@ -219,15 +234,21 @@ R provides several functions for creating vectors with certain patterns.
 5:11
 ```
 
-::: {.callout-caution}
-In R `a:b` is inclusive of both endpoints. This is not the case in all programming languages. For example, in Python `a:b` would generate integers from `a` (inclusive) up to but NOT including `b` (exclusive).
-:::
 
 
 ```{r}
 #| eval: true
 typeof(5:11)
 ```
+
+::: {.callout-caution}
+When defining a vector using the combine function `c()`, numbers are assumed to be decimals unless we specify we want it to be stored as an integer by adding an `L` after the number. 
+
+- `c(5, 6, 7, 8, 9, 10, 11)` is a vector of doubles (decimals).
+- `c(5L, 6L, 7L, 8L, 9L, 10L, 11L)` is a vector of integers.
+- `5:11` creates a vector of integers.
+:::
+
 
 ## Creating Vectors with `seq()`
 
@@ -264,6 +285,12 @@ Instead of specifying the increment between successive values in the vector, we 
 seq(1, 10, len = 19)
 ```
 
+
+---
+
+# We Stopped Here on Monday
+
+---
 
 ## Creating Vectors with `rep()`
 
