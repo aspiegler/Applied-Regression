@@ -14,6 +14,12 @@ format:
       - text: Link to Interactive Quarto version
         icon: file-code
         href: https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Chap1/03-Exploratory-Data-Analysis.qmd
+#format:
+#  pdf:
+#    toc: true
+#    toc-location: left
+#    toc-depth: 2
+#    toc-expand: 1
 editor: source
 execute:
   eval: false
@@ -44,6 +50,7 @@ The Quarto file used to generate the html file can be downloaded by clicking on 
 ---
 
 ```{r}
+#| eval: true
 # load core tidyverse packages
 library(tidyverse)
 library(janitor)
@@ -61,7 +68,7 @@ The [`tidyverse`](https://www.tidyverse.org/) is a [collection of packages](http
 - [`ggplot2`](https://ggplot2.tidyverse.org/): data visualization.
 - [`dplyr`](https://dplyr.tidyverse.org/): data wrangling and transformation.
 - [`tidyr`](https://tidyr.tidyverse.org/): arrange into tidy data.
-- [`readr`](https://readr.tidyverse.org/): importing tables and files from other aplications into R.
+- [`readr`](https://readr.tidyverse.org/): importing tables and files from other applications into R.
 - [`stringr`](https://stringr.tidyverse.org/): designed to make working with strings easier.
 - And others ...
 
@@ -70,14 +77,10 @@ The [`tidyverse`](https://www.tidyverse.org/) is a [collection of packages](http
 
 ---
 
-A fundamental application of statistics is to use data from a subset of a population to draw conclusions about the population.
-
--   <span style="color:dodgerblue">**Statistical inference**</span> is the process of drawing conclusions about the entire population based on information in a sample.
--   This process can be thought of as a cycle that is pictured below.
+A fundamental application of statistics is to use data from a subset of a population to draw conclusions about the population. <span style="color:dodgerblue">**Statistical inference**</span> is the process of drawing conclusions about the entire population based on information in a sample.
 
 ![Image Credit: [Loneshieling](https://commons.m.wikimedia.org/wiki/File:Population_versus_sample_%28statistics%29.png), modified by Adam Spiegler, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0).](https://raw.githubusercontent.com/CU-Denver-MathStats-OER/Statistical-Theory/main/Images/01fig-inference.png){width="80%" fig-alt="Diagram of Statistical Inference"}
 
-**This semester we will mainly focus on steps 3 and 4; however, the methods we learn are not as powerful without carefully considering steps 1 and 2!**
 
 ## Produce Data
 
@@ -173,12 +176,14 @@ The csv file below was [exported from the World Bank] (https://datatopics.worldb
 
 
 ```{r}
+#| eval: true
 # creates data frame from csv file
 regions_raw <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/world_bank_regions.csv")
 ```
 
 ```{r}
-class(regions_raw)  # check class of regions_mess
+#| eval: true
+class(regions_raw)  # check class of regions_raw
 ```
 
 
@@ -195,11 +200,13 @@ The `base` R function `read.csv()` has very similar syntax as the `readr` functi
 - Notice the `tidyverse` function has an underscore `_` and the `base` R function has `.` between `read` and `csv`.
 
 ```{r}
+#| eval: true
 # creates data frame from csv file
 regions_df <- read.csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/world_bank_regions.csv")
 ```
 
 ```{r}
+#| eval: true
 class(regions_df)
 ```
 
@@ -208,13 +215,13 @@ class(regions_df)
 
 ---
 
-Import a csv file with `read_csv()` or `read.csv()` and store it to an object named `regions_mess`, we will not see what is stored in the object. If we want to see the contents stored in an object on screen, we ask to see something.
+Import a csv file with `read_csv()` or `read.csv()` and store it to an object named `regions_raw`, we will not see what is stored in the object. If we want to see the contents stored in an object on screen, we ask to see something.
 
 ## Tibbles
 
 ---
 
-When `tidyverse` packages interact with a data frame, it usually produces a <font color="dodgerblue">**tibble**</font>.
+When `tidyverse` packages interact with a data frame, it usually produces a <span style="color:dodgerblue">**tibble**</span>.
 
 - Tibbles comes from the [`tibble`](https://tibble.tidyverse.org/) package, which is automatically imported by `readr`.
 - A tibble is supposed to be a "modern re-imagining" of R's standard data frame (referred to as `data.frame` for clarity).
@@ -224,6 +231,7 @@ When `tidyverse` packages interact with a data frame, it usually produces a <fon
 
 
 ```{r}
+#| eval: true
 # print tibble regions_raw
 regions_raw
 #print(regions_raw)
@@ -279,18 +287,28 @@ View(regions_raw)
 
 ---
 
-The <font color="dodgerblue">**working directory**</font> in R is the default location on your computer where R looks for files to load and where it saves files. It functions as the base path for all relative file operations within an R session or RStudio project. By default, the working directory is typically the same as the directory where the Quarto document is saved.
+The <span style="color:dodgerblue">**working directory**</span> in R is the default location on your computer where R looks for files to load and where it saves files. It functions as the base path for all relative file operations within an R session or RStudio project. By default, the working directory is typically the same as the directory where the Quarto document is saved.
 
 ```{r}
+#| eval: false
 getwd()
 ```
 
 
 ```{r}
+#| eval: false
 # this will import and glimpse
 # the data is not assigned to an object
-glimpse(read_csv("Data/world_bank_regions.csv"))
+glimpse(read_csv("../Data/world_bank_regions.csv"))
 ```
+
+::: {.callout-caution}
+When sharing Quarto documents, it is generally not a good practice to include code chunks with `getwd()` or `setwd()` commands since the person you are collaborating with likely has a different file structure and may want to read and write files to/from other locations. Thus, I used the code chunk option `#| eval: false` which means the code cell will be included in the rendered html document, but it will not be executed.
+:::
+
+::: {.callout-caution}
+For the similar reasons, using `read_csv()` commands with files stored online (GitHub) is  easier to share since the link is the same for everyone no matter the file structure. Using `read_csv()` with a local file may be problematic when sharing, though that is typically not too bad to resolve.
+:::
 
 
 # Cleaning The Data 
@@ -324,6 +342,7 @@ Object names should be descriptive but brief since each time we refer to the obj
 - If needed, abbreviate longer words.
 
 ```{r}
+#| eval: true
 regions_renamed <- regions_raw  # store result to new data frame rather than overwrite
 names(regions_renamed) <- c("country", "country_code", "region", "income_group", "lending_cat")
 glimpse(regions_renamed)
@@ -337,7 +356,7 @@ glimpse(regions_renamed)
 
 One of the most common transformations is converting non-standard ways of coding missing values into proper `NA` values in R.
 
-A <font color="dodgerblue">**missing value**</font> occurs when the value of something isn't known. R uses the special object `NA` to represent missing values. If you have a missing value, you should represent that value as `NA`. Note: The character string `"NA"` is not the same thing as `NA`.
+A <span style="color:dodgerblue">**missing value**</span> occurs when the value of something isn't known. R uses the special object `NA` to represent missing values. If you have a missing value, you should represent that value as `NA`. Note: The character string `"NA"` is not the same thing as `NA`.
 
 - Do not make the mistake of using `-99`, `0`,`" "`, `"NA"`, or anything other than `NA` to indicate a missing value.
 - It is common for somebody to share data with you that has missing values coded improperly.
@@ -349,6 +368,7 @@ From the output of the previous code cell, some missing `lending_cat` values hav
 - Then we assign the value `NA` as the new value for `lending_cat` for these observations.
 
 ```{r}
+#| eval: true
 regions_na <- regions_renamed  # store result to new data frame rather than overwrite
 regions_na$lending_cat[regions_na$lending_cat == "??"] <- NA
 glimpse(regions_na)
@@ -356,6 +376,7 @@ glimpse(regions_na)
 
 
 ```{r}
+#| eval: true
 regions_na$lending_cat[regions_na$lending_cat == "N/A"] <- NA
 regions_na$lending_cat[regions_na$lending_cat == "missing"] <- NA
 glimpse(regions_na)
@@ -365,13 +386,15 @@ glimpse(regions_na)
 
 ---
 
-Sometimes we think a variable is one data type, but it is actually being stored (and thus interpreted by R) as a different data type. *One common issue is categorical data is stored as characters. We would like observations with the same values to be grouped together.* Instead of the `character` data type, <font color="dodgerblue">**categorical data should be stored as a `factor`.**</font>
+Sometimes we think a variable is one data type, but it is actually being stored (and thus interpreted by R) as a different data type. *One common issue is categorical data is stored as characters. We would like observations with the same values to be grouped together.* Instead of the `character` data type, <span style="color:dodgerblue">**categorical data should be stored as a `factor`.**</span>
 
 ```{r}
+#| eval: true
 summary(regions_na)  # no summaries provided based number of observations
 ```
 
 ```{r}
+#| eval: false
 plot(regions_na$income_group)  # R generally does not know how to plot characters
 ```
 
@@ -381,6 +404,7 @@ plot(regions_na$income_group)  # R generally does not know how to plot character
 
 
 ```{r}
+#| eval: true
 regions_clean <- regions_na  # store result to new data frame rather than overwrite
 # convert each character to factor
 regions_clean$country <- factor(regions_clean$country)  # country
@@ -393,11 +417,13 @@ glimpse(regions_clean)
 
 
 ```{r}
+#| eval: true
 summary(regions_clean)  # counts are provided
 ```
 
 
 ```{r}
+#| eval: true
 plot(regions_clean$income_group)  # R does not know how to plot factors
 ```
 
@@ -437,6 +463,7 @@ Link to [cheatsheet](https://github.com/rstudio/cheatsheets/blob/main/data-trans
 ---
 
 ```{r}
+#| eval: true
 regions_renamed2 <- rename(regions_raw,  # data frame name
                            country = Economy,  # new_name = old_name
                            country_code = Code, 
@@ -463,6 +490,7 @@ The `janitor` package is not a core package in the `tidyverse`, but it does work
 - Then we load the package with `library(janitor)`.
 
 ```{r}
+#| eval: true
 #library(janitor)
 clean_names(regions_raw)
 ```
@@ -475,6 +503,7 @@ clean_names(regions_raw)
 In the code cell, we properly code all missing values of `lending_cat` as `NA`.
 
 ```{r}
+#| eval: true
 na_strings <- c("??", "N/A", "missing")  # vector of na strings
 regions_na2 <- mutate(regions_renamed2,  # data to mutate
                       lending_cat = case_when(  # redefine lending_cat
@@ -489,7 +518,7 @@ print(regions_na2)
 
 ---
 
-The <font color="dodgerblue">**pipe**</font>, `|>`, is a popular approach for "piping" an object into the first argument (usually) of another function.
+The <span style="color:dodgerblue">**pipe**</span>, `|>`, is a popular approach for "piping" an object into the first argument (usually) of another function.
 
 - The pipe was introduced by the `magrittr` package with `%>%`.
   - `magrittr` is in the `tidyverse`, so you can use `%>%` or `|>` whenever you load the `tidyverse`.
@@ -504,6 +533,7 @@ Wickham, Çetinkaya-Rundel, and Grolemund R briefly summarize the concept in for
 
 
 ```{r}
+#| eval: true
 regions_clean |>  # pipe data from regions_clean into select action
   select(country, region) |>  # pipe selected columns into filter action
   filter(region == "Sub-Saharan Africa") |>  # pipe filtered data to print function
@@ -512,6 +542,7 @@ regions_clean |>  # pipe data from regions_clean into select action
 
 
 ```{r}
+#| eval: true
 # below we use the pipe to compose both the rename and mutate actions
 # then pipe the result into the print function
 regions_na2 <- regions_raw |>  # start with regions_raw which is piped into rename
@@ -533,12 +564,14 @@ regions_na2 <- regions_raw |>  # start with regions_raw which is piped into rena
 We can use the `mutate` function in `dplyr` to convert variables to the `factor` data type.
 
 ```{r}
+#| eval: true
 # convert specified variables to factors
 mutate(regions_na2, across(c(country, country_code, region, income_group, lending_cat), as.factor))
 ```
 
 
 ```{r}
+#| eval: true
 # convert all variables to factors
 mutate(regions_na2, across(everything(), as.factor))
 ```
@@ -552,6 +585,7 @@ Beginning with the initially imported data frame `regions_raw`, we can perform a
 
 
 ```{r}
+#| eval: true
 # result will be stored to regions_clean2
 regions_clean2 <- regions_raw |>  # start with regions_raw which is piped into rename
   rename(country = Economy,
@@ -576,6 +610,7 @@ regions_clean2 <- regions_raw |>  # start with regions_raw which is piped into r
 - The argument `col_types` can be used to customize data types of columns.
 
 ```{r}
+#| eval: true
 regions_clean3 <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/world_bank_regions.csv",
                            col_names = c("country", "country_code", "region", "income_group", "lending_cat"),
                            na = c("??", "N/A", "missing"),
@@ -583,7 +618,68 @@ regions_clean3 <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-
 print(regions_clean3)
 ```
 
-# About the Remaining Data
+
+# Practice
+
+----
+
+Students and faculty at Cornell College in Mount Vernon, Iowa, collected data over many years at the hawk blind at Lake MacBride near Iowa City, Iowa. The data set that we are analyzing here is a subset of the original data set, using only those species for which there were more than 10 observations. Data were collected on random samples of three different species of hawks: Red-tailed, Sharp-shinned, and Cooper's hawks.
+
+The file `Hawks.csv`has 908 observations on 19 variables. Some of the variables we will consider are:
+
+- `Species`: `CH` = Cooper's, `RT` = Red-tailed, `SS` = Sharp-Shinned
+- `Age`: 	`0` = Immature or `1` = Adult
+- `Sex`:	`F` = Female or `M` = Male
+- `Wing`:	Length (in mm) of primary wing feather from tip to wrist it attaches to
+- `Weight`:	Body weight (in g)
+- `Culmen`:	Length (in mm) of the upper bill from the tip to where it bumps into the fleshy part of the bird
+- `Hallux`:	Length (in mm) of the killing talon
+- `Tail`:	Measurement (in mm) related to the length of the tail (invented at the MacBride Raptor Center)
+- `Standard Tail`:	Standard measurement of tail length (in mm)
+- `Tarsus`:	Length of the basic foot bone (in mm)
+- `Wing Pi tFat`:	Amount of fat in the wing pit
+- `Keel Fat`:	Amount of fat on the breastbone (measured by feel)
+
+Run the code below to load and store the data to an initial data frame called `hawks_raw`.
+
+```{r}
+#| eval: true
+# creates data frame from csv file
+hawks_raw <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/Hawks.csv")
+```
+
+## Question 1
+
+---
+
+Identify any issues that need to be cleaned with the data frame `hawks_raw`. Explain in words below and include R code used to support your answer.
+
+### Solution to Question 1
+
+---
+
+
+<br>  
+<br>  
+
+
+## Question 2
+
+---
+
+Clean the data by addressing each of the issues you identified in the previous question.
+
+
+### Solution to Question 2
+
+---
+
+
+<br>  
+<br>  
+
+
+# About the Remaining Data Country Data
 
 ---
 
@@ -603,7 +699,7 @@ HDI values are standardized scores from 0 (poor HDI) to 1 (perfect HDI). Data do
 
 ---
 
-`Electricity_Use.csv` is a comma-separate file that contains the electricity use per capita in kilowatt-hours per capita (kWh per capita) for all countries in the world (for which there is data) over the years 1960-2023 (though most countries last reported data in 2014). The data is from the [World Bank Databank](https://data.worldbank.org/). Data downloaded 3/8/2025 from <https://data.worldbank.org/indicator/EG.USE.ELEC.KH.PC/countries>.</font>
+`Electricity_Use.csv` is a comma-separate file that contains the electricity use per capita in kilowatt-hours per capita (kWh per capita) for all countries in the world (for which there is data) over the years 1960-2023 (though most countries last reported data in 2014). The data is from the [World Bank Databank](https://data.worldbank.org/). Data downloaded 3/8/2025 from <https://data.worldbank.org/indicator/EG.USE.ELEC.KH.PC/countries>.</span>
 
 
 
@@ -624,46 +720,44 @@ The goal of the [`tidyr`](https://tidyr.tidyverse.org/) package is to help creat
 The guidelines for tidy data may seem clear and obvious by now.  Why do we need to worry about tidying data, isn't all data tidy? When or why would we ever encounter messy data out there in the "real world". **Unfortunately, most "real" data is messy and tidy.**
 
 - Data is often organized to make *data entry* easy and not typically with *data analysis* in mind.
-- For people that do not spent their time working with data, the princples of tidy data are not evident at all.
+- For people that do not spent their time working with data, the principles of tidy data are not evident at all.
 
 
 
 ```{r}
+#| eval: true
 #| message: false
 hdi_raw <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/human_development_index.csv")
 print(hdi_raw)
 ```
 
 
-## Question 2a
+## Question 3
 
 ---
 
 Explain why the data in `hdi_raw` is not tidy. Use complete sentences. What would be this data look like if it were arranged tidy?
 
 
-### Solution to Question 2a
+### Solution to Question 3
 
 ---
 
-The years should be a single variable with each individual year a value of the `year` variable as opposed to each individual year being a separate column.
 
-The values in all of the years columns should be combined into a single column with a name such as `hdi` and new variable `year` should be created from the column names for each year.
-
-Each observation should be a country in a specfic year. Each country should therefore correspond to multiple rows, one row (observation) for each year.
-
-Thus, the data frame needs to be lengthened. We need to combine multiple columns into one and as a result we add more rows to the data frame.
+<br>  
+<br>  
 
 
 ## Tidying the HDI Data
 
 ---
 
-
+In the code cell below we perform more advanced cleaning to reformat the data in tidy form.
 
 ```{r}
-# use a pivot function to reformat hdi_mess
-hdi_clean <- hdi_raw |>  # start with hdi_mess
+#| eval: true
+# use a pivot function to reformat hdi_raw
+hdi_clean <- hdi_raw |>  # start with hdi_raw
   pivot_longer(  
     c(-"country"),  # apply to all columns except country
     names_to = "year",  # store old variable names to column named year
@@ -672,54 +766,58 @@ hdi_clean <- hdi_raw |>  # start with hdi_mess
 print(hdi_clean)  # display first 10 rows
 ```
 
-## Question 
+## Question 4
 
 ---
 
-Which five countries in `hdi_clean` had the highest HDI in 2021? Which five countries in `hdi_clean` had the lowest HDI in 2021?
+Which five countries in `hdi_clean` had the highest HDI in 2021? Which five countries in `hdi_clean` had the lowest HDI in 2021? 
 
 
-### Solution to Question
+### Solution to Question 4
 
 ---
 
-```{r}
-# subset hdi_clean to create data frame
-# named hdi_2021 with only 2021 HDI scores
-hdi_2021 <- hdi_clean |> filter(year == "2021")
-print(hdi_2021)
-```
-
-```{r}
-# print 5 greatest hdi scores from 2021
-slice_max(hdi_2021, hdi, n = 5)
-```
-
-```{r}
-# print 5 lowest hdi scores from 2021
-slice_min(hdi_2021, hdi, n = 5)
-```
+Include code chunks to answer the questions.
 
 
-## Question
+
+
+## Question 5
 
 ---
 
 What additional data cleaning would you perform on `hdi_clean`?
 
+
+### Solution to Question 5
+
+---
+
+Include code to perform additional cleaning.
+
+
 ```{r}
+#| eval: true
 hdi_clean$country <- factor(hdi_clean$country)
 hdi_clean$year <- as.integer(hdi_clean$year)
 summary(hdi_clean)
 ```
 
+## Tidying the Electricity Usage Data
+
+---
+
+In the code chunks below we first make sure missing values are properly coded.
+
 
 ```{r}
-# check out intial status of electricity data from world bank
+#| eval: true
+# check out initial status of electricity data from world bank
 print(read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/Electricity_Use.csv"))
 ```
 
 ```{r}
+#| eval: true
 #| message: false
 # add an na argument below to the read_csv command to
 electric_na <- read_csv(
@@ -729,27 +827,28 @@ electric_na <- read_csv(
 print(electric_na)
 ```
 
-
-## Question 3b
-
----
-
-Explain why the default columns names assigned by `read_csv()` when creating the data frame `electric_na` above are problematic. Use complete sentences when typing your explanation.
-
-
-
-### Solution to Question 3b
+## Question 6
 
 ---
 
-Main issue is there are spaces in the column names. When there are spaces in a column name, we need to put backticks around the column name whenever referring to it in our code.
+Is the data frame `electric_na` tidy? If not, write out how you think the data frame should look.
 
-## Tidying the Electricity Usage Data
+## Solution to Question 6
 
 ---
+
+
+
+<br>  
+<br>  
+
+
+
+In the code cell below we perform more advanced data wrangling to clean and tidy the electricity usage data.
 
 
 ```{r}
+#| eval: true
 electric_clean <- electric_na |> 
   clean_names() |>  # use janitor::clean_names() to fix variable names
   select(-series_name, -series_code) |>  # exclude series_name and series_code
@@ -767,212 +866,103 @@ electric_clean <- electric_na |>
 ```
 
 ```{r}
+#| eval: true
 summary(electric_clean)
 ```
 
 
 ## Merging Data Frames
 
+---
+
+In the code cell below we merge the electricity use and HDI data frames.
 
 ```{r}
+#| eval: true
 # merges electricity usage and hdi data frames
 hdi_electric_join <- full_join(electric_clean, hdi_clean)
 print(hdi_electric_join)
 ```
 
+Then we merge the country region and income level data.
+
 ```{r}
+#| eval: true
 #| message: false
 # merges data frame to include regions for each country
 hdi_electric <- hdi_electric_join |> 
   left_join(regions_clean) |> 
   select(-lending_cat) |> 
-print(hdi_electric)
+  print()
 ```
 
 ```{r}
+#| eval: true
 summary(hdi_electric)
 ```
 
-# Summaries of Numerical Variables
+# Exporting Data
 
 ---
 
-- [See text section 2.3](https://jfrench.github.io/LinearRegression/data-cleaning-and-exploration.html#numerical-summarization-of-data)
+`readr` has useful functions for writing data to files that we can export outside of R.
 
-- [See Math 3382 Materials](https://colab.research.google.com/drive/1rzKdbH723cZD-OF0kBmDZhkDjEH3LD0f?usp=sharing)
+- `write_csv(x, "file")`: writes data to a comma-separated file.
+- `write_tsv(x, "file")`: writes data to a tab-separated file.
+- Other write options include `write_delim()`, `write_csv2()`, `write_excel_csv()`, and `write_excel_csv2()`.
 
+The most important arguments to these functions are `x` (the data frame to save) and `file` (the file and location to save it). We can specify other options such as how missing values are coded by entering additional arguments.
 
-# Summaries of Categorical Variables
-
----
-
-- [See text section 2.3.2](https://jfrench.github.io/LinearRegression/data-cleaning-and-exploration.html#categorical-data)
-
-- [See Math 3382 Materials](https://colab.research.google.com/drive/1iWOp-0Zm-Ixo8mpxMXi-gLRwJJzUnvUM?usp=sharing)
-
-
-# Graphical Summaries in base R
-
----
-
-- [See text section 2.4](https://jfrench.github.io/LinearRegression/data-cleaning-and-exploration.html#visual-summaries-of-data)
-
-- [See Math 3382 Materials](https://aspiegler.github.io/Statistical-Theory/Overview-of-Plots.html)
-
-
-## Using the `plot()` function
-
----
-
-The base R function `plot()` is the most basic function, and it often does a pretty nice job of getting the ball rolling. Based on the data type and number of of the variables included, R will take an educated guess as to what plot might help visualize features of the data.
-
-- Factors such as `region` are plotted using a bar plot which is very reasonable.
+- The `getwd()` function can be used to check the location of the current working directory.
+- The `setwd()` function can be used to set/change the working directory.
 
 ```{r}
-plot(hdi_electric$region)
-```
-
-- Numeric variables such as `region` are plotted using an index plot which is typically not very useful.
-
-
-```{r}
-plot(hdi_electric$hdi)
-```
-
-- Entering two numeric variables results in a scatter plot. 
-
-```{r}
-plot(hdi_electric$electricity_use, hdi_electric$hdi)
-```
-
-- Entering one categorical (factor) and one quantitative variable results in a side by side box plots. One box plot for each class of the categorical variable. This is a very fine choice R!
-
-```{r}
-plot(hdi_electric$region, hdi_electric$hdi)
-```
-
-- Entering two one categorical (factor) variables results in a sort of stacked bar plot where the width of each bar means something. We can do better.
-
-
-```{r}
-plot(hdi_electric$region, hdi_electric$income_group)
-```
-
-## Histograms
-
----
-
-A  <font color="dodgerblue">**histogram** </font> is special bar chart we use to display the distribution of values for a quantitative variable.
-
--   We first group the values into different ranges of values called <font color="dodgerblue">**bins** </font> of equal width.
-    -   This essentially converts the quantitative variable to an ordinal categorical variable with with each bin representing a different level.
--   The height of the bars over each bin range is the number of values (or frequency) in each bin range.
--   **By default, the counts are right closed.** For example, an HDI value of 0.5 knots would be counted in the bin range 0.4-0.5 and not counted in the bin range 0.5-0.6.
--    <font color="dodgerblue">**The R function `hist(x, [options])` creates a histogram.** </font>
--   Run `?hist` for more information about the available options for customizing a histogram, some of which are illustrated in the code cell below.
-
-```{r}
-yr21 <- subset(hdi_electric, year == 2021)
-hist(yr21$hdi)
-```
-
-```{r}
-hist(yr21$hdi,  # vector of values to plot
-     breaks = 10,  # number of bin ranges to use
-     xlab = "HDI Index Score",   # x-axis label
-     xlim = c(0.3, 1),  # sets window for x-axis
-     ylab = "Frequency",  # y-axis label
-     ylim = c(0, 25),  # sets window for y-axis
-     main = "Distribution of HDI Index in 2021",  # main label
-     cex.lab=1.25, cex.axis=1.25, cex.main=1.5,  # increase font size
-     col = "steelblue")  # fill color of bars
-```
-
-```{r}
-# a relative frequency histogram
-hist(yr21$hdi,  # vector of values to plot
-     freq = FALSE,
-     breaks = 10,  # number of bin ranges to use
-     xlab = "HDI Index Score",   # x-axis label
-     xlim = c(0.3, 1),  # sets window for x-axis
-     ylab = "Relative Frequency",  # y-axis label
-     ylim = c(0, 3),  # sets window for y-axis
-     main = "Distribution of HDI Index in 2021",  # main label
-     cex.lab=1.25, cex.axis=1.25, cex.main=1.5,  # increase font size
-     col = "steelblue")  # fill color of bars
-```
-
-## Density Plots
-
----
-
-```{r}
-plot(density(yr21$hdi, na.rm = TRUE))
-```
-
-## Box Plots
-
----
-
-
-
-## Scatter Plots
-
----
-
-## Bar Plots
-
----
-
-## Side by Side Box Plot
-
----
-
-
-## Quantile-Quantile (qq-plots)
-
----
-
-
-## Importing Data
-
----
-
-<https://ourworldindata.org>
-
-<https://ourworldindata.org/grapher/electricity-prod-source-stacked>
-
-
-```{r}
-library(jsonlite)
-
-# Fetch the data
-df <- read.csv("https://ourworldindata.org/grapher/electricity-prod-source-stacked.csv?v=1&csvType=full&useColumnShortNames=true")
-
-# Fetch the metadata
-metadata <- fromJSON("https://ourworldindata.org/grapher/electricity-prod-source-stacked.metadata.json?v=1&csvType=full&useColumnShortNames=true")
-```
-
-
-```{r}
-summary(df)
-```
-
-```{r}
-codes <- factor(df$Code)
-summary(codes)
-```
-
-```{r}
-entitys <- factor(df$Entity)
-summary(entitys)
-```
-
-```{r}
-library(tidyverse)
-```
-```{r}
+#| eval: false
 getwd()
 ```
 
+```{r}
+#| eval: false
+write_csv(hdi_electric, "../Data/hdi_electric.csv")
+```
 
+::: {.callout-caution}
+When sharing Quarto documents, it is generally not a good practice to include code chunks with `write_csv()` commands since you do not want to inadvertently overwrite a file on you collaborator's computer. I wanted to include the code cell above to show how to write to an external file, but I did not want the code cell to run. Thus, I used the code chunk option `#| eval: false` which means the code cell will be included in the rendered html document, but it will not be executed.
+:::
+
+## Question 7
+
+---
+
+Run the code cell below to print the first 10 rows of data frame created from the csv file `hdi_electric.csv` we just created. Is the data frame that is imported the same as the data frame `hdi_electric` that we exported? If not, what has changed?
+
+```{r}
+#| eval: false
+print(read_csv("../Data/hdi_electric.csv"))
+```
+
+### Solution to Question 7
+
+---
+
+
+<br>  
+<br>  
+
+## `read_rds()` and `write_rds()`
+
+---
+
+
+The [`write_rds()` and `read_rds()`](https://readr.tidyverse.org/reference/read_rds.html) functions are uniform wrappers around the base functions `readRDS()` and `saveRDS()` that store data in R's custom binary format called [RDS (or R Data Serialization)](https://www.geeksforgeeks.org/data-serialization-rds-using-r/). This means that when we reload the object, we are loading the exact same R object that we stored.
+
+
+```{r}
+#| eval: false
+write_rds(hdi_electric, "../Data/hdi_electric.rds")
+```
+
+```{r}
+#| eval: false
+print(read_rds("../Data/hdi_electric.rds"))
+```
