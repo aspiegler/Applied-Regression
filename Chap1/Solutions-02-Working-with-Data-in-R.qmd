@@ -426,6 +426,55 @@ x <- rexp(20, 100, 15) # random sample of 20 values from N(100, 15)
 ```
 
 
+## Defining Our Own Functions
+
+---
+
+A function is essentially a sequence of commands executed based on certain arguments supplied to the function.
+
+In R, a function is defined using the general format:
+
+```
+myfunction <- function(arg1, arg2, arg3) {
+	code to execute
+}
+```
+
+In the example above,
+
+-  The name of the function is `myfunction`.
+-  There are three required inputs (or arguments) named `arg1`, `arg2`, and `arg3`.
+-  To use this function with `x1`, `x2`, and `x3` as inputs for `arg1`, `arg2`, and `arg3`, respectively, we enter `myfunction(x1, x2, x3)`.
+
+Let's create a function named `my_mean()` that returns the mean of the values stored in a vector `x`. Recall the mean is $\bar{x}$ and is computed using the formula below where $n$ denotes the number of values in $x$:
+
+$$\bar{x} = \dfrac{x_1 + x_2 + \ldots + x_n}{n} = \dfrac{ \sum_{i=1}^n x_i}{n}.$$
+
+
+```{r}
+my_mean <- function(x) {
+  n <- length(x)  # compute number of elements in x
+	xbar <- sum(x) / n  # sum of x divided by n
+  xbar  # print xbar to screen
+}
+```
+
+
+```{r}
+my_mean2 <- function(x) {
+	xbar <- sum(x) / length(x)  # another way to compute mean
+  xbar  # print xbar to screen
+}
+```
+
+
+```{r}
+my_mean(x)
+my_mean2(x)
+mean(x)
+```
+
+
 # Data Frames
 
 --- 
