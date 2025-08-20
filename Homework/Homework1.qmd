@@ -1,0 +1,515 @@
+---
+title: "Homework 1"
+author: 
+  - name: "Enter your name"
+    affiliation: "University of Colorado Denver"
+format: 
+  html:
+    embed-resources: true    
+editor: source
+warning: false
+---
+
+# Homework 1: Due Wednesday, September 3 at 2:00 PM
+
+------------------------------------------------------------------------
+
+## Instructions:
+
+------------------------------------------------------------------------
+
+1.  <span style="color:red">Be sure to download and save the file so you are working with your own private copy of the file.</span>
+
+2.  <span style="color:green">After you have copied the Quarto file onto your computer, you can begin editing and saving your work.</span>
+
+**Submit your work electronically as two separate files:**
+
+-   **A Quarto markdown file with file extension `.qmd` with all code cells run and relevant output displayed in the document**.
+-   **After you have completed all questions, render your completed work to an html file.**
+-   **Submit the html file that is created with file extension `.html`**.
+
+Upload both files into the Homework 1 assignment in Canvas before <span style="color:blue">**2 PM on Wednesday, September 3 2.**</span>
+
+**You must provide supporting work for your all of your answers.**
+
+-   <span style="color:blue">That work will include using R code cells.</span>
+    -   **Feel free to insert as much R code as you like.**
+    -   When asked, you must interpret or explain how the output of a code cell is being utilized to solve the question.
+    -   **Code with incomplete or missing explanations of why the output is useful may not receive full credit.**
+    -   **Code that involves methods and commands we have not discussed this semester may not receive full credit.**
+-   <span style="color:blue">Your work may also involve writing explanations and justifications in text cells.</span>
+    -   **Be sure to type/write out the steps of your work/explanation so I can see how you arrived at your answer.**
+
+## Important Academic Policies:
+
+------------------------------------------------------------------------
+
+-   **Be your own work.** Though you may collaborate with others, everyone is responsible for writing up the work in their own way using their own methods. Plagiarism of any form is not tolerated.
+-   **Be complete.** You must provide all work and/or explanations needed to find the solution. Answers with insufficient or incomplete supporting work may lose credit.
+-   **Adhere to the Code of Academic Honesty.**
+-   **Be clearly written (and legible if written).** Your solution to a question must be clear, written in complete sentences. You may lose credit for work that is unclear or hard to follow.
+
+## <span style="color:blue">Let me know if you need help, and **GOOD LUCK!!!**</span>
+
+------------------------------------------------------------------------
+
+# Introduction to Assignment
+
+------------------------------------------------------------------------
+
+Type your answers to HW 1 in this Quarto file. Your answers should contain blocks of R code when appropriate as well as a narrative/summary of the code. Interpret the significance of the output of your code when appropriate.
+
+# Be Sure to Do the Following Once Completed
+
+------------------------------------------------------------------------
+
+-   Be sure you have run ALL code cells before saving your work.
+-   Be sure all relevant code output is displayed in Quarto document.
+-   Then be sure to save the your work as a Quarto document.
+-   Finally, be sure you render your final work to a static `html` that you submit along with your Quarto file in Canvas.
+
+The `nepali` data set in the `faraway` package concerns a longitudinal study  on rural Nepalese children to see what effect vitamin A supplements have on growth and development of children. The `nepali` data set contains observations from a sample of 200 individuals in the study. Researchers followed up with each individual in the sample at 5 different times, so the data set has 1000 observations altogether.
+
+<br>  
+
+Data Source: West KP, Jr., LeClerq SC, Shrestha SR, Wu LS, Pradhan EK, Khatry SK, Katz J, Adhikari R, Sommer A. *Effects of vitamin A on growth of vitamin A deficient children: field studies in Nepal*. J Nutr 1997;10:1957-1965.
+
+<br>  
+
+# Loading Required Packages 
+
+------------------------------------------------------------------------
+
+If you have not already installed the `faraway` and `tidyverse` packages, then **in the console below**, you will first need to run the command `install.packages(c("faraway", "tidyverse"))` (to install both), `install.packages("faraway")`, or `install.packages(tidyverse")` depending on which package(s) you need to install. 
+
+- Be sure you run the `install.packages()` command in the Console and do NOT include that command in the Quarto document you submit.
+- You will only need to install the packages one time. If you have already installed the packages, you do not need to install them again.
+- However, each time we start a new R session, you do need to load installed packages with a `library()` command.
+- Run the code cell below to load required packages each time you restart your assignment.
+
+```{r}
+#| message: false
+library(faraway) # library needed for nepali data
+library(tidyverse) # possible libraries needed for cleaning
+```
+
+
+# Loading the Data
+
+---
+
+In the block of R code below, we perform an initial data cleaning step. Namely, a new data set called `first_obs` is created by filtering the original`nepali` data set, keeping only the first observations for each individual. 
+
+- First run the code to create the filtered data frame called `first_obs`.  
+- **Then answer all the questions based on data in `first_obs`** (and NOT the original data frame `nepali`).
+
+```{r}
+first_obs <- nepali |> # take the nepali data frame
+  group_by(id) |>  # group together by id
+  filter(age == min(age))  # in each group, keep only the obs with smallest age
+```
+
+
+::: {.callout-caution}
+Be sure you have run the R code each time you start a new R session  before answering the remaining questions.
+:::
+
+
+# Question 0
+
+------------------------------------------------------------------------
+
+Edit the author information in the YAML at the start of this document. Enter your name. Also, feel free to edit the YAML to your liking. However, **be sure you leave the format settings alone.** 
+
+- The document must render to an html file.
+- The `embed-resources: true` option must be used.
+
+## Solution to Question 0
+
+------------------------------------------------------------------------
+
+Describe how you adjusted the YAML. If all you did was change the author name, that is fine, just explain that. You are not required to do anything other than adjust the name, but feel free to do addition edits.
+
+
+<br>  
+<br>  
+
+
+# Question 1	
+
+------------------------------------------------------------------------
+
+List all variables in the data frame `first_obs` created in the code chunk above. Describe what each variable represents in practical terms and what data type each is initially stored. It may be helpful to use the help documentation available for some data set. Use a separate bullet point for each variable when expressing your final answer.
+
+
+
+## Solution to Question 1
+
+------------------------------------------------------------------------
+
+Include any R code (if any) you used to answer this question in the space below. Then enter your bulleted list.
+
+
+- enter info about variable 1
+- enter info about variable 2
+- and so on for all variables
+
+
+<br>  
+<br>  
+
+
+
+# Question 2	
+
+------------------------------------------------------------------------
+
+What are some ethical or other concerns you might have about the data the data or the documentation about the data? What questions do you have about the data?
+
+
+
+## Solution to Question 2
+
+------------------------------------------------------------------------
+
+
+
+<br>  
+<br>  
+
+
+# Question 3
+
+------------------------------------------------------------------------
+
+Clean the data further. For example, use descriptive values for categorical variables.
+
+## Solution to Question 3
+
+------------------------------------------------------------------------
+
+Include all necessary R code in the space below. Do not include scratch work that is not required for your code to run.
+
+
+
+<br>  
+
+Then in the space below, explain in words issues about the data in `first_obs` you identified and how your code addresses those issues.
+
+
+<br>  
+<br>  
+
+
+# Question 4
+
+------------------------------------------------------------------------
+
+Calculate and provide numerical summaries for all variables other than `id`.  Then in the space below your code, interpret in plain language some of the summaries. Do not just say the mean is blah. Rather, you can say:
+
+> The average age of the children is blah while the median bleh, and thus we can conclude something practical about age.
+
+Or
+
+> The five number summary for age is $(a, b, c, d, e)$ which tells that blah percent of all childern had an age between this and that.
+
+For categorical variables you can give counts and/or proportions for how many observations are in each class (or level) of the variable.
+
+
+## Solution to Question 4
+
+------------------------------------------------------------------------
+
+Include any relevant R code in the space below. Do not include scratch R code that is not required to answer the question.
+
+
+
+<br>  
+
+Then enter your interpretations below:
+
+
+#### Iterpretation of one of the five number summaries (pick one variable)
+
+
+<br>  
+
+#### Interpretation of the measurements of center (pick one other variable)
+
+
+
+<br>  
+
+#### Interpretation of a measurement of spread (pick one other variable)
+
+
+
+<br>  
+
+#### Interpretation of a summary for a categorical variable (pick one)
+
+
+
+
+<br>  
+<br>  
+
+
+# Question 5
+
+------------------------------------------------------------------------
+
+Construct and provide three univariate (displays only one variable as opposed to relationships between multiple variables) graphics for three different variables in `first_obs` (other than `id`). Include any relevant R code in the space below. Do not include scratch R code that is not required to answer the question. In addition, **for each plot, comment on any interesting features of each plot.** For your plots, be sure to do the following:
+
+- Use a histogram for at least one of the variables.
+- Use a box plot for at least one of the variables.
+- Use a bar plot for at least one of the variables.
+- **Use `ggplot2` (which is loaded with `tidyverse`) to construct at least one of the plots.**
+- **Use `base` R to construct at least one of the plots.**
+
+
+## Solution to Question 5
+
+------------------------------------------------------------------------
+
+Show code, plot, and interpretation for each in the space below.
+
+
+### Plot of variable 1 with histogram
+
+
+
+<br>  
+
+Practical interpretation of plot:
+
+
+### Plot of variable 2 with box plot
+
+
+
+<br>  
+
+Practical interpretation of plot:
+
+
+### Plot of variable 3 with bar plot
+
+
+
+<br>  
+
+Practical interpretation of plot:
+
+
+
+<br>  
+<br>  
+
+# Question 6
+
+------------------------------------------------------------------------
+
+Construct 3 different bivariate graphics for 3 different pairs of variables that you think may be interesting to compare. One such example could be to compare the weights of children born from a parent that was literate compared to the weight of children born from a parent that is not literate. You should come up with 3 of your pairs (don’t use mine in this example!) and create a bivariate graphic to summarize the relation between the two. Then, for each plot, either write a practical interpretation of the plot and/or give a statistical question that we could try to answer with further analysis.
+
+
+- At least one plot should compare two quantitative variables.
+- At least one plot should compare two categorical variables.
+- At least one plot should compare one categorical variable with one quantitative variable.
+- **Use `ggplot2` for at least one of the plots.** 
+  - You may use `ggplot2` for all of the plots if you prefer.
+
+
+## Solution to Question 6
+
+Show code, plot, and interpretation/statistical question for each in the space below.
+
+
+### Bivariate plot 1 (two quantitative)
+
+
+
+<br>  
+
+Practical interpretation of plot:
+
+
+
+### Bivariate plot 2 (two categorical)
+
+
+
+<br>  
+
+Practical interpretation of plot:
+
+
+
+### Bivariate plot 3 (one categorical and one quantitativ)
+
+
+
+
+<br>  
+
+Practical interpretation of plot:
+
+
+
+<br>  
+<br>  
+
+
+# Question 7
+
+------------------------------------------------------------------------
+
+Construct and provide densities for two quantitative variables (excluding `id`) split by literacy indicator.  Then for each plot, comment on the similarities or differences in the distribution of each variable for birth parents that are or are not literate.
+
+
+## Solution to Question 7
+
+------------------------------------------------------------------------
+
+Show code, plot, and interpretation/statistical question for each in the space below.
+
+
+### Plot 1
+
+
+
+<br>  
+
+Practical interpretation of plot:
+
+
+### Plot 2
+
+
+
+<br>  
+
+Practical interpretation of plot:
+
+
+
+<br>  
+<br>  
+
+
+# Congrats MATH 4387 Students! You are Done with Homework 1!!!
+
+### Almost done MATH 5387, but not yet.
+
+---
+
+<br>  
+
+
+# Question 8: For MATH 5387 Students Only
+
+------------------------------------------------------------------------
+
+The Panchayat system was a political system in Nepal from 1961 to 1990 imposed by King Mahendra. It was a partyless democracy under the sole authority of King Mahendra (one candidate to vote for) that replaced a parliamentary system. The system was intended to better represent the Nepalese traditions. The hierarchical structure had the King at the top (of course) who oversaw councils (panchayats) at village, town, district, and other levels.
+
+The `id` variable is a six digit code where the first 2 digits indicate the panchayat number, the next 2 digits indicate the ward within panchayat, the next digit (digit in position 5) indicates the household, and the last digit indicates the child within the household.
+
+**Split the `id` column into 4 separate columns corresponding to four new variables that you should give your own descriptive name that follows the snake case naming convention.** Store the resulting data frame to a new object rather than overwrite `first_obs`, and display on screen `summary()` data for the newly created data frame.
+
+
+## Solution to Question 8: For MATH 5387 Students Only
+
+------------------------------------------------------------------------
+
+Include R code below. You do NOT need to explain or justify how your code works.
+
+
+
+
+
+<br>  
+<br>  
+
+
+# Question 9: For MATH 5387 Students Only
+
+------------------------------------------------------------------------
+
+After splitting the `id` into four new more meaningful variables, answer the following questions **based on the data frame you created in the previous question** (NOT the full `nepali` data frame). Be sure to provide any R code required to justify your answer and do not include scratch R work that is not essential to your work.
+
+## Question 9a
+
+---
+
+Give the panchayat number id that has the most observations.
+
+
+### Solution to Question 9a
+
+---
+
+Include R code to justify your answer below. Then enter your answer in the space provided below.
+
+
+
+<br>  
+
+The panchayat number of that has the most observations is ??.
+
+<br>  
+
+## Question 9b
+
+---
+
+List all of the ward numbers from panchayat number 36 that had observations.
+
+
+### Solution to Question 9b
+
+---
+
+
+Include R code to justify your answer below. Then enter your answer in the space provided below.
+
+
+
+<br>  
+
+Panchayat number 36 included childern from the following ward numbers: ??.
+
+<br>  
+
+## Question 9c
+
+---
+
+What are the panchayat number, panchayat ward, and household id's for the 4 households that had four children.
+ 
+
+
+### Solution to Question 9c
+
+---
+
+Include R code to justify your answer below. Then enter your answer in the space provided below.
+
+
+
+<br>  
+
+The panchayat number, panchayat ward, and household id's for the 4 households that had four children in `first_obs` are:
+
+1. 
+2. 
+3. 
+4. 
+
+
+<br>  
+
+
+
+# Congrats everyone! You are Done with Homework 1!!!
+
+---
