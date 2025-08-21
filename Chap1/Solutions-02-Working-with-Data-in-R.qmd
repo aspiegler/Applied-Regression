@@ -15,8 +15,6 @@ format:
         icon: file-code
         href: https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Chap1/02-Working-with-Data-in-R.qmd
 editor: source
-execute:
-  eval: false
 title-block-banner: true
 warning: false
 license: "CC BY-NC-SA"
@@ -95,7 +93,6 @@ The `typeof()` function returns the R internal type or storage mode of any objec
 Consider the following commands and output:
 
 ```{r}
-#| eval: true
 # determine basic data type
 typeof(1)
 typeof(1L)
@@ -127,7 +124,6 @@ Without running the command, determine the output of each of the commands. Then 
 
 
 ```{r}
-#| eval: true
 # run code chunk to check your answers
 is.numeric("hello world!")
 is.numeric(1)
@@ -147,7 +143,6 @@ The most basic way to create a vector is the combine function `c()`. The followi
 
 
 ```{r}
-#| eval: true
 x1 <- c(1, 2, 5.3, 6, -2, 4)  # create a numeric (double) vector
 x2 <- c("one", "two", "three")  # create a character vector
 x3 <- c(TRUE, TRUE, FALSE, TRUE)  # create a logical vector
@@ -162,7 +157,6 @@ In R we use `<-` for the assignment operator, not the `=` character which used t
 We can use the `typeof()` function to check the data type of a vector (which must be a single data type).
 
 ```{r}
-#| eval: true
 # check the type of data structure of an object
 typeof(x1)
 typeof(x2)
@@ -176,7 +170,6 @@ typeof(x4)
 
 
 ```{r}
-#| eval: false
 x4
 ```
 
@@ -187,7 +180,6 @@ x4
 We can check the data structure of an object using commands such as `is.vector()`, `is.list()`, `is.matrix()`, and so on.
 
 ```{r}
-#| eval: true
 # checks data structure of objects
 is.list(x1)
 is.vector(x2)
@@ -210,7 +202,6 @@ What would the outputs of the commands `is.list(x3)` and `is.vector(x4)` be? Wit
 
 
 ```{r}
-#| eval: true
 # run code chunk to check your answers
 is.list(x4)
 is.vector(x4)
@@ -228,7 +219,6 @@ R provides several functions for creating vectors with certain patterns.
 - The code `a:b` creates a vector of all integers from `a` to `b` (inclusive of both `a` and `b`).
 
 ```{r}
-#| eval: true
 # creates vector of all integers
 # starting from 5 up to and including 11
 5:11
@@ -237,7 +227,6 @@ R provides several functions for creating vectors with certain patterns.
 
 
 ```{r}
-#| eval: true
 typeof(5:11)
 ```
 
@@ -261,7 +250,6 @@ The `seq()` (sequence) function is used to create an equidistant series of numer
    - The value `from`, `to`, or `by` can be a decimal or integer value.
 
 ```{r}
-#| eval: true
 seq(from = 1, to = 10, by = 2)
 ```
 
@@ -269,7 +257,6 @@ seq(from = 1, to = 10, by = 2)
 - The ordering of the inputs is very important!
 
 ```{r}
-#| eval: true
 # a more concise way to write code
 seq(1, 10, 2)
 ```
@@ -281,16 +268,9 @@ seq(1, 10, 2)
 Instead of specifying the increment between successive values in the vector, we can use the `len` argument instead to indicate how many values we want our vector to contain. Then R will determine the increment accordingly. There are other options for creating vectors with the `seq()` function. Run the command `?seq` in the Console below if you are curious about more details. 
 
 ```{r}
-#| eval: true
 seq(1, 10, len = 19)
 ```
 
-
----
-
-# We Stopped Here on Monday
-
----
 
 ## Creating Vectors with `rep()`
 
@@ -300,7 +280,6 @@ The `rep` (replicate) function can be used to create a vector by replicating val
 Some examples:
 
 ```{r}
-#| eval: true
 rep(1:3, times = 3)  # replicate the sequence `1, 2, 3` three times
 rep(c("trt1", "trt2", "trt3"), times = 1:3)  # replicates `"trt1"` once, `"trt2"` twice, and `"trt3"` three times.
 rep(1:3, each = 3)  # replicates each element of the sequence 1, 2, 3 three times.
@@ -316,7 +295,6 @@ Subsets of the elements of a vector can be extracted by appending an index vecto
 Let's create the numeric vector 2, 4, 6, 8, 10, 12, 14, 16.
 
 ```{r}
-#| eval: true
 # define a sequence 2, 4, ..., 16
 a <- seq(2, 16, by = 2)
 a
@@ -325,7 +303,6 @@ a
 We can extract non-contiguous elements such as the 2nd, 4th, and 6th elements of `a` as follows:
 
 ```{r}
-#| eval: true
 # extract a non-contiguous subset of a vector
 a[c(2, 4, 6)]
 ```
@@ -337,7 +314,6 @@ R starts with index 1 which is different from Python which indexes starting from
 We can extract contiguous elements such as all elements from the 2nd to the 6th of `a` as follows:
 
 ```{r}
-#| eval: true
 # extract a contiguous subset of a vector
 a[2:6]
 ```
@@ -347,7 +323,6 @@ a[2:6]
 We can access all elements in `a` *EXCEPT* the 2nd, 4th, and 6th using the minus (`-`) sign in front of the index vector.
 
 ```{r}
-#| eval: true
 # extract a subset of all entries except a non-contiguous subset
 a[-c(2, 4, 6)]
 ```
@@ -357,7 +332,6 @@ a[-c(2, 4, 6)]
 We can  access all elements in `a` except elements 3 through 6 as follows:
 
 ```{r}
-#| eval: true
 # extract a subset of all entries except a contiguous subset
 a[-(3:6)]
 ```
@@ -412,19 +386,24 @@ Enter a command using that performs the action indicated by each comment and run
 ---
 
 ```{r}
-x <- rexp(20, 100, 15) # random sample of 20 values from N(100, 15)
-
-# length of x
-# sum of x
-# sample mean of x
-# sample variance of x
-# sample standard deviation of x
-# range of x
-# square root of each element in x
-# summary of x
-# structure of x
+# here's my sample
+set.seed(123)
+x <- rnorm(20, 100, 15) # random sample of 20 values from N(100, 15)
+x
 ```
 
+```{r}
+# here's the output of the functions
+length(x)  # length of x
+sum(x)  # sum of x
+mean(x)  # sample mean of x
+var(x)  # sample variance of x
+sd(x)  # sample standard deviation of x
+range(x)  # range of x
+sqrt(x)  # square root of each element in x
+summary(x) # summary of x
+str(x)# structure of x
+```
 
 ## Defining Our Own Functions
 
@@ -499,7 +478,6 @@ Consider the following example:
 
 
 ```{r}
-#| eval: true
 # define the variables as separate vectors
 d <- c(2L, 4L, 6L, 8L)  # vector of integers (note 2L is the integer 2)
 e <- c(2, 2.1, 2.2, 2.3)  # vector of decimals (note 2 is a decimal)
@@ -525,7 +503,6 @@ df
 
 
 ```{r}
-#| eval: true
 is.matrix(df)
 is.vector(df)
 is.data.frame(df)
@@ -541,7 +518,6 @@ In R, object names must start with a letter, and an only contain letters, number
 The columns of a data frame can be renamed using the `names()` function on the data frame.
 
 ```{r}
-#| eval: true
 # name columns of data frame
 names(df) <- c("id", "measure", "color", "passed")
 df
@@ -562,7 +538,6 @@ data.
 
 
 ```{r}
-#| eval: true
 # create data frame with better column names
 df2 <- data.frame(id = d, measure = e, color = f, passed = g)
 df2
@@ -577,7 +552,6 @@ The column vectors of a data frame may be extracted using `$` and specifying the
 
 
 ```{r}
-#| eval: true
 # access the color column of data frame df
 df$color
 ```
@@ -617,9 +591,9 @@ Let data frame `df` be the data frame defined above. What would be the output of
 
 ---
 
-a.  `df[2, ]` gives the output ??.
-b.  `df[, 2]` will gives the output ??.
-c.  `df[1:2, -c(1,3)]` gives the output ??.
+a.  `df[2, ]` will extract only row 2 and keep all columns. 
+b.  `df[, 2]` will extract all rows of data and only column 2.
+c.  `df[1:2, -c(1,3)]` will extract rows one and two and exclude columns 1 and 3.
 
 <br>
 
@@ -637,7 +611,10 @@ df[, 2]
  df[1:2, -c(1,3)]
 ```
 
-<br>  
+::: {.callout-note}
+When we slice a data frame, the result is NOT always data frame. For example, slicing a single column results in a vector.
+:::
+
 <br>  
 
 ## Extracting Multiple Columns by Name
@@ -647,19 +624,16 @@ df[, 2]
 If you need to select multiple columns of a data frame by name, you can pass a character vector with column names in the column position of `[]`.
 
 ```{r}
-#| eval: true
 # extract the id, color,and passed columns of df
 df[, c("id", "color", "passed")]
 ```
 
 ```{r}
-#| eval: true
 # another way to extract the id, color, and passed columns of df
 df[, c(1, 3, 4)]  
 ```
 
 ```{r}
-#| eval: true
 # another way to extract the id, color, and passed columns of df
 df[, -2] 
 ```
@@ -689,7 +663,6 @@ conditions. This can be determined using the logical operators `<`,
 Consider the vector `a` defined in the code cell below.
 
 ```{r}
-#| eval: true
 a <- seq(2, 16, by = 2) # creating the vector a
 ```
 
@@ -711,7 +684,6 @@ a != 10
 Consider the data frame `df` defined earlier.
 
 ```{r}
-#| eval: true
 df
 ```
 
@@ -722,7 +694,6 @@ We can use a logical statement as an index to extract certain entries from a vec
 -   We indicate we want to keep just columns 3 and 4 with the column index `3:4`.
 
 ```{r}
-#| eval: true
 df[df$color != "blue", 3:4]
 ```
 
@@ -737,9 +708,9 @@ Determine the output of the following commands. Then run the code cells below to
 
 ---
 
-- `df$measure >= 2.2` gives the output ??.
-- `df[df$measure >= 2.2, ]` gives the output ??.
-- `df[df$measure >= 2.2, -c(1,3)]` gives the output ??.
+- `df$measure >= 2.2` gives the output `FALSE`, `FALSE`, `TRUE`, `TRUE`.
+- `df[df$measure >= 2.2, ]` gives the output of from rows 3 and 4 and keeps all columns.
+- `df[df$measure >= 2.2, -c(1,3)]` gives the output of from rows 3 and 4 and keeps all columns except columns 1 and 3.
 
 
 <br>  
@@ -799,8 +770,8 @@ FALSE | FALSE
 We define the vector `a` from earlier again.
 
 ```{r}
-#| eval: true
 a <- seq(2, 16, by = 2) # creating the vector a
+a
 ```
 
 Run the following commands in R and see what you get.
@@ -830,6 +801,10 @@ Insert an R code chunk and enter a commond that subsets all entries in the data 
 
 Insert an R code chunk and answer the question.
 
+```{r}
+df[df$color == "red" | df$measure > 2.2, -1]
+```
+
 <br>  
 <br>  
 
@@ -841,7 +816,6 @@ Insert an R code chunk and answer the question.
 As the name implies, the `subset()` function in base R is a really useful function for subsetting! We can open the help documentation with `?subset` to learn how to apply this function. Below are some examples of different ways we may want to subset the `df` data frame.
 
 ```{r}
-#| eval: true
 # keeps all variables for observations with passed equal to TRUE
 subset(df,  # name of data frame
        passed == TRUE)  # logical condition
@@ -849,7 +823,6 @@ subset(df,  # name of data frame
 
 
 ```{r}
-#| eval: true
 # keeps only the color and passed columns
 subset(df,  # name of data frame
        select = c(color, passed),  # column(s) to select
@@ -858,7 +831,6 @@ subset(df,  # name of data frame
 
 
 ```{r}
-#| eval: true
 # stores object as a vector instead of a data frame
 subset(df,  # name of data frame
        select = color,  # column(s) to select
@@ -875,14 +847,12 @@ subset(df,  # name of data frame
 The `dplyr` package in the `tidyverse` has a `filter()` function that works very similarly to the base R function `subset()`. We will typically work with **base** R, which are commands and functions R offers by default.
 
 ```{r}
-#| eval: true
 # if you have not already installed packages from the tidyverse
 # in the console below first run the command install.packages("tidyverse")
 library(tidyverse)
 ```
 
 ```{r}
-#| eval: true
 # keeps all columns
 filter(df, passed == TRUE)
 ```
@@ -906,7 +876,6 @@ In R we use `<-` for the assignment operator, not the `=` character which used t
 
 
 ```{r}
-#| eval: true
 # create vector of integers from 1 to 9 with increments of 2
 # assigns vector to `x`
 # nothing printed to screen
@@ -927,12 +896,10 @@ Although we do not see any output after running the previous code cell, the gree
 Note that the value of `x` is not printed, it's just stored. If you want to view the value, type `x` in a code chunk or in the Console below.
 
 ```{r}
-#| eval: true
 x  # printing the output stored in x
 ```
 
 ```{r}
-#| eval: true
 # assing vector to x
 # then display on screen
 x <- seq(1, 9, 2)
@@ -946,7 +913,6 @@ x
 If we enclose a command in a pair rounded parentheses `( )`, then output of the command inside the parentheses will executed and printed to the screen.
 
 ```{r}
-#| eval: true
 # enclosing command in parentheses assigns and prints to screen
 (x <- seq(1, 9, 2))
 ```
@@ -958,7 +924,6 @@ If we enclose a command in a pair rounded parentheses `( )`, then output of the 
 If we enclose a command in a pair rounded parentheses `( )`, then output of the command inside the parentheses will executed and printed to the screen.
 
 ```{r}
-#| eval: true
 # the print command works too!
 x <- seq(1, 9, 2)
 print(x)
