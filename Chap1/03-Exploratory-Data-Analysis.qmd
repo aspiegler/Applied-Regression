@@ -10,16 +10,6 @@ format:
     toc-depth: 2
     toc-expand: 1
     embed-resources: true
-    code-links:
-      - text: Link to Interactive Quarto version
-        icon: file-code
-        href: https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Chap1/03-Exploratory-Data-Analysis.qmd
-#format:
-#  pdf:
-#    toc: true
-#    toc-location: left
-#    toc-depth: 2
-#    toc-expand: 1
 editor: source
 execute:
   eval: false
@@ -27,10 +17,6 @@ title-block-banner: true
 warning: false
 license: "CC BY-NC-SA"
 ---
-
-
-The Quarto file used to generate the html file can be downloaded by clicking on the Code Links beneath the Table of Contents.
-
 
 ## Additional Reading
 
