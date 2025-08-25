@@ -10,20 +10,14 @@ format:
     toc-depth: 2
     toc-expand: 1
     embed-resources: true
-    code-links:
-      - text: Link to Interactive Quarto version
-        icon: file-code
-        href: https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Chap1/03-Exploratory-Data-Analysis.qmd
 editor: source
 execute:
   eval: false
 title-block-banner: true
-warning: false
+#warning: false
 license: "CC BY-NC-SA"
 ---
 
-
-The Quarto file used to generate the html file can be downloaded by clicking on the Code Links beneath the Table of Contents.
 
 
 ## Additional Reading
@@ -31,15 +25,11 @@ The Quarto file used to generate the html file can be downloaded by clicking on 
 ---
 
 - [Chapter 2 Data Cleaning and Exploration](https://jfrench.github.io/LinearRegression/data-cleaning-and-exploration.html) from *A Progressive Introduction to Linear Models*
-
-- [An Overview of Plotting Data in Base R](https://aspiegler.github.io/Applied-Regression/C-Overview-of-Plots.html) for more details about creating plots in base R.
-
+- [Chapters 9-11 R for Data Science: Visualization](https://r4ds.hadley.nz/layers.html)
+- [An Overview of Plotting Data in R](https://aspiegler.github.io/Applied-Regression/C-Overview-of-Plots.html) for more details about creating plots in base R.
 - The [R Graph Gallery](https://r-graph-gallery.com/) has examples of many other types of graphs.
+- Optional: [Interactive Plots with `plotly`](https://aspiegler.github.io/Data-Wrangling-and-Visualization/11-Interactive-Graphics-with-plotly.html) materials from Math 3376
 
-- [Getting Started with `ggplot2`](https://colab.research.google.com/drive/1pCIpbag7MLvRbpWhGXlfoSvXP6qzaL5M?usp=sharing) and/or [Beyond the Basics of `ggplot2`](https://colab.research.google.com/drive/1Oz8qPf_RX9-q-gZWIdjUfNBF_L-ME8sA?usp=sharing) for more details about creating plots with `ggplot2`.
-
-- [See Math 3382 Materials for EDA with Categorical Data](https://colab.research.google.com/drive/1iWOp-0Zm-Ixo8mpxMXi-gLRwJJzUnvUM?usp=sharing)
-- [See Math 3382 Materials for EDA with Numeric Data](https://colab.research.google.com/drive/1rzKdbH723cZD-OF0kBmDZhkDjEH3LD0f?usp=sharing)
 
 # Loading Required Packages
 
@@ -47,6 +37,7 @@ The Quarto file used to generate the html file can be downloaded by clicking on 
 
 ```{r}
 #| eval: true
+#| message: false
 library(tidyverse)  # load core tidyverse packages
 library(ggthemes)  # additional color palettes for ggplot integration
 library(plotly)  # package for interactive plots
@@ -58,11 +49,43 @@ Recall you only need to install a package with the `install.packages()` function
 :::
 
 
+
+# Exploratory Data Analysis
+
+---
+
+**Exploratory data analysis**, or **EDA** for short, can be thought of as a cycle:
+
+-   Generate questions about our data.
+-   Search for answers by visualizing, transforming, and modeling our data.
+-   Use what we learn to refine your questions and/or generate new questions.
+
+The main goal of EDA is to develop an understanding of your data. When we ask a question, the question focuses our attention on a specific part of the data set and helps us decide which graphs, models, or transformations to make.
+
+-   EDA can be an intricate process that requires developing some keen investigation skills.
+-   EDA can be creating one plot that tells a compelling story about the data.
+-   [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/){target="_blank"} by Roger Peng is a free textbook to help you dig deeper into EDA if interested!
+
+# Tips for Good Graphics
+
+---
+
+Data graphics should be as *informative* as possible.
+
+-   Graphics do *not* need to contain as much *information* as possible.
+-   Make it as easy to understand the information you want to reveal about the data.
+-   Simpler graphics are easier to understand and should be preferred.
+-   Adding complexity to a graphic can sometimes reveal far more about the data than a simple graphic.
+-   Make sure labels and text are large enough to easily read.
+-   Make sure colors are distinguishable and colorblind friendly using the `viridis` color palette.
+
+Complicated graphics may present far more information than we are able to process. You will have to decide what is needed in a graphic to make it as informative as possible.
+
 # Choosing Colors
 
 ---
 
-Choosing a color palette, line style, and/or shapes to represent the attributes with our plots can be very critical. Moreover, being able to choose visual aids that are accessible to indivduals that see colors differently helps make your plots insightful for a general audience.
+Choosing a color palette, line style, and/or shapes to represent the attributes with our plots can be very critical. Moreover, being able to choose visual aids that are accessible to individuals that see colors differently helps make your plots insightful for a general audience.
 
 
 -   The traditional color palettes available in R are `rainbow`, `heat.colors`, `terrain.colors`, `topo.colors`, and `cm.colors`.
@@ -101,38 +124,6 @@ demo.pal(16)
 -   The [`colorspace`](https://cran.r-project.org/web/packages/colorspace/vignettes/colorspace.html) package provides many of the same HCL palettes available through the `hcl.colors` palette, but it also provides convenient functions for accessing this in `ggplot2`.
 
 
-# Exploratory Data Analysis
-
----
-
-<span style="color:dodgerblue">**Exploratory data analysis**</span>, or <span style="color:dodgerblue">**EDA**</span> for short, can be thought of as a cycle:
-
--   Generate questions about our data.
--   Search for answers by visualizing, transforming, and modeling our data.
--   Use what we learn to refine your questions and/or generate new questions.
-
-The main goal of EDA is to develop an understanding of your data. When we ask a question, the question focuses our attention on a specific part of the data set and helps us decide which graphs, models, or transformations to make.
-
--   EDA can be an intricate process that requires developing some keen investigation skills.
--   EDA can be creating one plot that tells a compelling story about the data.
--   [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/){target="_blank"} by Roger Peng is a free textbook to help you dig deeper into EDA if interested!
-
-# Tips for Good Graphics
-
----
-
-Data graphics should be as *informative* as possible.
-
--   Graphics do *not* need to contain as much *information* as possible.
--   Make it as easy to understand the information you want to reveal about the data.
--   Simpler graphics are easier to understand and should be preferred.
--   Adding complexity to a graphic can sometimes reveal far more about the data than a simple graphic.
--   Make sure labels and text are large enough to easily read.
--   Make sure colors are distinguishable and colorblind friendly using the `viridis` color palette.
-
-Complicated graphics may present far more information than we are able to process. You will have to decide what is needed in a graphic to make it as informative as possible.
-
-
 # Hawks Data
 
 ---
@@ -168,8 +159,7 @@ The data frame `hawks`has 908 observations on 19 variables. Some of the variable
 ---
 
 - [See text section 2.3](https://jfrench.github.io/LinearRegression/data-cleaning-and-exploration.html#numerical-summarization-of-data)
-
-- [See Math 3382 Materials](https://colab.research.google.com/drive/1rzKdbH723cZD-OF0kBmDZhkDjEH3LD0f?usp=sharing)
+- [See Statistical Theory Materials](https://aspiegler.github.io/Statistical-Theory/02-EDA-Categorical.html)
 
 
 Numerical exploration of a data set generally consists of computing various relevant statistics for each of the variables in a data set in order to summarize the data.
@@ -180,11 +170,11 @@ Numerical exploration of a data set generally consists of computing various rele
 | median           | `numeric`     | center | `median` |
 | variance         | `numeric`     | spread  | `var`  |
 | standard deviation  | `numeric` | spread  | `sd` |
-| interquartile range  | `numeric`  | spread | `quantile` (modified) |
+| interquartile range  | `numeric`  | spread | `IQR` |
 | quantiles        | `numeric`     | center and spread | `quantile` |
 | correlation      | `numeric`     | similarity | `cor`  |
 | frequency distribution  | `factor` | counts  | `table`|
-| relative frequency distribution | `factor` | proportions | `table` (modified) |
+| relative frequency distribution | `factor` | proportions | `prop.table` |
 
 ## The `summary()` Function
 
@@ -193,6 +183,7 @@ Numerical exploration of a data set generally consists of computing various rele
 The `summary()` function is one of our favorite R commands by now. It provides a numerical summary for a single vector or for all columns of a data frame at once. The `summary()` function gives a different summary depending on the data type. For example, the output for `numeric` `factor`, or `character` variables are totally different.
 
 ```{r}
+#| eval: true
 summary(hawks)
 ```
 
@@ -206,7 +197,7 @@ Numerical exploration of a set of quantitative (`numeric`) values usually focuse
 1.  center
 2.  spread
 3.  quantiles/percentiles
-4.  correlation (bewteen two different variables)
+4.  correlation (between two different variables)
 
 
 ## Question 1
@@ -224,26 +215,12 @@ If you get an error message or output that does not make sense at first, you can
 
 ---
 
-```{r}
-mean(hawks$culmen, na.rm = TRUE)
-```
 
-```{r}
-median(hawks$culmen, na.rm = TRUE)
-```
+<br>  
+<br>  
 
-```{r}
-sd(hawks$culmen, na.rm = TRUE)
-```
-
-
-The average culmen length is $21.8015$ mm. The median culmen length is $25.5$ mm. Thus, half of the hawks in our sample have a culmen length less than $25.5$ mm, and half have a culmen length greater than $25.5$ mm. Since the mean is less than the median, this means the data is skewed to the left (most values are on the right, but a tail of outliers exist on the left). There are some outliers with very small culmen lengths. 
-
-The standard deviation is approximately $7.28$ mm. This roughly means the average distance of each culmen length to the mean culmen length is $7.28$ mm. The previous sentence may not sound to practical. We can informally say "many" of the culmen values are $21.8015$ mm $\pm 7.28$ mm, or "most" are between $21.8015$ mm $\pm 2(7.28)$ mm.
-
-
-::: {.callout-note}
-In the interpretation of the standard deviation, we roughly apply what is often called the 68%-95%-99.5% Rule or the *Empircal Rule* which says if a distribution is normally distributed then: 68% of the data is within $\pm 1$ standard deviation from the mean, 95% of the data is within $\pm 2$ standard deviations from the mean, and 99.5% of the data is within $\pm 3$ standard deviations from the mean. The less normal the data is distributed, the less accurate this rule becomes.
+::: {.callout-hint}
+In the interpretation of the standard deviation, we can roughly apply what is often called the 68%-95%-99.5% Rule or the *Empirical Rule* which says if a distribution is normally distributed then: 68% of the data is within $\pm 1$ standard deviation from the mean, 95% of the data is within $\pm 2$ standard deviations from the mean, and 99.5% of the data is within $\pm 3$ standard deviations from the mean. The less normal the data is distributed, the less accurate this rule becomes.
 :::
 
 
@@ -263,25 +240,8 @@ Comment on how large the sample of immature and the sample of adult hawks are. T
 ---
 
 
-```{r}
-# subsetting the data
-immature <- hawks[hawks$age == "I", ]  # using indexing and logicals
-adult <- filter(hawks, age == "A")  # using dplyr
-#adult <- subset(hawks, age == "I")  # using base::subset
-```
-
-```{r}
-nrow(immature) # number of rows equals data frame is number obs
-length(adult$age)  # length of a vector also gives number obs
-```
-
-
-```{r}
-quantile(immature$culmen, probs = 0.9, na.rm = TRUE)
-quantile(adult$culmen, 0.9, na.rm = TRUE)  # don't need to name probs arg, it is implied
-```
-
-There are a total of 684 immature hawks in the data and 224 adult hawks in the data. 90% of all immature hawks in the sample had a culmen length less than $28.7$ mm. 90% of all adult hawks in the sample had a culmen length less than $29.08$ mm. The 90th percentile for culmen length of adults is slightly ($0.38$ mm) higher compared to immature hawks. Intuitively it makes sense the immature hawks have smaller culmen lengths than adult hawks.
+<br>  
+<br>  
 
 
 ## Question 3
@@ -295,56 +255,9 @@ Find the five number summary for culmen length for the sample of adult hawks and
 
 ---
 
-```{r}
-summary(immature)
-```
 
-
-```{r}
-# returns just the 5 numbers
-# NA's are filtered out by default, yay!
-fivenum(immature$culmen)
-```
-
-- The five number summary for culmen length of the immature hawks is $(8.6, 12.7, 25.7, 27.3, 34.1)$.
-
-25% of all immature hawks in the sample have a culmen length between each pair of successive values in the five number of summary. In other words:
-
-- One-quarter of the immature hawks in the sample have a culmen length between $8.6$ mm and $12.7$ mm.
-- $25\%$ of the immature hawks in the sample have a culmen length between $12.7$ mm and $25.7$ mm.
-- And so on.
-- The middle 50% of the immature hawks in the sample have a culmen length between $12.7$ and $27.3$ mm.
-
-::: {.callout-note}
-The distance between the first and third quartiles, denoted $Q_1$ and $Q_3$ respectively, is called the **interquartile range** or **IQR**. It gives the width of the spread of the middle 50% of values in the data. In R, we can calculate the IQR with `IQR()`.
-:::
-
-```{r}
-# comparing two methods
-# need to specify to remove na
-IQR(immature$culmen, na.rm = TRUE)
-
-quantile(immature$culmen, 0.75, na.rm = TRUE) - # Q3 -
-  quantile(immature$culmen, 0.25, na.rm = TRUE)  # Q1 
-```
-
-
-```{r}
-# includes additional info
-# NA's are also filtered out by default
-summary(adult$culmen)
-```
-
-```{r}
-# finding each value separately
-min(adult$culmen, na.rm = TRUE)  # find minimum value
-quantile(adult$culmen, 0.25, na.rm = TRUE)  # Q1 = 0.25 quantile
-median(adult$culmen, na.rm = TRUE)  # find minimum value
-quantile(adult$culmen, 0.75, na.rm = TRUE)  # Q3 = 0.75 quantile 
-max(adult$culmen, na.rm = TRUE)  # find minimum value
-```
-
-- The five number summary for culmen length of the adult hawks is $(9.3, 12.95, 25.3, 27.5, 39.2)$.
+<br>  
+<br>  
 
 ### Notation and Terminology
 
@@ -370,7 +283,7 @@ $$s = \sqrt{\frac{\sum (x_i - \bar{x})^2}{n-1}}.$$
 
 The correlation between two `numeric` variables quantifies the strength and direction of their linear relationship.
 
-The most common correlation statistic is Pearson's correlation statistic. If $x_1, x_2, \ldots, x_n$ and $y_1, y_2, \ldots, y_n$ are two sets of `numeric` values, then the sample correlation statistic is computed as 
+The most common correlation statistic is Pearson's correlation statistic (or **correlation coefficient**). If $x_1, x_2, \ldots, x_n$ and $y_1, y_2, \ldots, y_n$ are two sets of `numeric` values, then the sample correlation statistic is computed as 
 
 $$r = \frac{1}{n-1}\sum_{i=1}^n\left(\frac{x_i - \bar{x}}{s_x}\right)\left(\frac{y_i - \bar{y}}{s_y}\right),$$
 
@@ -382,6 +295,10 @@ where:
 $r$ must be between -1 and 1.
 
 The `cor` function can be used to compute the sample correlation between two `numeric` variables.
+
+::: {.callout-note}
+The typical convention of using Greek letters for population parameters and Latin letters for sample statistics applies to correlation. Namely we use $r$ for a correlation coefficient of a sample and $\rho$ for a correlation coefficient for population data.
+:::
 
 #### Interpreting the Value of the Correlation Coefficient
 
@@ -400,6 +317,7 @@ In the code below, we compute the sample correlation between the `wing` and `tai
 
 
 ```{r}
+#| eval: true
 # determine whether each variable is numeric
 cor(hawks$wing, hawks$tail, use = "complete.obs")
 ```
@@ -408,8 +326,9 @@ cor(hawks$wing, hawks$tail, use = "complete.obs")
 
 ---
 
-We see there is a positive association between `wing` and `tail` lengths of hawks. This makes sense since we'd expect as a hawk's `wing` length grows, its `tail` length would also tend to grow. The fact that the value is close to 1 means the association should be close to linear.  We expect a plot of the points to be approximately linear and going up with a roughly constant, positive slope.
 
+<br>  
+<br>  
 
 ## Question 5
 
@@ -422,13 +341,9 @@ Insert a code cell below to calculate the correlation between hawk `wing` and th
 
 ---
 
-```{r}
-# determine whether each variable is numeric
-cor(hawks$wing, hawks$year, use = "complete.obs")
-```
 
-The correlation coefficient is $r = -0.204111$. The value is negative which means there is a negative association between the variables. For example, as the time goes on (`year` increases) the `wing` lengths tend to get smaller. The value is close to 0 which there is not a strong linear association. We might expect a plot of the points to be more a cloud of data rather than see a pattern.
-
+<br>  
+<br>  
 
 
 ## Categorical (or Qualitive) Data
@@ -443,6 +358,7 @@ The correlation coefficient is $r = -0.204111$. The value is negative which mean
 Tables of frequencies (or counts) are useful for determining how many observation are in each class of a categorical variable. We can use the `table()` function to get the distribution of frequencies.
 
 ```{r}
+#| eval: true
 # table function returns counts for one variable
 table(hawks$age)  # na values removed by default
 ```
@@ -461,6 +377,7 @@ A **contingency table** (or **two-way table**) gives the number of observations 
 Run the code cell below to generate a two-way that shows the relationship between the `age` and `species` variables. Which species has the most adult hawks? Which species has the most immature hawks?
 
 ```{r}
+#| eval: true
 # table function returns two-way table to compare 2 categorical variables
 table(hawks$age, hawks$species)
 ```
@@ -469,7 +386,10 @@ table(hawks$age, hawks$species)
 
 ---
 
-The red-tailed species has both the most adult hawks (454) and the most immature hawks (123) in the sample.
+
+
+<br>  
+<br>  
 
 
 ### Relative Frequency Tables
@@ -479,18 +399,20 @@ The red-tailed species has both the most adult hawks (454) and the most immature
 A **relative frequency table summarizes** the proportion or percentage of observations with each level of a categorical variable. 
 
 ::: {.callout-note}
-Relative frequencies typically provide more context and are more meaningful when comparing data that is not uniformally distributed. When some classes have a lot of observations and others few, comparing counts can be misleading.
+Relative frequencies typically provide more context and are more meaningful when comparing data that is not uniformly distributed. When some classes have a lot of observations and others few, comparing counts can be misleading.
 :::
 
 One convenient way to construct a relative frequency table is to apply the `prop.table(tbl)` to a table previously stored in `tbl`. From the output of the `prop.table()` function below we see $24.67\%$ of the values in `hawks` are from adults and the other $75.53\%$ of the values are for immature hawks.
 
 
 ```{r}
+#| eval: true
 my_tbl <- table(hawks$age)
 my_tbl
 ```
 
 ```{r}
+#| eval: true
 prop.table(my_tbl)
 ```
 
@@ -502,18 +424,21 @@ prop.table(my_tbl)
 When we apply the `prop.table(two_way_tbl)` function to a two-way table stored in `two_way_tbl`, the output tells us what proportion of all observations in the data frame are both a specified class of one variable and a specified class of a second variable. **By default the proportions are calculated relative to the grand total**. In other words, we divide each of the counts in `two_way_tbl` by the total number of all observations. The resulting table gives the  **joint distribution** for variables `age` and `species`.
 
 ```{r}
+#| eval: true
 # table function returns two-way table to compare 2 categorical variables
 two_way_tbl <- table(hawks$age, hawks$species)
 two_way_tbl
 ```
 
 ```{r}
-# round
+#| eval: true
+# proportions relative to grand total
 prop.table(two_way_tbl) |> 
   round(4)  # pipe output into round function to round to 4 decimal places
 ```
 
 ```{r}
+#| eval: true
 # manually divide each count by total number of observations
 # returns same result
 round(two_way_tbl / nrow(hawks), 4)  
@@ -528,8 +453,9 @@ We can compute the relative frequencies relative to either the row totals or the
   
 
 ```{r}
-# adding option 1
-prop.table(two_way_tbl, 1) |> 
+#| eval: true
+# adding option 1 to prop.table()
+prop.table(two_way_tbl, 1) |>  # proportions are relative to row totals
   round(4)  # round to 4 decimal places
 ```
 
@@ -540,6 +466,7 @@ prop.table(two_way_tbl, 1) |>
   
 
 ```{r}
+#| eval: true
 # adding option 2 using pipe
 table(hawks$age, hawks$species) |>  # first find two-way table (not stored)
   prop.table(2) |>  # then convert to prop relative to col totals
@@ -560,12 +487,11 @@ Based on the output from the three different `prop.table()` (relative to grand t
 
 ---
 
-- If an adult hawk in the sample is randomly selected, it is mostly likely to be a Red-tailed species of hawk. We can see in from the output of `prop.table(two_way_tbl, 1)` that there is a $54.91\%$ chance it is a red-tailed hawk compared to $14.29\%$ (for Cooper's) and $14.29\%$ (for Sharp-shinned).
 
-- If a Cooper's hawk in the sample is randomly selected, it is mostly likely to be an immature hawk. We can see in from the output of `prop.table(two_way_tbl, 2)` that there is a $54.29\%$ chance it is immature compared to a $45.71\%$ chance it is adult.
 
-- Cooper's hawks have the greatest proportion of adults within their sample. We can see in the output from `prop.table(two_way_tbl, 2)` that $45.71\%$ of the Cooper's hawks are adult compared to $21.32\%$ and $26.44\%$ for Red-tailed and Sharp-shinned hawks, respectively.
 
+<br>  
+<br>  
 
 
 # Visual Summaries of Data
@@ -593,7 +519,7 @@ The two most popular packages for producing graphics in R are:
 | side-by-side box plots   | 1 `numeric`, 1 `factor` | bivariate  | `plot(x, y)` or `boxplot(x, y)` | `geom_boxplot`|
 | stacked or grouped bar plot   | 2 `factor` | bivariate  | `boxplot(prop.table(two_way_tbl))` | `geom_boxplot` |
 | grouped scatter plot | 2 `numeric`, 1 `factor` | multivariate | `plot` | `geom_point`  |
-| facetted plots | mixed | multivariate | none | `facet_wrap` or `facet_grid` |
+| faceted plots | mixed | multivariate | none | `facet_wrap` or `facet_grid` |
 | interactive plots | mixed | multivariate | none | `plotly::ggplotly`  |
 
 
@@ -602,7 +528,7 @@ The two most popular packages for producing graphics in R are:
 
 ---
 
-The base R function `plot()` is the most basic function, and it often does a pretty nice job of getting the ball rolling. Based on the data type and number of of the variables included, R will take an educated guess as to what plot might help visualize features of the data.
+The base R function `plot()` is the most generic plotting function, and it often does a pretty nice job of getting the ball rolling. Based on the data type and number of of the variables included, R will take an educated guess as to what plot might help visualize features of the data.
 
 - If `fac` is a `factor`, then `plot(fac)` gives a **bar plot**.
 - If `num` is a `numeric`, then `plot(num)` gives an **index plot** which is often not helpful.
@@ -618,13 +544,17 @@ The base R function `plot()` is the most basic function, and it often does a pre
 Factors such as `species` are plotted using a bar plot which is very reasonable.
 
 ```{r}
+#| eval: true
 # a factor variable results in bar plot
 plot(hawks$species)
 ```
 
-Run `?plot()` to see a list of arguments that can be added to the command. Below I add some common arguments as well as a legend to the plot.
+- Run `?plot()` to see a list of arguments that can be added to the command. Below are some common arguments.
+- A `legend()` can also be added to output of a `plot()`. Options are similar to `plot()`. Run `?legend()` for more info.
+
 
 ```{r}
+#| eval: true
 plot(hawks$species,
      main = "Distribution of Hawk Species",  # main title
      xlab = "Species",  # title on x-axis
@@ -643,11 +573,25 @@ legend(x="topright",  # place legend in top right
 ---
 
 
-Numeric variables such as `culmen` are plotted using an index plot which is typically not very useful. Thus, we typically use other functions to plot one numeric variable in most situations.
+Numeric variables such as `culmen` are plotted using an index plot which is typically not very useful. Thus, we typically use other functions to plot one numeric variable in most situations. 
 
 ```{r}
+#| eval: true
 plot(hawks$culmen)
 ```
+
+## Question 8
+
+---
+
+Even though the index plot generated by `plot()` is not necessarily the best plot to identify key characteristics, can you identify any patterns or properties in the `culmen` measurements? If so, give a possible reason for observing the pattern.
+
+### Solution to Question 8
+
+---
+
+<br>  
+<br>  
 
 
 ### Comparing One Numeric and One Categorical Variable: Side-by-Side Box Plots
@@ -657,7 +601,8 @@ plot(hawks$culmen)
 Entering one categorical (factor) `df$fac` and one quantitative variable `df$num` into the generic `plot(df$fac,  df$num)` results in a side by side box plots. One box plot for each class of the categorical variable. This is a very fine choice by R!
 
 ```{r}
-plot(hawks$species, hawks$wing)
+#| eval: true
+plot(hawks$species, hawks$culmen)
 ```
 
 ::: {.callout-note}
@@ -666,10 +611,11 @@ In the plot below we make use of the topo color palette that is available in `ba
 
 
 ```{r}
-plot(hawks$species, hawks$wing, 
-     main = "Distribution of Wing Lengths by Hawk Species",  # main title
+#| eval: true
+plot(hawks$species, hawks$culmen, 
+     main = "Distribution of Culmen Lengths by Hawk Species",  # main title
      xlab = "Species",  # title on x-axis
-     ylab = "Wing Length (in mm)",  # title on y-axis
+     ylab = "Culmen Length (in mm)",  # title on y-axis
      col = topo.colors(3))  # fill colors
 
 # add a legend to plot
@@ -678,6 +624,19 @@ legend(x="topright",  # place legend in top right
        fill = topo.colors(3))  # use same fill colors
 ```
 
+
+## Question 9
+
+---
+
+Based on the plot generated by the previous code chunk, do you believe there is a relation between `species` and `culmen` length? If so, summarize the relation.
+
+### Solution to Question 9
+
+---
+
+<br>  
+<br>  
 
 ### Comparing Two Numeric Variables: Scatter Plots
 
@@ -691,6 +650,7 @@ legend(x="topright",  # place legend in top right
 - The two vectors must have the same length.
 
 ```{r}
+#| eval: true
 plot(hawks$wing, hawks$tail,
      main = "Association of Wing and Tail Lengths of Hawks",  # main title
      xlab = "Wing Length (in mm)")  # title on x-axis
@@ -704,18 +664,39 @@ We can also adjust the syntax of the `plot()` function to enter the information 
 - The `data` is `hawks`.
 
 ```{r}
+#| eval: true
 # use the syntax boxplot(response ~ predictor, data = df)
 plot(tail ~ wing, data = hawks)
 ```
+
+
+## Question 10
+
+---
+
+Based on the plot generated by the previous code chunk:
+
+- Summarize the general relation between `wing` and `tail` lengths? 
+- Do you believe there may be other variables lurking in background that are also related to `wing` and `tail`?
+- What visual features could we add to the plot to help identify other potential lurking variables?
+
+
+### Solution to Question 10
+
+---
+
+<br>  
+<br>  
 
 ### Comparing Two Categorical Variables: Stacked and Grouped Bar Plots
 
 ---
 
-Entering two categorical (factor) variables into the generic `plot()` function does not work very unfortuntely.
+Entering two categorical (factor) variables into the generic `plot()` function does not work very unfortunately. We can create nice visual displays for comparing two categorical variables with the base R `barplot()` function and using the `ggplot2` package. Both methods are discussed shortly.
 
 
 ```{r}
+#| eval: true
 plot(hawks$species, hawks$age)
 ```
 
@@ -735,7 +716,7 @@ The generic `base` R `plot()` function changes the type of plot based on the dat
 
 ---
 
-We can also convert a frequency table into a barplot using the `barplot(tbl)` function.
+We can also convert a frequency table into a bar plot using the `barplot(tbl)` function. This illustrates the different sizes of the samples.
 
 ::: {.callout-caution}
 The `barplot()` function must take a table as the input and not a vector. Thus, you must first create a frequency table and then input that table into the `barplot()` function.
@@ -743,19 +724,25 @@ The `barplot()` function must take a table as the input and not a vector. Thus, 
 
 
 ```{r}
+#| eval: true
 # composing functions
 barplot(table(hawks$species))
 ```
 
+- The pipe is a nice way to compose operations.
+
 ```{r}
+#| eval: true
 # composing actions with the pipe
 table(hawks$species) |> 
   barplot()
 ```
 
-Run `?barplot()` to see a list of arguments that can be added to the command. Below I add some common arguments as well as a legend to the plot which are exactly the same options as we used with `plot()`.
+- Run `?barplot()` to see a list of arguments that can be added to the command. Below are some common arguments.
+- A `legend()` can also be added to output of a `plot()`. Options are similar to `barplot()`. Run `?legend()` for more info.
 
 ```{r}
+#| eval: true
 # composing actions with the pipe
 table(hawks$species) |> 
   barplot(main = "Distribution of Hawk Species",  # main title
@@ -783,6 +770,7 @@ The generic `plot()` function creates a fine looking bar plot when we enter one 
 
 
 ```{r}
+#| eval: true
 # age on horizontal axis
 # different colors stacked for each species
 table(hawks$species, hawks$age) |>  # create frequency table
@@ -794,6 +782,7 @@ The `hcl.colors` function provides has many additional color palettes. See the a
 
 
 ```{r}
+#| eval: true
 # convert to relative frequencies
 num_species <- nlevels(hawks$species)  # nlevels() counts number of levels of species
 
@@ -803,6 +792,7 @@ table(hawks$species, hawks$age) |>  # species are rows and age is column
 ```
 
 ```{r}
+#| eval: true
 # adding a legend
 #num_species <- nlevels(hawks$species)  # nlevels() counts number of levels of species
 
@@ -815,7 +805,9 @@ legend(x="topleft",  # place legend in top left
        fill = hcl.colors(num_species, palette = "viridis"))  # use same fill colors
 ```
 
+
 ```{r}
+#| eval: true
 #num_species <- nlevels(hawks$species)  # nlevels() counts number of levels of species
 
 table(hawks$species, hawks$age) |> 
@@ -827,7 +819,20 @@ legend(x="topleft",  # place legend in top left
        fill = hcl.colors(num_species, palette = "viridis"))
 ```
 
+::: {.callout-caution}
+In the plot above, the proportions stacked above the immature age group `I` add up to a value greater than 1 which is suspicious for proportions. The command `prop.table(1)` means the proportions are computed relative to the row variable which is species in this case. 
+
+- The first rectangle in purple in the `I` stack has height $0.79$ which means $79\%$ of all Red-tailed hawks in the sample are immature. 
+- Similarly, the green block has height $0.54$ which means $54\%$ of Cooper's Hawks are immature.
+- The yellow block has height $0.74$, so $74\%$ of Sharp-shinned hawks are immature.
+- Adding the values together gives a total height of approximately $2.07$
+:::
+
+The stacked relative frequency bar plot below is likely a more helpful display since all proportions are relative to each class plotted across the horizontal axis. Thus, the each stack has a height that adds up to one.
+
+
 ```{r}
+#| eval: true
 table(hawks$species, hawks$age) |> 
   prop.table(2) |>  # prop relative to column (age) totals
   barplot(col = hcl.colors(num_species, palette = "viridis"))  # change color of bars 
@@ -849,7 +854,7 @@ The generic `base` R `plot()` function will create an index plot with one numeri
 
 A  **histogram** is special bar chart we use to display the distribution of values for a quantitative variable.
 
--   We first group the values into different ranges of values called <font color="dodgerblue">**bins** </font> of equal width.
+-   We first group the values into different ranges of values called **bins** of equal width.
     -   This essentially converts the quantitative variable to an ordinal categorical variable with with each bin representing a different level.
 -   The height of the bars over each bin range is the number of values (or frequency) in each bin range.
 -   **By default, the counts are right closed.** For example, an HDI value of 0.5 knots would be counted in the bin range 0.4-0.5 and not counted in the bin range 0.5-0.6.
@@ -858,10 +863,12 @@ A  **histogram** is special bar chart we use to display the distribution of valu
 
 
 ```{r}
+#| eval: true
 hist(hawks$culmen)
 ```
 
 ```{r}
+#| eval: true
 hist(hawks$culmen,  # vector of values to plot
      breaks = 15,  # number of bin ranges to use
      xlab = "Culmen Length (in mm)",   # x-axis label
@@ -874,6 +881,7 @@ hist(hawks$culmen,  # vector of values to plot
 
 
 ```{r}
+#| eval: true
 # a relative frequency histogram
 hist(hawks$culmen,
      freq = FALSE,  # relative frequency hist
@@ -892,32 +900,26 @@ hist(hawks$culmen,
 A **density plot** is similar to a smoothed relative frequency histogram.
 
 - The total area under the smoothed curve must equal 1.
-- We typically read density plots by looking at what proportion of the total **area** is above sits abovea given range of values.
+- We typically read density plots by approximating the proportion of the total area that lies above a given range of values.
 - We need to be careful how we interpret the height, so most people don't bother!
+- On a more surface level, we can identify what seems to be a **bimodal** pattern in the distribution which might be attributed to other **lurking variables**.
 
 We combine the `plot` and `density` functions to construct a density plot using `base` R.
 
-## Question
-
----
-
-Create and interpret this graph
 
 ```{r}
+#| eval: true
 plot(density(hawks$culmen, na.rm = TRUE),
-     col = "dodgerblue")
+     col = "blue")
 ```
 
-### Solution to Question
-
----
 
 
 #### Box Plots
 
 ---
 
-Box plots are another common and useful way to visually represent numeric data and identify patterna. They are particularly useful for identifying outliers and skewness. However, we do lose detail and information (compared to histograms). 
+Box plots are another common and useful way to visually represent numeric data and identify . They are particularly useful for identifying outliers and skewness. However, we do lose detail and information (compared to histograms). 
 
 If we align the box plot horizontally:
 
@@ -931,22 +933,13 @@ If we align the box plot horizontally:
 
 The `boxplot(x)` function is the easiest approach for producing a single box plot using `base` R.
 
-## Question
-
----
-
-Construct and then interpret the box plot below.
 
 ```{r}
+#| eval: true
 boxplot(hawks$culmen, 
         main = "Distribution of Culmen Length for Hawks",
         horizontal = TRUE)
 ```
-
-
-### Solution to Question
-
----
 
 
 
@@ -971,11 +964,12 @@ boxplot(hawks$species, hawks$wing)
 
 We use similar syntax as we used when creating a scatter plot with the generic `plot()` function, namely `boxplot(response ~ predictor, data = df)`. Notice first we enter the response variable which is a `numeric` plotted on the vertical axis. Then after the `~` we enter the the predictor variable which is a `factor` plotted separately across the on the horizontal axis. In this example:
 
-- The reponse variable is the `numeric` variable `wing`.
+- The response variable is the `numeric` variable `wing`.
 - The predictor variable is the `factor` variable `species`.
 - The `data` is in `hawks`.
 
 ```{r}
+#| eval: true
 # use the syntax boxplot(response ~ predictor, data = df)
 boxplot(wing ~ species, 
         data = hawks, 
@@ -991,9 +985,8 @@ boxplot(wing ~ species,
 Thus far, we have created some perfectly fine looking visualizations in base R using function such as `plot()`, `hist()`, `boxplot()`, and `barplot()`. There are other plotting functions and packages in R that can be used to generate similar and additional plots.
 
 
-Next we discuss how to perform basic data visualization use an R package called <font color="dodgerblue">**ggplot2**</font> (Wickham 2016; Wickham et al. 2023) which is perhaps the most powerful and intuitive package for producing data visualizations. `ggplot2` is different from most other graphical packages since it has a natural underlying grammar. In fact, that is what the `gg` in `ggplot2` stands for, namely *Grammar of Graphics*.  `ggplot2` is perhaps the most popular and powerful tool for constructing statistical graphics because it is so flexible and it has such an elegant framework.
+Next we discuss how to perform basic data visualization use an R package called **ggplot2** (Wickham 2016; Wickham et al. 2023) which is perhaps the most powerful and intuitive package for producing data visualizations. `ggplot2` is different from most other graphical packages since it has a natural underlying grammar. In fact, that is what the `gg` in `ggplot2` stands for, namely *Grammar of Graphics*.  `ggplot2` is perhaps the most popular and powerful tool for constructing statistical graphics because it is so flexible and it has such an elegant framework.
 
-![The ggplot2 logo](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Ggplot2_hex_logo.svg/208px-Ggplot2_hex_logo.svg.png)
 
 
 ## The Grammar of Graphics
@@ -1020,11 +1013,13 @@ There are 4 main components needed to produce a graphic using
 
 In [*R for Data Science*](https://r4ds.hadley.nz/data-visualize), Wickham and Grolemund (2023) provide the following template for creating graphics using `ggplot2`:
 
-    ggplot(
-      data = <DATA>,
-      mapping = aes(<MAPPINGS>)
-      ) +
-      <GEOM_FUNCTION>()
+```
+ggplot(
+  data = <DATA>,
+  mapping = aes(<MAPPINGS>)
+  ) +
+  <GEOM_FUNCTION>()
+```
 
 `<DATA>`, `<MAPPINGS>`, and `<GEOM_FUNCTION>` are placeholders that you
 replace with the data frame, aesthetic mappings, and geometric object, respectively, you want to use in your specific plot.
@@ -1032,6 +1027,7 @@ replace with the data frame, aesthetic mappings, and geometric object, respectiv
 <br>
 
 Sources:
+
 - Wilkinson L (2005). *The grammar of graphics*. Statistics and computing, 2nd edn. Springer, New York
 - Wickham (2010). *A layered grammar of graphics*. J Comput Graph Stat 19(1):3-28
 
@@ -1050,6 +1046,7 @@ Here is an explanation of the template above:
 
 
 ```{r}
+#| eval: true
 # passing data into a ggplot to create an empty graph
 ggplot(data = hawks)
 ```
@@ -1060,6 +1057,7 @@ ggplot(data = hawks)
 
 
 ```{r}
+#| eval: true
 # the x and y arguments of aes() specify
 # which variables to map to the x and y axes.
 ggplot(
@@ -1071,11 +1069,12 @@ ggplot(
 4.  The `+` symbol is used to add a layer to your graphic.
     -   If your code spans multiple lines, then you need to make sure all lines but the last end with the `+` operator to stack the layers properly.
 
-5.  The `<GEOM_FUNCTION>` indicates the geometric object you want to use in the plot. See below.
+5.  The `<GEOM_FUNCTION>` indicates the geometric object you want to use in the plot.
     -   One of the reasons `ggplot2` is so powerful is that you can use different mappings for different geometric objects.
 
 
 ```{r}
+#| eval: true
 # geom_point() adds a layer of points to your plot which creates a scatter plot
 ggplot(
   data = hawks,
@@ -1087,18 +1086,40 @@ ggplot(
 We typically truncate the code by not explicitly stating the argument names.
 
 ```{r}
+#| eval: true
 ggplot(hawks, aes(x = wing, y = tail)) +  # enter data and mappings
-  geom_point(na.rm = TRUE)  # add geom layer
+  geom_point()  # add geom layer
 ```
+
+::: {.callout-warning}
+Notice a warning about a row with missing values. This is a warning of a potential issue about the data we may want to investigate further. This is not an error message. The code ran perfectly fine and generated the intended plot. If the warnings distract you, then we can add an argument `na.rm = TRUE` in the `geom` layer or we can disable the warning using the code chunk option `#| warning: false`. Both are illustrated below. So as not to complicate the code, we tend to use the code chunk option `#| warning: false` to hide the warning rather than add the `na.rm = TRUE` argument to the code.
+:::
+
+```{r}
+#| eval: true
+ggplot(hawks, aes(x = wing, y = tail)) +  
+  geom_point(na.rm = TRUE)  # use argument to remove observations before plotting
+```
+
+```{r}
+#| eval: true
+#| warning: false 
+# the code chunk option `#| warning: false` disables warning
+ggplot(hawks, aes(x = wing, y = tail)) +  
+  geom_point()  # no longer need to use na.rm = TRUE
+```
+
 
 6.  We can account for additional potential lurking variables such as `age` or `species` by layering additional **aesthetics** onto our plot and see if they reveal any additional patterns or insight.
 
 ```{r}
+#| eval: true
+#| warning: false
 ggplot(hawks, aes(x = wing, 
                   y = tail, 
                   color = species,  # include color aesthetic
                   shape = age)) +  # include shape aesthetic
-  geom_point(na.rm = TRUE)  # add geom layer and avoid warning message about NA
+  geom_point()  # add geom layer
 ```
 
 7. Customize additional formatting layers.
@@ -1110,16 +1131,21 @@ ggplot(hawks, aes(x = wing,
 Below is an example of how we can store a foundation and then add layers to customize the plot.
 
 ```{r}
-# store previous plot to gghawk
+#| eval: true
+#| warning: false
+# no output generated since we have
+# stored previous plot to gghawk
 gghawk <- ggplot(hawks, aes(x = wing, 
                             y = tail, 
                             color = species,  # include color aesthetic
                             shape = age)) +  # include shape aesthetic
-  geom_point(na.rm = TRUE)  # add geom layer and avoid warning message about NA
+  geom_point()  # add geom layer
 ```
 
 
 ```{r}
+#| eval: true
+#| warning: false
 gghawk + 
   scale_x_continuous(breaks = seq(0, 500, by = 50)) +  # customize scale on x-axis
   scale_y_continuous(breaks = seq(0, 300, by = 50)) +  # customize scale on y-axis
@@ -1127,8 +1153,8 @@ gghawk +
     title = "Association Between Wing and Tail Measurements",
     subtitle = "Hawks",
     x = "Wing Length (in mm)",
-    x = "Tail Length (in mm)") + 
-  theme_light()  # use custom theme
+    y = "Tail Length (in mm)") + 
+  theme_light()  # use a custom theme
 ```
 ::: {.callout-note}
 A `theme` is a customized style that changes the overall appearance of our graphic in non-data related ways.`ggplot2` provides a number of built-in themes. Some of the built-in themes include:
@@ -1191,40 +1217,52 @@ common ones that show up in many geoms are provided below.
 
 ---
 
-Use the `geom_bar()` to construct bar plots.
+- Use the `geom_bar()` to construct bar plots.
+- No variable is mapped to the `fill` aesthetic in the `geom_bar()`. 
+  - Instead we map a fixed color to the `fill` aesthetic.
+  - This changes the appearance of the plot.
+  - But no additional features of the data are highlighted.
 
-## Question 3
-
----
-
-Construct a bar plot of the `species` variable in the `hawks` data frame.
-
-### Solution to Question 3
-
----
 
 ```{r}
-ggplot(hawks, aes(x = species)) +
-  geom_bar(fill = "steelblue")
+#| eval: true
+ggplot(hawks, aes(x = species)) +  # plot factor variable species on x
+  geom_bar(fill = "steelblue")  # use the same fill color for all bars
 ```
 
+- If we map `species` to the `fill` aesthetic, then each bar is plotted in a different color.
+  - That might look nice? Maybe not your style?
+  - Since the same variable is mapped to both aesthetics, we gain no new information from the colors.
+
+
 ```{r}
-ggplot(hawks, aes(x = species, fill = species)) +
+#| eval: true
+ggplot(hawks, aes(x = species, fill = species)) +  # use diff color for diff species
   geom_bar()
 ```
 
 
+- If we map a different factor variable, such as `age` to the `fill` aesthetic, then we do gain additional information.
+- The result is a stacked frequency bar chart.
+
+
 ```{r}
-ggplot(hawks, aes(x = species, fill = age)) +
+#| eval: true
+# mapping a second variable to a second aesthetic conveys additional info
+ggplot(hawks, aes(x = species, fill = age)) + 
   geom_bar()
 ```
 
 ```{r}
+#| eval: true
+# swapping variables and aesthetics results in different plot
 ggplot(hawks, aes(x = age, fill = species)) +
   geom_bar()
 ```
 
 ```{r}
+#| eval: true
+# we add additional layers for improved layout
 ggplot(hawks, aes(x = age, fill = species)) +
   geom_bar() +
   labs(
@@ -1239,21 +1277,27 @@ ggplot(hawks, aes(x = age, fill = species)) +
 
 ---
 
-Use `geom_histogram()` to construct a histogram.
+Use `geom_histogram()` to construct a histogram for a `numeric` variable that is mapped to the `x` aesthetic.
 
 ```{r}
+#| eval: true
+#| warning: false
 ggplot(hawks, aes(x = culmen)) +
   geom_histogram()
 ```
 
+- We can add additional options to customize `geom_histogram()`.
+- Run `?geom_histogram` to access help documentation to view other available arguments.
+
 
 ```{r}
+#| eval: true
+#| warning: false
 ggplot(hawks, aes(x = culmen)) +
   geom_histogram(
-    na.rm = TRUE,  # removes missing values when creating histogram
     binwidth = 2,  # sets width of each bin to 2 mm
     fill = "steelblue",  # set fill color to steelblue
-    color = "black"  # set ouline color to black
+    color = "black"  # set outline color to black
     )
 ```
 
@@ -1262,73 +1306,93 @@ ggplot(hawks, aes(x = culmen)) +
 
 ---
 
+Use `geom_density()` to construct a density plot for a `numeric` variable that is mapped to the `x` aesthetic.
+
 ```{r}
+#| eval: true
+#| warning: false
 ggplot(hawks, aes(x = culmen)) +
-  geom_density(na.rm = TRUE)
+  geom_density()
 ```
 
+- We can map other variables to other aesthetics to search for other lurking relations.
+
 ```{r}
+#| eval: true
+#| warning: false
 ggplot(hawks, aes(x = culmen, color = species)) +
-  geom_density(na.rm = TRUE)
+  geom_density()
 ```
 
+- Since some people may not perceive colors as well as others, we can map a single variable to multiple aesthetics to communicate a relation using multiple modes such as `color` and `linetype`.
 
 ```{r}
+#| eval: true
+#| warning: false
 ggplot(hawks, aes(x = culmen, 
                   color = species,
                   linetype = species)) +
-  geom_density(na.rm = TRUE)
+  geom_density()
 ```
 
+- Some aesthetics may work better than others. Beauty is in the eye of the beholder. Express yourself through the language of `ggplot2` aesthetics.
+
 ```{r}
+#| eval: true
+#| warning: false
 ggplot(hawks, aes(x = culmen, 
                   fill = species)) +
-  geom_density(na.rm = TRUE)
+  geom_density()
 ```
 
 ### Adjusting Transparency with `alpha`
 
 ---
 
-To address the masking issue, we can control the transparency of the
-colors using the `alpha` aesthetic. This value, between 0 and 1,
-controls how transparent the objects are.
+To address masking issues, we can control the transparency of the colors using the `alpha` aesthetic. 
 
 - `0` means completely transparent (not visible),
 - `1` means completely opaque (cannot see anything behind it).
 
-In the code cell below we set `alpha = 0.3`. Notice that we specify this in the `geom` and *outside the aesthetic mapping* and in the `geom`.
+In the code cell below we set `alpha = 0.3`. Notice that we specify this in the `geom` layer, not in the  aesthetic mapping, since we want to apply the same value to all density plots.
 
 ```{r}
+#| eval: true
+#| warning: false
 ggplot(hawks, aes(x = culmen, 
                   fill = species)) +
-  geom_density(alpha = 0.3, na.rm = TRUE)
+  geom_density(alpha = 0.3)  # add alpha aesthetic here
 ```
 
 ## Box Plots with `geom_boxplot`
 
 ---
 
-- Use `geom_boxplot()` to construct a bo xplot.
+Use `geom_boxplot()` to construct a box plot of a `numeric` variable mapped to the `x` aesthetic.
 
 
 ```{r}
+#| eval: true
+#| warning: false
 ggplot(hawks, aes(x = culmen)) +
-  geom_boxplot(na.rm = TRUE)
+  geom_boxplot()
 ```
 
+- We can always add additional layers for formatting and layout after working out how to convey important features and patterns in the data.
+
 ```{r}
+#| eval: true
+#| warning: false
 ggplot(hawks, aes(x = culmen)) +
-  geom_boxplot(fill = "steelblue", na.rm = TRUE) +  # set fill color to steelblue
+  geom_boxplot(fill = "steelblue") +  # set fill color to steelblue
   scale_x_continuous(breaks = fivenum(hawks$culmen)) +  # customize ticks on x-axis
   labs(
-    title = "Distribution of Hawk Culmen Lengths",  # add main title
-    x = "Culmen Length (in mm)",  # add label on each axis
+    title = "Distribution of Hawk Culmen Lengths", 
+    x = "Culmen Length (in mm)",  
   ) +
-  theme_bw() +  # remove gray panel in background
+  theme_bw() +  # use custom theme
   theme(
-    axis.ticks.y=element_blank(),
-    axis.text.y=element_blank(),
+    axis.ticks.y=element_blank(),  # turn off y-axis ticks
     panel.grid.minor = element_blank(),  # remove minor gridlines
     panel.grid.major = element_blank())  # remove major gridlines
 ```
@@ -1337,29 +1401,30 @@ ggplot(hawks, aes(x = culmen)) +
 
 ---
 
-We can create side by side boxplots by simply adding a categorical variable such as `species` to the opposite axis as the one the numeric variable is mapped to. In additiona, a `fill` color to the boxplots might be a more visually appealing graphic.
+We can create side by side box plots by simply adding a categorical variable such as `species` to the opposite axis as the one the numeric variable is mapped to. In addition, a `fill` color to the box plots might be a more visually appealing graphic.
 
 
 ```{r}
+#| eval: true
+#| warning: false
 ggplot(hawks, aes(x = species, y = culmen, fill = species)) +
-  geom_boxplot(na.rm = TRUE) +
-  theme(legend.position = "none")
+  geom_boxplot() +
+  theme(legend.position = "none")  # legend adds no new info in this case 
 ```
 
 ## Violin Plots with `geom_violin`
 
 ---
 
-A **violin plot** blends a box plot and a density plot. A violin plot unites a density with its mirror image and then displays the unified object like a box plot.
+A **violin plot** blends a box plot and a density plot. A violin plot unites a density with its mirror image and then displays the unified object like a box plot. Use `geom_violin()` to construct a violin plot for a `numeric` variable.
 
-- Use `geom_violin()` to construct a boxplot.
-- A violin plot is used to visually summarize a numeric variable.
 
 ```{r}
+#| eval: true
 #| warning: false
 ggplot(hawks, aes(x = species, y = culmen, fill = species)) +
   geom_violin() +
-  theme(legend.position = "none")
+  theme(legend.position = "none")  # legend adds no new info in this case 
 ```
 
 
@@ -1385,13 +1450,21 @@ There are many different models we can choose for the smoothing `method`. `ggplo
 If we do not know what these are but think they sound fancy, we should not add them to our plot. If we do not understand what we are adding to our plot, then it is not going to help us understand the data! Run the code cell below to open the help documentation for `geom_smooth()` for further information.
 
 ```{r}
+#| eval: true
 #| warning: false
-#| message: false
 ggplot(hawks, aes(x = tail, y = wing, color = species, shape = species)) +
   geom_point(size = 2) +
   geom_smooth(method = "lm")
 ```
 
+```{r}
+#| eval: true
+#| warning: false
+# turn off conf int band with se = FALSE argument
+ggplot(hawks, aes(x = tail, y = wing, color = species, shape = species)) +
+  geom_point(size = 2) +
+  geom_smooth(method = "lm", se = FALSE)
+```
 
 ## Adjusting Color Palette for Colorblind-Friendly Plots
 
@@ -1405,8 +1478,8 @@ If you have not already install the `ggthemes` package, you will need to first r
 
 
 ```{r}
+#| eval: true
 #| warning: false
-#| message: false
 #library(ggthemes)  # loaded in first code cell
 ggplot(hawks, aes(x = tail, y = wing, color = species, shape = species)) +
   geom_point(size = 2) +
@@ -1427,12 +1500,12 @@ In `ggplot2`, there are two ways to map a variable to an aesthetic:
 
 In the plot above, we applied a global aesthetic mapping to the `species` variable using the `color` aesthetic to obtain three separate linear models for each of the three different species, resulting in a more complete picture.
 
-In the code cell below, we use a local aesthetic mapping to produce a simpler version of the previous plot. This only adds a single line across all groups, which does not explain the relationship between body mass and bill length as well since it does not account for the counfounding variable `species`.
+In the code cell below, we use a local aesthetic mapping to produce a simpler version of the previous plot. This only adds a single line across all groups, which does not explain the relationship between body mass and bill length as well since it does not account for the confounding variable `species`.
 
 
 ```{r}
+#| eval: true
 #| warning: false
-#| message: false
 ggplot(hawks, aes(x = tail, y = wing)) +
   geom_point(aes(color = species, shape = species), size = 2) +
   geom_smooth(method = "lm") + 
@@ -1448,9 +1521,9 @@ ggplot(hawks, aes(x = tail, y = wing)) +
 
 There are two functions for creating faceted graphics in `ggplot2`:
 
--   `facet_wrap` facets the plots based on a single `factor` variable. The panels are wrapped around the plotting window.
-  -   Wrapped is typically the more useful type of faceting.
--   `facet_grid` forms a matrix of panels based on row and column faceting variables.
+- `facet_wrap` facets the plots based on a single `factor` variable. The panels are wrapped around the plotting window.
+  - Wrapped is typically the more useful type of faceting.
+- `facet_grid` forms a matrix of panels based on row and column faceting variables.
 
 ### Wrapped Faceting
 
@@ -1459,6 +1532,7 @@ There are two functions for creating faceted graphics in `ggplot2`:
 In the plot below, we facet scatter plots of `wing` versus `tail` by `species`, and in addition we change the color of points to indicate the age group.
 
 ```{r}
+#| eval: true
 #| warning: false
 ggplot(hawks, aes(x = wing, y = tail, color = age)) +
   geom_point() +
@@ -1474,48 +1548,132 @@ ggplot(hawks, aes(x = wing, y = tail, color = age)) +
 We now explore the `facet_grid` function to facet by the `factor` variables `species` and `age`.  
 
 ```{r}
+#| eval: true
 #| warning: false
 ggplot(hawks, aes(x = wing, y = tail)) +
   geom_point() +
   facet_grid(species ~ age)
 ```
 
+
+# Practice
+
+---
+
+The `dplyr` package contains a data set called `storms` that contains 19,537 observations and 13 variables from storms that have occurred in the North Atlantic from 1975-2022. Run `?storms` from the console below to open up documentation to learn more about the data stored in `storms`. In particular, make sure you understand what the variables in the data set are measuring and if there are any data cleaning issues.
+
+```{r}
+#| eval: true
+summary(storms)
+```
+
+
+## Question 11
+
+---
+
+Clean up any issues you see with the data.
+
+### Solution to Question 11
+
+---
+
+
+<br>  
+<br>  
+
+## Question 12
+
+---
+
+Create one univariate plot for a `numeric` variable in `storms` using any method you prefer.
+
+
+### Solution to Question 12
+
+---
+
+
+
+<br>  
+<br>  
+
+
+## Question 13
+
+---
+
+Create one univariate plot for a categorical variable in `storms` using any method you prefer.
+
+
+### Solution to Question 13
+
+---
+
+
+
+<br>  
+<br> 
+
+
+## Question 14
+
+---
+
+Create a scatter plot to see whether there is a relation between two `numeric` variables in `storms`.
+
+
+### Solution to Question 14
+
+---
+
+
+
+<br>  
+<br> 
+
+
+## Question 15
+
+---
+
+Create a side-by-side box plots or violin plots to compare the distribution of a `numeric` variable for different levels of a categorical variable in `storms`.
+
+
+### Solution to Question 15
+
+---
+
+
+
+<br>  
+<br> 
+
+
 # Interactive Plots with `plotly`
 
 ---
 
-Interactive graphics are visual displays that dynamically provide information to users based on the user interacting with the graphic.
-
-The best packages for creating interactive graphics in R are:
+Interactive graphics are visual displays that dynamically provide information to users based on the user interacting with the graphic. Some of the best packages for creating interactive graphics in R are:
 
 -   [`plotly`](https://plotly.com/): provides functions to make `ggplot2` graphics interactive and a custom interface to the JavaScript library `plotly.js` inspired by the grammar of graphics. This is perhaps the best known interactive visualization library.
 -   [`ggiraph`](https://davidgohel.github.io/ggiraph/): creates interactive `ggplot2` graphics using [`htmlwidgets`](https://cran.r-project.org/web/packages/rgl/index.html).
 -   [`rgl`](https://cran.r-project.org/web/packages/rgl/index.html): provides functions for 3D interactive graphics using OpenGL or to various standard 3D file formats
 -   [`shiny`](https://shiny.posit.co/): a package for creating interactive web apps.
 
-As stated on the `plotly` website (<https://plotly.com/r/getting-started/>):
-
-> plotly is an R package for creating interactive web-based graphs via the open source JavaScript graphing library plotly.js.
-
-It can be used to add interactivity to plots created with `ggplot2` or create interactive plots on its own.
-Thus, the two approaches for creating interactive graphics with `plotly` are:
-
-1.  Create a plot using `ggplot2` and use the `ggplotly()` function from the `plotly` package to make the graphic interactive.
-2.  Create an interactive plot with the `plot_ly()` function from `plotly` (and not `ggplot2`).
-
-The easiest way to create interactive graphics is to:
+If we are already familiar with `ggplot2`, then `plotly` is super convenient. The easiest way to create interactive graphics with `ggplot2` and `plotly` is to:
 
 1.  Create a plot using `ggplot2`.
-2.  Use the `ggplotly` function from the `plotly` package to make the graphic interactive.
+2.  Use the `ggplotly()` function from the `plotly` package to make the graphic interactive.
 
-The advantage of this approach is that it builds off our prior knowledge of working with with `ggplot2`. The disadvantage of this approach is that it may not give us the desired control over the aspects of the graphic that are interactive. Since we just discussed how to created plots with `ggplot2`, we will only use the first method outlined above, namely we'll use the `ggplotly()` function.
+That's it. We now can make just about any `ggplot2` plot interactive.
 
 ::: {.callout-warning}
 If you have not already install the `plotly` package, you will need to first run the command `install.packages("plotly")` from the console below.
 :::
 
 
-## Interactice Bar Plots
+## Interactive Bar Plots
 
 ---
 
@@ -1524,29 +1682,36 @@ If you have not already install the `plotly` package, you will need to first run
 2. Use the `ggplotly()` function to convert the static `ggplot` to an interactive plot
 
 
+::: {.callout-warning}
+If you have not already install the `plotly` package, you will need to first run the command `install.packages("plotly")` from the console below. The `plotly` package is loaded in the first code cell of this document. If you have not run that code cell, be sure to run the command `library(plotly)` to load the package before running the code cell below.
+:::
+
 ```{r}
-# bar plot of penguin species
+#| eval: true
+# first create and store ggplot bar plot
 #library(plotly)
-ggbar <-
-  ggplot(hawks, aes(x = species)) +
+ggbar <- ggplot(hawks, aes(x = species)) +
   geom_bar()
 
-# make bar plot interactive
+# then input into ggplotly to make it interactive
 ggplotly(ggbar)
 ```
 
 
-## Interactice Histograms
+
+## Interactive Histograms
 
 ---
 
+First create a histogram with `geom_histogram()`. Then input into `ggplotly()`. Scroll around the plot and use the tool bar on top to interact with the plot.
+
+
 ```{r}
+#| eval: true
 #| warning: false
-gghist <-
-  ggplot(hawks, aes(x = culmen)) +
+gghist <- ggplot(hawks, aes(x = culmen)) +
   geom_histogram(bins = 20)
 
-# create an interactive plot using ggplotly()
 ggplotly(gghist)
 ```
 
@@ -1555,20 +1720,26 @@ ggplotly(gghist)
 
 ---
 
+First create a density plot with `geom_density()`. Then input into `ggplotly()`. Scroll around the plot and use the tool bar on top to interact with the plot.
+
 ```{r}
+#| eval: true
 #| warning: false
-ggdens <-
-  ggplot(hawks, aes(x = culmen, fill = species)) +
+ggdens <- ggplot(hawks, aes(x = culmen, fill = species)) +
   geom_density(alpha = 0.3)
+
 ggplotly(ggdens)
 ```
 
 
-## Interactice Box Plots
+## Interactive Box Plots
 
 ---
 
+First create a box plot with `geom_boxplot()`. Then input into `ggplotly()`. Scroll around the plot and use the tool bar on top to interact with the plot.
+
 ```{r}
+#| eval: true
 #| warning: false
 ggbox <- ggplot(hawks, aes(x = species, y = culmen)) +
   geom_boxplot()
@@ -1579,7 +1750,10 @@ ggplotly(ggbox)
 
 ---
 
+First create a scatter plot with `geom_point()`. Then input into `ggplotly()`. Scroll around the plot and use the tool bar on top to interact with the plot.
+
 ```{r}
+#| eval: true
 ggscatter <-
   ggplot(hawks, 
          aes(x = wing,
@@ -1595,6 +1769,7 @@ Notice that `species` is indicated twice when we hover over a point.
 We can correct this behavior by using the `tooltip` argument to specify the attributes (`x`, `y`, `color`, etc.) we want to display when our mouse hovers over a point.
 
 ```{r}
+#| eval: true
 # restrict attributes displayed from hover
 ggplotly(ggscatter,
          tooltip = c("shape", "x", "y"))
@@ -1602,7 +1777,7 @@ ggplotly(ggscatter,
 
 ## Adding Smooths to an Interactive Scatter Plot Using `ggplot2` and `ggplotly()`
 
-------------------------------------------------------------------------
+---
 
 In the code below, we:
 
@@ -1613,14 +1788,13 @@ In the code below, we:
 The interactive graphic indicates the `species`, `wing`, and `tail` of each point, points on the .
 
 ```{r}
+#| eval: true
 #| warning: false
 #| message: false
-ggsmooth <- 
-  ggplot(hawks, 
-         aes(x = wing,
-             y = tail,
-             color = species,
-             shape = species)) +
+ggsmooth <- ggplot(hawks, aes(x = wing,
+                              y = tail,
+                              color = species,
+                              shape = species)) +
   geom_point() +
   geom_smooth(method = "lm")
 
@@ -1630,7 +1804,7 @@ ggplotly(ggsmooth)
 
 # Appendix: Color Palettes Available with `base` R
 
-------------------------------------------------------------------------
+---
 
 ```{r}
 #| echo: false
@@ -1662,7 +1836,7 @@ demo.pal(16)
 
 # Appendix: Color Swatches for HCL Palettes
 
-------------------------------------------------------------------------
+---
 
 ```{r}
 #| echo: false
