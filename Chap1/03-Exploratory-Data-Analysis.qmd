@@ -699,7 +699,7 @@ HDI values are standardized scores from 0 (poor HDI) to 1 (perfect HDI). Data do
 
 ---
 
-`Electricity_Use.csv` is a comma-separate file that contains the electricity use per capita in kilowatt-hours per capita (kWh per capita) for all countries in the world (for which there is data) over the years 1960-2023 (though most countries last reported data in 2014). The data is from the [World Bank Databank](https://data.worldbank.org/). Data downloaded 3/8/2025 from <https://data.worldbank.org/indicator/EG.USE.ELEC.KH.PC/countries>.</span>
+`Electricity_Use.csv` is a comma-separate file that contains the electricity use per capita in kilowatt-hours per capita (kWh per capita) for all countries in the world (for which there is data) over the years 1960-2023 (though most countries last reported data in 2014). The data is from the [World Bank Databank](https://data.worldbank.org/). Data downloaded 3/8/2025 from <https://data.worldbank.org/indicator/EG.USE.ELEC.KH.PC/countries>.
 
 
 
