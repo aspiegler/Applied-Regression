@@ -1,0 +1,1111 @@
+---
+title: "Module 3: Exploratory Data Analysis"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+#format:
+#  pdf:
+#    toc: true
+#    toc-location: left
+#    toc-depth: 2
+#    toc-expand: 1
+editor: source
+#execute:
+#  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+## Additional Reading
+
+---
+
+- [Chapter 2 Data Cleaning and Exploration](https://jfrench.github.io/LinearRegression/data-cleaning-and-exploration.html) from *A Progressive Introduction to Linear Models*
+- [Chapter 3 R for Data Science: Data Transformation](https://r4ds.hadley.nz/data-transform.html)
+- Optional: [Chapter 5 R for Data Science: Data Tidying](https://r4ds.hadley.nz/data-tidy.html)
+
+
+# Loading Required Packages
+
+---
+
+```{r}
+# load core tidyverse packages
+library(tidyverse)
+library(janitor)
+```
+
+## `tidyverse` Packages
+
+---
+
+![The tidyverse logos](https://raw.githubusercontent.com/CU-Denver-MathStats-OER/Data-Wrangling-and-Visualization/main/Images/tidyverse.png)
+
+The [`tidyverse`](https://www.tidyverse.org/) is a [collection of packages](https://www.tidyverse.org/packages/) by [Hadley Wickham](https://blog.revolutionanalytics.com/2016/09/tidyverse.html) that "share an underlying design philosophy, grammar, and data structures" of tidy data. We can load individual packages within the `tidyverse` one by one, or we can load all packages at once with the command `library(tidyverse)`.
+
+
+- [`ggplot2`](https://ggplot2.tidyverse.org/): data visualization.
+- [`dplyr`](https://dplyr.tidyverse.org/): data wrangling and transformation.
+- [`tidyr`](https://tidyr.tidyverse.org/): arrange into tidy data.
+- [`readr`](https://readr.tidyverse.org/): importing tables and files from other applications into R.
+- [`stringr`](https://stringr.tidyverse.org/): designed to make working with strings easier.
+- And others ...
+
+
+# Statistical Inference
+
+---
+
+A fundamental application of statistics is to use data from a subset of a population to draw conclusions about the population. <span style="color:dodgerblue">**Statistical inference**</span> is the process of drawing conclusions about the entire population based on information in a sample.
+
+![Image Credit: [Loneshieling](https://commons.m.wikimedia.org/wiki/File:Population_versus_sample_%28statistics%29.png), modified by Adam Spiegler, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0).](https://raw.githubusercontent.com/CU-Denver-MathStats-OER/Statistical-Theory/main/Images/01fig-inference.png){width="80%" fig-alt="Diagram of Statistical Inference"}
+
+
+## Produce Data
+
+---
+
+<span style="color:dodgerblue">**We need data to do statistics!**</span> How we design the collection of data is a crucial first step. If we collect the wrong data or biased data, we cannot gain reasonable insights to achieve our goal even if we do proper analysis. In the end, the conclusions we infer are only as strong as the data we collect.
+
+-   Experimental design is an entire field in itself and requires many considerations and techniques to ensure we can reach our ultimate goal.
+-   Collecting or finding the right data is a critical step that should be carefully planned.
+-   We do not spend too much time on this aspect of the process this semester, but we should be very aware of how important and delicate this step can be.
+-   There are many interesting data sets others have already collected that we can easily import into R for further analysis.
+-   This semester we will mostly be working with data sets that others have already carefully collected rather than produce the data ourselves.
+
+## Explore Data
+
+---
+
+<span style="color:dodgerblue">**Exploratory data analysis**</span>, or <span style="color:dodgerblue">**EDA**</span> for short, can be thought of as a cycle:
+
+-   Generate questions about our data.
+-   Search for answers by visualizing, transforming, and modeling our data.
+-   Use what we learn to refine your questions and/or generate new questions.
+
+The main goal of EDA is to develop an understanding of your data. When we ask a question, the question focuses our attention on a specific part of the data set and helps us decide which graphs, models, or transformations to make.
+
+-   EDA can be an intricate process that requires developing some keen investigation skills.
+-   [Exploratory Data Analysis with R](https://bookdown.org/rdpeng/exdata/){target="_blank"} by Roger Peng is a free textbook to help you dig deeper into EDA if interested!
+-   Our focus this semester will not be on EDA, but at times we will be exploring data in order to uncover our own statistical questions.
+
+## Analyze and Interpret
+
+---
+
+After we explore data and generate statistical questions to investigate, we apply statistical methods to analyze the data and hopefully gain insight to draw conclusions. Sometimes, even though we carefully perform our analysis correctly, we are unable to reach a decisive conclusion. Sometimes instead of reaching an answer, the insight we gain informs us to refine our question. Other times, it simply leads to more questions! <span style="color:dodgerblue">**Probability**</span> is required to do statistical analysis, and we will explore some key results from probability that we will need to apply in this step.
+
+## Present Findings
+
+---
+
+Finally, after we have interpreted our results, we present our findings to others. Sometimes our colleagues specialize in fields outside of mathematics, statistics, or data science. They rely on us to breakdown our findings in more practical terms accessible to a more general audience.
+
+## Professional Ethics
+
+---
+
+As we learn and refine our statistical tools, it is our duty to be mindful of the moral and ethical considerations at play in deciding what statistical questions we want to explore, how we produce data, what is the source of our data, what is the benefit to society of our work, and who is impacted by our analysis.
+
+Below is a excerpt from *An Introduction to the Science of Statistics: From Theory to Implementation* by Joseph Watkins that we should always be very mindful of whether we are doing statistical analysis or other endeavors:
+
+> "Those with particular training have a special obligation to bring to the public their special knowledge. Such public statements can take several forms. We can speak out as a member of society with no particular basis in our area of expertise. We can speak out based on the wisdom that comes with this specialized knowledge. Finally, we can speak out based on a formal procedure of gathering information and reporting carefully the results of our analysis. In each case, it is our obligation to be clear about the nature of that communication and that the our statements follow the highest ethical standards. In the same vein, as consumers of information, we should have a clear understanding of the perspective in any document that presents statistical information."
+
+Below are two sources with ethical guidance to help steer our practice of statistics.
+
+-   [*Ethical Guidelines for Statistical Practice*](https://www.amstat.org/your-career/ethical-guidelines-for-statistical-practice){target="_blank"} by the American Statistical Association (ASA).
+-   [*Declaration on Professional Ethics*](https://isi-web.org/declaration-professional-ethics-2010){target="_blank"} by the International Statistical Institute.
+
+
+# Reading Data From An External File
+
+---
+
+One of the most universal and common file formats for storing files is [**comma-separated file (or CSV file)**](https://en.wikipedia.org/wiki/Comma-separated_values). CSV files:
+
+- Store data in plain text.
+- Use commas to separate adjacent cell values.
+- Use newlines to separate rows.
+
+
+## Importing csv Files with `readr::read_csv()`
+
+---
+
+The `readr` package is a core `tidyverse` package. According to the developers of [`readr`](https://readr.tidyverse.org/index.html):
+
+> The goal of readr is to provide a fast and friendly way to read rectangular data from delimited files, such as comma-separated values (CSV) and tab-separated values (TSV). It is designed to parse many types of data found in the wild, while providing an informative problem report when parsing leads to unexpected results
+
+Compared to the equivalent `base` R functions such as `read.csv()` and `read.table()`, `readr` functions such as `read_csv()` and `read_table()`:
+
+-  Are much faster and efficient.
+-  Bring consistency to importing.
+-  Produce data frames in a tibble format.
+-  Have more flexible column specifications.
+-  Run `?read_csv()` to access help documentation.
+
+
+## Importing Raw World Bank Regions
+
+---
+
+The csv file below was [exported from the World Bank] (https://datatopics.worldbank.org/world-development-indicators/the-world-by-income-and-region.html)
+
+> The World Bank classifies economies for analytical purposes into four income groups: low, lower-middle, upper-middle, and high income. For this purpose it uses gross national income (GNI) per capita data in U.S. dollars, converted from local currency using the World Bank Atlas method, which is applied to smooth exchange rate fluctuations.
+
+
+```{r}
+# creates data frame from csv file
+regions_raw <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/world_bank_regions.csv")
+```
+
+```{r}
+class(regions_raw)  # check class of regions_raw
+```
+
+
+## Importing csv Files with `base::read.csv()`
+
+---
+
+The [`read.table()`](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/read.table) is a multipurpose function in `base` R for importing data. The more focused functions [`read.csv()`](https://www.geeksforgeeks.org/read-contents-of-a-csv-file-in-r-programming-read-csv-function/) and [`read.delim()`](https://www.geeksforgeeks.org/how-to-use-read-delim-in-r/) have been adjusted (by setting options for the `read_table()` function accordingly) to import more specific file types.
+
+
+The `base` R function `read.csv()` has very similar syntax as the `readr` function `read_csv()`, namely the first argument (and only required argument) in `read.csv()` is the path to the file.
+
+- Run `?read.csv()` to access help documentation.
+- Notice the `tidyverse` function has an underscore `_` and the `base` R function has `.` between `read` and `csv`.
+
+```{r}
+# creates data frame from csv file
+regions_df <- read.csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/world_bank_regions.csv")
+```
+
+```{r}
+class(regions_df)
+```
+
+
+# Useful Summaries of Data Frames
+
+---
+
+Import a csv file with `read_csv()` or `read.csv()` and store it to an object named `regions_raw`, we will not see what is stored in the object. If we want to see the contents stored in an object on screen, we ask to see something.
+
+## Tibbles
+
+---
+
+When `tidyverse` packages interact with a data frame, it usually produces a <span style="color:dodgerblue">**tibble**</span>.
+
+- Tibbles comes from the [`tibble`](https://tibble.tidyverse.org/) package, which is automatically imported by `readr`.
+- A tibble is supposed to be a "modern re-imagining" of R's standard data frame (referred to as `data.frame` for clarity).
+- A tibble has class `tbl_df`.
+- A tibble is also a `data.frame`, but has different default behaviors.
+- Functions that take a `data.frame` as an input should also take a tibble as an input.
+
+
+```{r}
+# print tibble regions_raw
+regions_raw
+#print(regions_raw)
+```
+
+
+```{r}
+#| eval: false
+# print data frame regions_df
+regions_df
+#print(regions_df)
+```
+
+
+```{r}
+#| eval: false
+# additional info displayed for tibbles
+str(regions_raw)
+```
+
+
+```{r}
+#| eval: false
+# less info displayed for data frames
+str(regions_df)
+```
+
+```{r}
+#| eval: false
+# dplyr glimpse is similar to base::str()
+# more streamlined for tibbles than str()
+glimpse(regions_raw)
+```
+
+```{r}
+#| eval: false
+# dplyr glimpse is similar to base::str()
+# more or less identical for data frames
+glimpse(regions_df)
+```
+
+```{r}
+#| eval: false
+# gives numeric summary of each variable
+# not particularly useful with characters
+summary(regions_raw)
+```
+
+
+```{r}
+#| eval: false
+# opens preview of data frame in new tab
+# not recommended when rendering
+View(regions_raw)
+```
+
+
+### Importing a Local File
+
+---
+
+The <span style="color:dodgerblue">**working directory**</span> in R is the default location on your computer where R looks for files to load and where it saves files. It functions as the base path for all relative file operations within an R session or RStudio project. By default, the working directory is typically the same as the directory where the Quarto document is saved.
+
+```{r}
+#| eval: false
+getwd()
+```
+
+
+```{r}
+#| eval: false
+# this will import and glimpse
+# the data is not assigned to an object
+glimpse(read_csv("../Data/world_bank_regions.csv"))
+```
+
+::: {.callout-caution}
+When sharing Quarto documents, it is generally not a good practice to include code chunks with `getwd()` or `setwd()` commands since the person you are collaborating with likely has a different file structure and may want to read and write files to/from other locations. Thus, I used the code chunk option `#| eval: false` which means the code cell will be included in the rendered html document, but it will not be executed.
+:::
+
+::: {.callout-caution}
+For the similar reasons, using `read_csv()` commands with files stored online (GitHub) is  easier to share since the link is the same for everyone no matter the file structure. Using `read_csv()` with a local file may be problematic when sharing, though that is typically not too bad to resolve.
+:::
+
+
+# Cleaning The Data 
+
+---
+
+
+After importing the data, the next step usually requires transforming it in some way to make it easier for us to perform analysis on the data. What potential issues the data has and how to address them will vary from task to task. Typically, the most common steps include:
+
+1. Renaming variables.
+2. Properly coding (and maybe imputing) missing values.
+3. Converting categorical variables to `factor` data type.
+
+First we'll walk through the entire process using only commands from base R. Then we'll go through a workflow using the `dplyr` package from `tidyverse`. Finally, we'll demonstrate how to perform all of the steps on import by adding additional arguments to the `read_csv()` function.
+
+
+## Cleaning Variables Names with `base::names`
+
+---
+
+
+Object names:
+
+- Must start with a letter, and
+- Can only contain letters, numbers, `_`, and/or `.`.
+
+Object names should be descriptive but brief since each time we refer to the object we do not want to type a lot of characters. When we want to use multiple words to describe an object, we recommend using the `snake_case` method:
+
+- Use lowercase letters.
+- Separate words with the underscore character, `_`.
+- If needed, abbreviate longer words.
+
+```{r}
+regions_renamed <- regions_raw  # store result to new data frame rather than overwrite
+names(regions_renamed) <- c("country", "country_code", "region", "income_group", "lending_cat")
+glimpse(regions_renamed)
+```
+
+
+## Cleaning Missing Data
+
+--- 
+
+
+One of the most common transformations is converting non-standard ways of coding missing values into proper `NA` values in R.
+
+A <span style="color:dodgerblue">**missing value**</span> occurs when the value of something isn't known. R uses the special object `NA` to represent missing values. If you have a missing value, you should represent that value as `NA`. Note: The character string `"NA"` is not the same thing as `NA`.
+
+- Do not make the mistake of using `-99`, `0`,`" "`, `"NA"`, or anything other than `NA` to indicate a missing value.
+- It is common for somebody to share data with you that has missing values coded improperly.
+
+
+From the output of the previous code cell, some missing `lending_cat` values have been properly coded as `NA`. Others have been improperly coded as `"??"`, `"N/A"`, and `"missing"`. The other variables do not have any missing values.
+
+- The logical statement `regions_fix_na$lending_cat == "??"` extracts just the observations with `lending_cat` equal to `"??"`.
+- Then we assign the value `NA` as the new value for `lending_cat` for these observations.
+
+```{r}
+regions_na <- regions_renamed  # store result to new data frame rather than overwrite
+regions_na$lending_cat[regions_na$lending_cat == "??"] <- NA
+glimpse(regions_na)
+```
+
+
+```{r}
+regions_na$lending_cat[regions_na$lending_cat == "N/A"] <- NA
+regions_na$lending_cat[regions_na$lending_cat == "missing"] <- NA
+glimpse(regions_na)
+```
+
+## Converting Categorical Variables to `factor` Data Type
+
+---
+
+Sometimes we think a variable is one data type, but it is actually being stored (and thus interpreted by R) as a different data type. *One common issue is categorical data is stored as characters. We would like observations with the same values to be grouped together.* Instead of the `character` data type, <span style="color:dodgerblue">**categorical data should be stored as a `factor`.**</span>
+
+```{r}
+summary(regions_na)  # no summaries provided based number of observations
+```
+
+```{r}
+#| eval: false
+plot(regions_na$income_group)  # R generally does not know how to plot characters
+```
+
+- The `country_name`, `country_code`, `region`, `income_group`, and `lending_cat` variables are all initially stored as characters.
+- We convert them all to factors.
+
+
+
+```{r}
+regions_clean <- regions_na  # store result to new data frame rather than overwrite
+# convert each character to factor
+regions_clean$country <- factor(regions_clean$country)  # country
+regions_clean$country_code <- factor(regions_clean$country_code)  # country_code
+regions_clean$region <- factor(regions_clean$region)  # region
+regions_clean$income_group <- factor(regions_clean$income_group)  # income_group
+regions_clean$lending_cat <- factor(regions_clean$lending_cat)  # lending_cat
+glimpse(regions_clean)
+```
+
+
+```{r}
+summary(regions_clean)  # counts are provided
+```
+
+
+```{r}
+plot(regions_clean$income_group)  # R does not know how to plot factors
+```
+
+# Data Cleaning with `dplyr`
+
+---
+
+The [`dplyr`](https://dplyr.tidyverse.org/) package provides functions for the "verbs" (i.e., actions) related to common data frame manipulation tasks. Each verb performs a different task, but they all share the following structure:
+
+
+1. The first argument is always a data frame.
+2. The next arguments typically describe which columns to operate on using variable names **without quotes**.
+3. The output is a new data frame.
+
+
+The table below summarizes some of the most important verbs (functions) by the aspect of a data frame it manipulates.
+
+
+aspect | function | purpose
+---|---|---
+row | `filter` | selects rows based on a logical statement
+row | `slice` | select rows based on position or other property
+row | `arrange` | reorders the rows based on some property
+row | `group_by` | groups a collection of rows hierarchically based on one or more variables
+group of rows | `summarize` | produces a summarizing value or values for a group of rows
+column | `select` | selects columns based on a logical statement, column names, etc.
+column | `rename` | changes one or more column names
+column | `mutate` | changes an existing column or adds a new column
+column | `relocate` | reorders the columns
+
+
+Link to [cheatsheet](https://github.com/rstudio/cheatsheets/blob/main/data-transformation.pdf) for `dplyr`.
+
+
+## Cleaning Variables Names with  `dplyr::rename`
+
+---
+
+```{r}
+regions_renamed2 <- rename(regions_raw,  # data frame name
+                           country = Economy,  # new_name = old_name
+                           country_code = Code, 
+                           region = Region, 
+                           income_group = `Income group`,  # need quotes if space
+                           lending_cat = `Lending category`)  # need quotes if space
+
+print(regions_renamed2)
+```
+
+
+## Cleaning Variables Names with  `janitor::clean_names`
+
+---
+
+The [`janitor`](https://cran.r-project.org/web/packages/janitor/index.html) package contains useful functions for data cleaning. According to their documentation:
+
+
+> The main janitor functions can: perfectly format data.frame column names; provide quick counts of variable combinations (i.e., frequency tables and crosstabs); and explore duplicate records.
+
+The `janitor` package is not a core package in the `tidyverse`, but it does work well within the pipe `|>` workflow.
+
+- If you have not installed the `janitor` package, then run the command `install.packages("janitor")` in the console.
+- Then we load the package with `library(janitor)`.
+
+```{r}
+#library(janitor)
+clean_names(regions_raw)
+```
+
+
+## Cleaning Missing Values with `dplyr::mutate`
+
+---
+
+In the code cell, we properly code all missing values of `lending_cat` as `NA`.
+
+```{r}
+na_strings <- c("??", "N/A", "missing")  # vector of na strings
+regions_na2 <- mutate(regions_renamed2,  # data to mutate
+                      lending_cat = case_when(  # redefine lending_cat
+                        lending_cat %in% na_strings ~ NA,  # if value in na_strings assign NA
+                        .default = lending_cat)  # otherwise keep original value
+)
+
+print(regions_na2)
+```
+
+## The pipe Operator
+
+---
+
+The <span style="color:dodgerblue">**pipe**</span>, `|>`, is a popular approach for "piping" an object into the first argument (usually) of another function.
+
+- The pipe was introduced by the `magrittr` package with `%>%`.
+  - `magrittr` is in the `tidyverse`, so you can use `%>%` or `|>` whenever you load the `tidyverse`.
+  - `|>` was added to R 4.1.0 in 2021 and works in base R and in the `tidyverse`.
+  - Note `%>%` does not work in base R which may affect reproducibility of code and ability to collaborate.
+- Because each verb does a single action, solving complex problems typically requires composing a sequence of actions together in a particular order.  
+- It is extremely popular in the `tidyverse` for stringing sequences of operations together in a readable way.
+
+Wickham, Çetinkaya-Rundel, and Grolemund R briefly summarize the concept in for [R for Data Science.](https://r4ds.hadley.nz/data-transform.html#dplyr-basics) as follows:
+
+> the pipe takes the thing on its left and passes it along to the function on its right so that `x |> f(y)` is equivalent to $f(x, y)$, and `x |> f(y) |> g(z)` is equivalent to $g(f(x, y), z)$. The easiest way to pronounce the pipe is “then”.
+
+
+```{r}
+regions_clean |>  # pipe data from regions_clean into select action
+  select(country, region) |>  # pipe selected columns into filter action
+  filter(region == "Sub-Saharan Africa") |>  # pipe filtered data to print function
+  print()  # print result to screen
+```
+
+
+```{r}
+# below we use the pipe to compose both the rename and mutate actions
+# then pipe the result into the print function
+regions_na2 <- regions_raw |>  # start with regions_raw which is piped into rename
+  rename(country = Economy,  # rename columns
+         country_code = Code,
+         region = Region, 
+         income_group = `Income group`,  
+         lending_cat = `Lending category`) |> # renamed columns piped into mutate 
+  mutate(lending_cat = case_when(  # mutate lending_cat to fix missing values
+    lending_cat %in% na_strings ~ NA,  
+    .default = lending_cat)) |>  # pipe the fixed na data into print function
+  print()
+```
+
+## Converting Catagorical Variables with `dplyr::mutate`
+
+---
+
+We can use the `mutate` function in `dplyr` to convert variables to the `factor` data type.
+
+```{r}
+# convert specified variables to factors
+mutate(regions_na2, across(c(country, country_code, region, income_group, lending_cat), as.factor))
+```
+
+
+```{r}
+# convert all variables to factors
+mutate(regions_na2, across(everything(), as.factor))
+```
+
+
+## More Efficient Cleaning
+
+---
+
+Beginning with the initially imported data frame `regions_raw`, we can perform all cleaning steps in a single code cell by composing actions with the pipe operator `|>`.
+
+
+```{r}
+# result will be stored to regions_clean2
+regions_clean2 <- regions_raw |>  # start with regions_raw which is piped into rename
+  rename(country = Economy,
+         country_code = Code,
+         region = Region, 
+         income_group = `Income group`,  
+         lending_cat = `Lending category`) |> # renamed columns piped into mutate 
+  mutate(lending_cat = case_when(  
+    lending_cat %in% na_strings ~ NA,  
+    .default = lending_cat)) |>  # pipe the fixed na data into mutate
+  mutate(across(everything(), as.factor)) |>  # pipe clean data to summary function
+  glimpse()
+```
+
+# Cleaning Data on Import with `read_csv()`
+
+--- 
+
+- The argument `col_names` can be used to rename columns during import
+- The argument `na` can be added to `read_csv()` to customize the strings that are read as `NA`.
+  - By default, `read_csv()` only recognizes empty strings (`""`) and the character string `"NA"` as `NA`s.
+- The argument `col_types` can be used to customize data types of columns.
+
+```{r}
+regions_clean3 <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/world_bank_regions.csv",
+                           col_names = c("country", "country_code", "region", "income_group", "lending_cat"),
+                           na = c("??", "N/A", "missing"),
+                           col_types = cols(.default = col_factor()))
+print(regions_clean3)
+```
+
+
+# Practice
+
+----
+
+Students and faculty at Cornell College in Mount Vernon, Iowa, collected data over many years at the hawk blind at Lake MacBride near Iowa City, Iowa. The data set that we are analyzing here is a subset of the original data set, using only those species for which there were more than 10 observations. Data were collected on random samples of three different species of hawks: Red-tailed, Sharp-shinned, and Cooper's hawks.
+
+The file `Hawks.csv`has 908 observations on 19 variables. Some of the variables we will consider are:
+
+- `Species`: `CH` = Cooper's, `RT` = Red-tailed, `SS` = Sharp-Shinned
+- `Age`: 	`0` = Immature or `1` = Adult
+- `Sex`:	`F` = Female or `M` = Male
+- `Wing`:	Length (in mm) of primary wing feather from tip to wrist it attaches to
+- `Weight`:	Body weight (in g)
+- `Culmen`:	Length (in mm) of the upper bill from the tip to where it bumps into the fleshy part of the bird
+- `Hallux`:	Length (in mm) of the killing talon
+- `Tail`:	Measurement (in mm) related to the length of the tail (invented at the MacBride Raptor Center)
+- `Standard Tail`:	Standard measurement of tail length (in mm)
+- `Tarsus`:	Length of the basic foot bone (in mm)
+- `Wing Pi tFat`:	Amount of fat in the wing pit
+- `Keel Fat`:	Amount of fat on the breastbone (measured by feel)
+
+Run the code below to load and store the data to an initial data frame called `hawks_raw`.
+
+```{r}
+# creates data frame from csv file
+hawks_raw <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/Hawks.csv")
+```
+
+## Question 1
+
+---
+
+Identify any issues that need to be cleaned with the data frame `hawks_raw`. Explain in words below and include R code used to support your answer.
+
+### Solution to Question 1
+
+---
+
+```{r}
+glimpse(hawks_raw)
+```
+
+
+- `month`, `day`, `year` are stored as decimals (`double`) but we may want to store them as `factor` or `integer` data types depending on our goal.
+- All variables should be renamed according to `snake_case` rules:
+  - All lower case letters.
+  - No spaces (use underscore instead)
+  - Descriptive and not too long (which they are already).
+- `Band Number`, `Species`, `Age`, and `Sex` are categorical and should be stored as `factor`.
+- The categories for `Age` should be descriptive:
+  - `"0"` is immature which we can code as `"I"`.
+  - `"1"` is adult which we can code as `"A"`.
+- `Capture Time` and `Release Time` are times that we may want to convert to `factor` or another data or time data type.
+- `Standard Tail` has missing values coded improperly as `"N/A"`.
+- `Standard Tail` should be converted from `character` to `double`.
+- It seems all other missing values have been properly coded with `NA`, but we'll see.
+
+<br>  
+<br>  
+
+
+## Question 2
+
+---
+
+Clean the data by addressing each of the issues you identified in the previous question.
+
+
+### Solution to Question 2
+
+---
+
+#### Solution Using `base` R
+
+---
+
+This code may be easier to read and write. It is more intuitive to interpret what each command is doing. The downside is the code is longer and less efficient to run.
+
+```{r}
+# data cleaning in base R
+hawks_clean <- hawks_raw  # create new cleaned df rather than overwrite original 
+# rename variables
+names(hawks_clean) <- c("month",  
+                        "day",
+                        "year",
+                        "capture_time",
+                        "release_time",
+                        "band_number",
+                        "species",
+                        "age",
+                        "sex",
+                        "wing",
+                        "weight",
+                        "culmen",
+                        "hallux",
+                        "tail",
+                        "standard_tail",
+                        "tarsus",
+                        "wing_pit_fat",
+                        "keel_fat",
+                        "crop")
+# fix missing values in standard_tail
+hawks_clean$standard_tail[hawks_clean$standard_tail == "N/A"] <- NA
+# give more descriptive labels for age classes
+hawks_clean$age[hawks_clean$age == 0] <- "I"  # I for immature
+hawks_clean$age[hawks_clean$age == 1] <- "A"  # A for adult
+# convert variable types to integer
+hawks_clean$month <- as.integer(hawks_clean$month)
+hawks_clean$day <- as.integer(hawks_clean$day)
+hawks_clean$year <- as.integer(hawks_clean$year)
+# covert categorical variables to factor
+hawks_clean$capture_time <- factor(hawks_clean$capture_time)
+hawks_clean$release_time <- factor(hawks_clean$release_time)
+hawks_clean$band_number <- factor(hawks_clean$band_number)
+hawks_clean$species <- factor(hawks_clean$species)
+hawks_clean$age <- factor(hawks_clean$age)
+hawks_clean$sex <- factor(hawks_clean$sex)
+# convert standard_tail to double
+hawks_clean$standard_tail <- as.double(hawks_clean$standard_tail)
+
+glimpse(hawks_clean)
+```
+
+#### Solution Using `dplyr`
+
+---
+
+Below we first check what the default names will be with `janitor::clean_names()` as that will help us code other cleaning actions.
+
+```{r}
+#| eval: false
+#glimpse(clean_names(hawks_raw))
+hawks_raw |> clean_names() |> glimpse()  # composing actions using the pipe
+```
+
+Use `dplyr` commands are more efficient and generally shorter code. The code may be less intuitive to interpret.
+
+
+```{r}
+# data cleaning with dplyr actions
+hawks_clean <- hawks_raw |> 
+  clean_names() |>  # rename variables (requires janitor package)
+  mutate(standard_tail = case_when(  # fix missing values in standard_tail
+    standard_tail == "N/A" ~ NA,  
+    .default = standard_tail)) |>  
+  mutate(age = case_when(  # give more descr names to classes
+    age == 0 ~ "I",  # I is for immature
+    age == 1 ~ "A"  # A is for adult
+    )) |>  
+  mutate(month = as.integer(month),  # convert data types
+         day = as.integer(day),
+         year = as.integer(year),
+         standard_tail = as.double(standard_tail)
+         ) |> 
+  mutate(across(c(capture_time,  # convert to categorical to factor
+                  release_time, 
+                  band_number, 
+                  species, 
+                  age,
+                  sex), as.factor)) |> 
+  glimpse()
+```
+
+
+```{r}
+# see numeric summary of all variables
+summary(hawks_clean)
+```
+
+We are not going to further analysis the time variables, so the data type chosen is not too important for our purposes now. However, we could decide to format the `capture_time` and `release_time` variables as `hms` data type (hours-min-sec) using the `lubridate` package from the `tidyverse`. 
+
+```{r}
+#| eval: false
+# optional: store times as hms data type
+# requires lubridate package
+hawks_clean$capture_time <- hms(hawks_clean$capture_time)  
+hawks_clean$release_time <- hms(hawks_clean$release_time)
+```
+
+
+#### Solution Mostly on Import with `read_csv()`
+
+---
+
+Below we first ensure all missing values are encoded with `NA`. Then we convert data types (using original variable names). We do not convert `Age` at first since we are going to rename the labels for the classes. Then we clean the variable names using `janitor::clean_names()` function. Finally, we rename the labels `0`, and `1` for the age classes to more descriptive labels `I`, and `A`, respectively. We also convert the `age` variable to a `factor` at in the same `mutate` command.
+
+
+```{r}
+hawks_clean <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/Hawks.csv", 
+                        na = c("N/A", "", "NA"),  # properly code missing values
+                        col_types = list(Month = col_integer(),  # convert data types
+                                         Day = col_integer(),
+                                         Year = col_integer(),
+                                         `Capture Time` = col_factor(),
+                                         `Release Time` = col_factor(),
+                                         `Band Number` = col_factor(),
+                                         Species = col_factor(),
+                                         #Age = col_factor(),  # apply with transformation
+                                         Sex = col_factor())) |>
+  clean_names() |>  # clean variable names using janitor::clean_names
+  mutate(age = as.factor(  # convert to factor
+    case_when(  # give more descr names to classes
+      age == 0 ~ "I",  # I is for immature
+      age == 1 ~ "A"  # A is for adult
+    ))) |>  
+  glimpse()
+```
+
+```{r}
+summary(hawks_clean)
+```
+
+<br>  
+
+
+# About the Remaining Data Country Data
+
+---
+
+
+## Human Development Index
+
+---
+
+`human_development_index.csv` is a comma-separate file that contains the Human Development Index (HDI) for all countries (that reported their HDI) over the years 1990-2021. The data is from the [United Nations Development Programme](https://undp.org/) that oversees the calculation of HDI based on the following stated criteria:
+
+> The Human Development Index (HDI) is a summary measure of average achievement in key dimensions of human development: a long and healthy life, being knowledgeable and having a decent standard of living. The HDI is the geometric mean of normalized indices for each of the three dimensions.
+
+HDI values are standardized scores from 0 (poor HDI) to 1 (perfect HDI). Data downloaded 3/8/2025 from <https://hdr.undp.org/data-center/human-development-index#/indicies/HDI>,
+
+
+## Electricity Usage
+
+---
+
+`Electricity_Use.csv` is a comma-separate file that contains the electricity use per capita in kilowatt-hours per capita (kWh per capita) for all countries in the world (for which there is data) over the years 1960-2023 (though most countries last reported data in 2014). The data is from the [World Bank Databank](https://data.worldbank.org/). Data downloaded 3/8/2025 from <https://data.worldbank.org/indicator/EG.USE.ELEC.KH.PC/countries>.
+
+
+
+# Tidy Data and the `tidyr` Package
+
+---
+
+
+![tidyr-logo](https://tidyr.tidyverse.org/logo.png)
+
+The goal of the [`tidyr`](https://tidyr.tidyverse.org/) package is to help create **tidy data** that is structured so that:
+
+1. Each variable is in a single column and no variables share a column.
+2. Each observation is in a single row.
+3. Each data value has its own cell.
+
+
+The guidelines for tidy data may seem clear and obvious by now.  Why do we need to worry about tidying data, isn't all data tidy? When or why would we ever encounter messy data out there in the "real world". **Unfortunately, most "real" data is messy and tidy.**
+
+- Data is often organized to make *data entry* easy and not typically with *data analysis* in mind.
+- For people that do not spent their time working with data, the principles of tidy data are not evident at all.
+
+
+
+```{r}
+#| message: false
+hdi_raw <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/human_development_index.csv")
+print(hdi_raw)
+```
+
+
+## Question 3
+
+---
+
+Explain why the data in `hdi_raw` is not tidy. Use complete sentences. What would be this data look like if it were arranged tidy?
+
+
+### Solution to Question 3
+
+---
+
+The years should be a single variable with each individual year a value of the `year` variable as opposed to each individual year being a separate column.
+
+The values in all of the years columns should be combined into a single column with a name such as `hdi` and new variable `year` should be created from the column names for each year.
+
+Each observation should be a country in a specific year. Each country should therefore correspond to multiple rows, one row (observation) for each year.
+
+Thus, the data frame needs to be lengthened. We need to combine multiple columns into one and as a result we add more rows to the data frame.
+
+
+## Tidying the HDI Data
+
+---
+
+In the code cell below we perform more advanced cleaning to reformat the data in tidy form.
+
+```{r}
+# use a pivot function to reformat hdi_raw
+hdi_clean <- hdi_raw |>  # start with hdi_raw
+  pivot_longer(  
+    c(-"country"),  # apply to all columns except country
+    names_to = "year",  # store old variable names to column named year
+    values_to = "hdi"  # store values for each year in column hdi
+)
+print(hdi_clean)  # display first 10 rows
+```
+
+## Question 4
+
+---
+
+Which five countries in `hdi_clean` had the highest HDI in 2021? Which five countries in `hdi_clean` had the lowest HDI in 2021? 
+
+
+### Solution to Question 4
+
+---
+
+Include code chunks to answer the questions.
+
+```{r}
+hdi_clean |> filter(year == "2021") |>  # filter observations with year equal 2021
+  slice_max(hdi, n = 5)  # extract (slice) the 5 observations with max hdi values
+```
+
+```{r}
+hdi_clean |> filter(year == "2021") |>  # filter observations with year equal 2021
+  slice_min(hdi, n = 5)  # extract (slice) the 5 observations with max hdi values
+```
+
+## Question 5
+
+---
+
+What additional data cleaning would you perform on `hdi_clean`?
+
+
+### Solution to Question 5
+
+---
+
+Include code to perform additional cleaning.
+
+
+- Convert `country` from `character` to `factor` to store as a categorical variable.
+- Conver `year` from `character` to `integer`.
+
+```{r}
+hdi_clean$country <- factor(hdi_clean$country)
+hdi_clean$year <- as.integer(hdi_clean$year)
+summary(hdi_clean)
+```
+
+## Tidying the Electricity Usage Data
+
+---
+
+In the code chunks below we first make sure missing values are properly coded.
+
+
+```{r}
+#| message: false
+# check out initial status of electricity data from world bank
+print(read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/Electricity_Use.csv"))
+```
+
+```{r}
+#| message: false
+# add an na argument below to the read_csv command to
+electric_na <- read_csv(
+  "https://raw.githubusercontent.com/CU-Denver-MathStats-OER/Data-Wrangling-and-Visualization/main/Data/Electricity_Use.csv",
+  na = c(".."))
+
+print(electric_na)
+```
+
+## Question 6
+
+---
+
+Is the data frame `electric_na` tidy? If not, write out how you think the data frame should look.
+
+### Solution to Question 6
+
+---
+
+No it is not tidy. Years should be stored as a separate variable. Each country should have a separate row for each year, and the only other numeric variable in each row is the electricity power consumption of the country in a single year. In addition, there is only one quantitative variable which is the electricity per consumption. We do not need the `Series Name` or `Series Code` columns since that is redundant info. A more tidy form of the data would be:
+
+| country | country_code | year | electricity_use |
+|---------|--------------|------|-----------------|
+| Afghanistan | AFG | 1960 | NA |
+| Afghanistan | AFG | 1961 | NA |
+
+and so on for the other years and other countries. There are lots of missing values, but they are all coded properly as `NA`.
+
+<br>  
+<br>  
+
+
+
+In the code cell below we perform more advanced data wrangling to clean and tidy the electricity usage data.
+
+
+```{r}
+electric_clean <- electric_na |> 
+  clean_names() |>  # use janitor::clean_names() to fix variable names
+  select(-series_name, -series_code) |>  # exclude series_name and series_code
+  pivot_longer(  # tidy the data so each obs is a row and each column a variable
+    cols = !(country_name:country_code),  # do not gather country and year
+    names_to = "year",  # new column names
+    values_to = "electricity_use"  # column name where values stored
+  ) |>
+  mutate(year = substr(year, 2, 5)) |>  # extract values 2 through 5 of year
+  select(-country_code) |>  # exclude country_code column
+  rename(country = country_name) |>  # rename country to be consistent
+  mutate(country = as.factor(country)) |>  # convert country to factor
+  mutate(year = as.integer(year)) |>  # convert year to integer
+  glimpse()
+```
+
+```{r}
+summary(electric_clean)
+```
+
+
+## Merging Data Frames
+
+---
+
+In the code cell below we merge the electricity use and HDI data frames.
+
+```{r}
+#| eval: true
+# merges electricity usage and hdi data frames
+hdi_electric_join <- full_join(electric_clean, hdi_clean)
+print(hdi_electric_join)
+```
+
+Then we merge the country region and income level data.
+
+```{r}
+#| eval: true
+#| message: false
+# merges data frame to include regions for each country
+hdi_electric <- hdi_electric_join |> 
+  left_join(regions_clean) |> 
+  select(-lending_cat) |> 
+  print()
+```
+
+```{r}
+#| eval: true
+summary(hdi_electric)
+```
+
+# Exporting Data
+
+---
+
+`readr` has useful functions for writing data to files that we can export outside of R.
+
+- `write_csv(x, "file")`: writes data to a comma-separated file.
+- `write_tsv(x, "file")`: writes data to a tab-separated file.
+- Other write options include `write_delim()`, `write_csv2()`, `write_excel_csv()`, and `write_excel_csv2()`.
+
+The most important arguments to these functions are `x` (the data frame to save) and `file` (the file and location to save it). We can specify other options such as how missing values are coded by entering additional arguments.
+
+- The `getwd()` function can be used to check the location of the current working directory.
+- The `setwd()` function can be used to set/change the working directory.
+
+```{r}
+#| eval: false
+getwd()
+```
+
+```{r}
+#| eval: false
+write_csv(hdi_electric, "../Data/hdi_electric.csv")
+```
+
+::: {.callout-caution}
+When sharing Quarto documents, it is generally not a good practice to include code chunks with `write_csv()` commands since you do not want to inadvertently overwrite a file on you collaborator's computer. I wanted to include the code cell above to show how to write to an external file, but I did not want the code cell to run. Thus, I used the code chunk option `#| eval: false` which means the code cell will be included in the rendered html document, but it will not be executed.
+:::
+
+## Question 7
+
+---
+
+Run the code cell below to print the first 10 rows of data frame created from the csv file `hdi_electric.csv` we just created. Is the data frame that is imported the same as the data frame `hdi_electric` that we exported? If not, what has changed?
+
+```{r}
+#| eval: false
+print(read_csv("../Data/hdi_electric.csv"))
+```
+
+### Solution to Question 7
+
+---
+
+Most of our changes have been properly stored in the csv file so it imports with most of the changes we previously made. However, the data types are the same as in data frame we exported to created the csv. The data types have changed back and need to be cleaned up again.
+
+<br>  
+<br>  
+
+## `read_rds()` and `write_rds()`
+
+---
+
+
+The [`write_rds()` and `read_rds()`](https://readr.tidyverse.org/reference/read_rds.html) functions are uniform wrappers around the base functions `readRDS()` and `saveRDS()` that store data in R's custom binary format called [RDS (or R Data Serialization)](https://www.geeksforgeeks.org/data-serialization-rds-using-r/). This means that when we reload the object, we are loading the exact same R object that we stored.
+
+
+```{r}
+#| eval: false
+write_rds(hdi_electric, "../Data/hdi_electric.rds")
+```
+
+```{r}
+#| eval: false
+print(read_rds("../Data/hdi_electric.rds"))
+```
