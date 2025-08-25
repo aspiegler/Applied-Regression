@@ -37,13 +37,8 @@ The Quarto file used to generate the html file can be downloaded by clicking on 
 ---
 
 - [Chapter 2 Data Cleaning and Exploration](https://jfrench.github.io/LinearRegression/data-cleaning-and-exploration.html) from *A Progressive Introduction to Linear Models*
-
-- [An Overview of Plotting Data in Base R](https://aspiegler.github.io/Applied-Regression/C-Overview-of-Plots.html) for more details about creating plots in base R.
-
-- The [R Graph Gallery](https://r-graph-gallery.com/) has examples of many other types of graphs.
-
-- Optional: [Getting Started with `ggplot2`](https://colab.research.google.com/drive/1pCIpbag7MLvRbpWhGXlfoSvXP6qzaL5M?usp=sharing) and/or [Beyond the Basics of `ggplot2`](https://colab.research.google.com/drive/1Oz8qPf_RX9-q-gZWIdjUfNBF_L-ME8sA?usp=sharing) for more details about creating plots with `ggplot2`.
-
+- [Chapter 3 R for Data Science: Data Transformation](https://r4ds.hadley.nz/data-transform.html)
+- Optional: [Chapter 5 R for Data Science: Data Tidying](https://r4ds.hadley.nz/data-tidy.html)
 
 # Loading Required Packages
 
