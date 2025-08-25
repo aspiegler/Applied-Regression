@@ -777,12 +777,10 @@ What additional data cleaning would you perform on `hdi_clean`?
 Include code to perform additional cleaning.
 
 
-```{r}
-#| eval: true
-hdi_clean$country <- factor(hdi_clean$country)
-hdi_clean$year <- as.integer(hdi_clean$year)
-summary(hdi_clean)
-```
+
+<br>  
+<br>  
+
 
 ## Tidying the Electricity Usage Data
 
@@ -814,7 +812,7 @@ print(electric_na)
 
 Is the data frame `electric_na` tidy? If not, write out how you think the data frame should look.
 
-## Solution to Question 6
+### Solution to Question 6
 
 ---
 
