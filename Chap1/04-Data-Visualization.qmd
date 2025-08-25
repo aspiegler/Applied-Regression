@@ -206,7 +206,7 @@ Numerical exploration of a set of quantitative (`numeric`) values usually focuse
 
 Use R commands to calculate the mean, median, and standard deviation of the culmen length of all hawks in the sample. Then interpret the practical meaning of these numerical summaries. Include units in your interpretation when possible.
 
-::: {.callout-hint}
+::: {.callout-tip}
 If you get an error message or output that does not make sense at first, you can access help documentation with commands such as `?mean` that might help you correct the error.
 :::
 
@@ -219,7 +219,7 @@ If you get an error message or output that does not make sense at first, you can
 <br>  
 <br>  
 
-::: {.callout-hint}
+::: {.callout-tip}
 In the interpretation of the standard deviation, we can roughly apply what is often called the 68%-95%-99.5% Rule or the *Empirical Rule* which says if a distribution is normally distributed then: 68% of the data is within $\pm 1$ standard deviation from the mean, 95% of the data is within $\pm 2$ standard deviations from the mean, and 99.5% of the data is within $\pm 3$ standard deviations from the mean. The less normal the data is distributed, the less accurate this rule becomes.
 :::
 
