@@ -1,5 +1,5 @@
 ---
-title: "Module 4: Data Visualization"
+title: "Solutions Module 4: Data Visualization"
 author: 
   - name: "Adam Spiegler"
     affiliation: "University of Colorado Denver"
@@ -1791,13 +1791,37 @@ Create one univariate plot for a `numeric` variable in `storms` using any method
 
 Options can vary. Below are some plots of different variables, using different plots and different plotting systems.
 
+#### Base R Graphics Without Defaults
+
 ```{r}
-# using base R to create generic histogram
-# most basic histogram we can make
+# using base R to create default histogram
 hist(storms$wind)
 ```
 
+```{r}
+# using base R to create default box plot
+boxplot(storms$wind)
+```
 
+
+```{r}
+# using base R to create default density plot
+# most basic histogram we can make
+plot(density(storms$wind))
+```
+
+#### `ggplot2` with Defaults
+
+```{r}
+# switch which geom is uncommented to generate a different plot type
+ggplot(storms, aes(x = wind)) + 
+#  geom_histogram()  # geom for histogram
+  geom_boxplot()  # geom for box plot
+#  geom_density()  # geom for density
+#  geom_violin()  # geom for violin plot
+```
+
+#### Base R with Additional Formatting
 
 ```{r}
 # using base R hist
@@ -1805,32 +1829,17 @@ hist(storms$wind)
 hist(storms$wind,  # vector of values to plot
      breaks = seq(0, 170, 10),  # specify endpoints of bins
      xlab = "Wind Speed (in knots)",   # x-axis label
-#     xlim = c(5, 40),  # sets window for x-axis
+     xlim = c(0, 180),  # sets window for x-axis  (doesn't work!)
      ylab = "Frequency",  # y-axis label
-     ylim = c(0, 4000),  # sets window for y-axis
+     ylim = c(0, 5000),  # sets window for y-axis (doesn't work!)
      main = "Distribution of Wind Speeds of Storms",  # main label
      col = "steelblue")  # fill color of bars
+
+axis(side = 1, at = seq(0, 180, 20)) # fix x-axis ticks
+axis(side = 2, at = seq(0, 5000, 1000)) # fix y-axis ticks
 ```
 
-```{r}
-# using base R to create generic boxplot
-# most basic boxplot we can make
-boxplot(storms$wind)
-```
-
-```{r}
-# using base R to create generic density plot
-# most basic density plot we can make
-plot(density(storms$wind))
-```
-
-```{r}
-#| message: false
-# most basic histogram with ggplot2
-ggplot(storms, aes(x = pressure)) +
-  geom_histogram()
-```
-
+#### `ggplot2` with Formatting Options and Layers
 
 ```{r}
 #| message: false
@@ -1870,7 +1879,7 @@ ggplot(storms, aes(x = pressure)) +
     title = "Distribution of Storm Pressure",  # add main title
     x = "Pressure (in millibars)", y = "Count"   # add label on each axis
   ) + 
-  theme_base()
+  theme_classic()
 ```
 
 <br>  
@@ -1887,6 +1896,84 @@ Create one univariate plot for a categorical variable in `storms` using any meth
 ### Solution to Question 13
 
 ---
+
+#### Base R Graphics Without Defaults
+
+```{r}
+# using generic plot function with factor results in bar plot
+plot(storms$category)
+```
+
+```{r}
+# using table and barplot base R to create bar plot
+my_tbl <- table(storms$category)
+barplot(my_tbl)
+```
+
+
+```{r}
+# using prop.table to create relative freq bar plot
+my_prop_tbl <- prop.table(table(storms$category))
+barplot(my_prop_tbl)
+```
+
+#### `ggplot2` with Defaults
+
+```{r}
+# by default NA observations are included
+# not what we want for this plot
+ggplot(storms, aes(x = category)) + 
+  geom_bar()  # geom for bar plot
+```
+
+
+```{r}
+# a better plot when removing NA bar
+# filter out obs with category not equal to NA
+clean_category <- filter(storms, !is.na(category))
+      
+ggplot(clean_category, aes(x = category)) + 
+  geom_bar()  # geom for bar plot
+```
+
+#### Base R with Additional Formatting
+
+```{r}
+# a frequency bar plot with nice format
+plot(storms$category, 
+     main = "Distribution of Hurricanes by Category",  # main title
+     xlab = "Category Hurricane",  # title on x-axis
+     ylab = "Count",  # title on y-axis
+     col = rainbow(5))  # fill colors
+```
+
+
+```{r}
+# a relative frequency bar plot with nice format
+barplot(prop.table(table(storms$category)), 
+     main = "Distribution of Hurricanes by Category",  # main title
+     xlab = "Category Hurricane",  # title on x-axis
+     ylab = "Proportion",  # title on y-axis
+     col = terrain.colors(5))  # fill colors
+```
+
+
+#### `ggplot2` with Formatting Options and Layers
+
+```{r}
+#| message: false
+# bar plot with ggplot2 and improved layout
+clean_category <- filter(storms, !is.na(category))  # filter out obs with category not equal to NA
+
+ggplot(clean_category, aes(x = category)) +
+  geom_bar(fill = "steelblue") +
+  labs(
+    title = "Distribution of Hurricane Category",  # add main title
+    x = "Category", y = "Count"   # add label on each axis
+  ) + 
+  theme_classic()
+```
+
 
 
 
@@ -1905,6 +1992,94 @@ Create a scatter plot to see whether there is a relation between two `numeric` v
 
 ---
 
+#### Base R Graphics Without Defaults
+
+```{r}
+# using generic plot function with two numeric results in bar plot
+plot(wind ~ pressure, data = storms)  # plot(y ~ x, data = df)
+```
+
+
+```{r}
+# using generic plot function with two numeric results in bar plot
+# results in same plot as above
+plot(storms$pressure, storms$wind)  # plot(df$x, df$y)
+```
+
+
+#### `ggplot2` with Defaults
+
+```{r}
+# ggplot2 with no formatting
+ggplot(storms, aes(x = pressure, y = wind)) + 
+  geom_point()  # geom for scatter plot
+```
+
+
+#### Base R with Additional Formatting
+
+```{r}
+# a histogram with formatting
+plot(wind ~ pressure, data = storms, 
+     main = "Relation of Storm Pressure and Wind Speed",  # main title
+     xlab = "Pressure (in millibars)",  # title on x-axis
+     ylab = "Wind Speed (in knots)",  # title on y-axis
+     col = "green",   # set color of points
+     pch = 2,  # change shape of points
+     cex = 0.6)  # set size of points to 60% of default size
+```
+
+```{r}
+# a histogram with formatting
+# mapping status to color
+plot(wind ~ pressure, data = storms, 
+     main = "Relation of Storm Pressure and Wind Speed",  # main title
+     xlab = "Pressure (in millibars)",  # title on x-axis
+     ylab = "Wind Speed (in knots)",  # title on y-axis
+     col = status,   # set color of points
+     pch = 2,  # change shape of points
+     cex = 0.6)  # set size of points to 60% of default size
+```
+
+
+#### `ggplot2` with Formatting Options and Layers
+
+
+```{r}
+# ggplot with formatting
+ggplot(storms, aes(x = pressure,
+                   y = wind)) +  # change size
+  geom_point(color = "green",  # set color to green for all
+                   shape = 2,  # change shape to same for all
+                   size = 2) +  # change size for all
+  labs(  # customize labels
+    title = "Association Between Storm Pressure and Wind Speed",
+    subtitle = "North Atlantic Storms 1975-2022",
+    x = "Pressure (in millibars)",
+    y = "Wind Speed (in knots)") + 
+  theme_light()  # use a custom theme
+```
+
+```{r}
+#| warning: false
+# ggplot with formatting
+# mapping status to color
+ggplot(storms, aes(x = pressure,
+                   y = wind,
+                   color = status)) +  # change size
+  geom_point() +  # change size for all
+#  scale_x_continuous(breaks = seq(0, 500, by = 50)) +  # customize scale on x-axis
+#  scale_y_continuous(breaks = seq(0, 300, by = 50)) +  # customize scale on y-axis
+  labs(  # customize labels
+    title = "Association Between Storm Pressure and Wind Speed",
+    subtitle = "North Atlantic Storms 1975-2022",
+    x = "Pressure (in millibars)",
+    y = "Wind Speed (in knots)") + 
+  scale_color_colorblind() + # adjust color palette
+  theme_light()  # use a custom theme
+
+```
+
 
 
 <br>  
@@ -1922,7 +2097,118 @@ Create a side-by-side box plots or violin plots to compare the distribution of a
 
 ---
 
+#### Base R Graphics Without Defaults
 
+```{r}
+# using generic plot function with results in side-by-side box plots
+plot(storms$status, storms$wind)  # plot(df$fac, df$num)
+```
+
+```{r}
+# same plot as above using different syntax with plot
+plot(wind ~ status, data = storms)  # plot(num ~ fac, data = df)
+```
+
+
+```{r}
+# using boxplot function for side-by-side box plots
+boxplot(wind ~ status, data = storms)  # boxplot(num ~ fac, data = df)
+```
+
+
+
+
+#### `ggplot2` with Defaults
+
+```{r}
+# ggplot boxplots with no formatting
+ggplot(storms, aes(x = status, y = wind)) + 
+  geom_boxplot()  # geom for scatter plot
+```
+
+```{r}
+# ggplot violin plots with no formatting
+# not a very good choice in my opinion
+ggplot(storms, aes(x = status, y = wind)) + 
+  geom_violin()  # geom for scatter plot
+```
+
+
+```{r}
+# ggplot violin plots with no formatting
+# looks a little better if less levels of factor variable
+ggplot(storms, aes(x = category, y = wind)) + 
+  geom_violin()  # geom for scatter plot
+```
+
+
+#### Base R with Additional Formatting
+
+```{r}
+# side by side box plots with formatting
+# adding a legend covers the plot, not ideal
+plot(storms$status, storms$wind, 
+     main = "Distribution of Wind Speeds by Status",  # main title
+     xlab = "Storm Status",  # title on x-axis
+     ylab = "Wind Speed (in knots)",  # title on y-axis
+     col = topo.colors(9))  # fill colors
+
+# add a legend to plot
+legend(x="topright",  # place legend in top right
+       legend = levels(storms$status),  
+       fill = topo.colors(9))  # use same fill colors
+```
+
+
+```{r}
+# side by side box plots with formatting
+# we can rotate labels but still cut off
+plot(storms$status, storms$wind, 
+     main = "Distribution of Wind Speeds by Status",  # main title
+     xlab = "",  # no title on x-axis
+     ylab = "Wind Speed (in knots)",  # title on y-axis
+     col = topo.colors(9),  # fill colors
+     las = 3)  # rotate the labels on x axos
+
+```
+
+#### `ggplot2` with Formatting Options and Layers
+
+```{r}
+# ggplot2 with formatting changes
+# better customization
+ggplot(storms, aes(x = status, y = wind, fill = status)) +
+  geom_boxplot() +
+  labs(  # customize labels
+    title = "Distribution of Wind Speeds by Storm Status",
+    subtitle = "North Atlantic Storms 1975-2022",
+    x = "Storm Status",
+    y = "Wind Speed (in knots)") + 
+  theme_light() + 
+  theme(
+    legend.position = "top",  # adds legend on top which works!
+    axis.text.x = element_text(angle = 45, hjust = 1)  # custom rotate status labels
+  )  
+```       
+
+
+```{r}
+# ggplot2 with formatting changes
+# just changed geom to violin
+ggplot(storms, aes(x = status, y = wind, fill = status)) +
+  geom_violin() +
+  labs(  # customize labels
+    title = "Distribution of Wind Speeds by Storm Status",
+    subtitle = "North Atlantic Storms 1975-2022",
+    x = "Storm Status",
+    y = "Wind Speed (in knots)") + 
+  theme_light() + 
+  theme(
+    legend.position = "top",  # adds legend on top which works!
+    axis.text.x = element_text(angle = 45, hjust = 1)  # custom rotate status labels
+  )  
+```       
+       
 
 <br>  
 <br> 

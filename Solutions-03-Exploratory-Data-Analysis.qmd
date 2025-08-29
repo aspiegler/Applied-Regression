@@ -1,5 +1,5 @@
 ---
-title: "Module 3: Exploratory Data Analysis"
+title: "Solutions Module 3: Exploratory Data Analysis"
 author: 
   - name: "Adam Spiegler"
     affiliation: "University of Colorado Denver"
