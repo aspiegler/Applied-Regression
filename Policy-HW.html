@@ -3271,7 +3271,7 @@ Note
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>my_mean <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  clean_data <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(x)  <span class="co"># remove missing values</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">length</span>(clean_data)  <span class="co"># compute number of elements in x</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    xbar <span class="ot">&lt;-</span> <span class="fu">sum</span>(clean_data) <span class="sc">/</span> n  <span class="co"># sum of x divided by n</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  xbar <span class="ot">&lt;-</span> <span class="fu">sum</span>(clean_data) <span class="sc">/</span> n  <span class="co"># sum of x divided by n</span></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  xbar  <span class="co"># print xbar to screen</span></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
@@ -3291,7 +3291,7 @@ Note
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This is code is way more complicated than needed. This was intended to be a simple one line command answer. We are going to use the built-in <code>mean()</code> function a lot this semester, so better you familiarize yourself with it. You do not want to get in a habit of recreating functions that already have scripts. Using code such as this on an exam is time consuming and inefficient; thus, you would not earn full credit for this work on homework or the exam since it is not a very elegant solution.</p>
+<p>This code is way more complicated than needed. This was intended to be a simple one line command answer. We are going to use the built-in <code>mean()</code> function a lot this semester, so better you familiarize yourself with it. You do not want to get in a habit of recreating functions that already have scripts. Using code such as this on an exam is time consuming and inefficient; thus, you would not earn full credit for this work on homework or the exam since it is not a very elegant solution.</p>
 </div>
 </div>
 </section>

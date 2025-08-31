@@ -204,7 +204,7 @@ ChatGPT suggested the code below:
 my_mean <- function(x) {
   clean_data <- na.omit(x)  # remove missing values
   n <- length(clean_data)  # compute number of elements in x
-	xbar <- sum(clean_data) / n  # sum of x divided by n
+  xbar <- sum(clean_data) / n  # sum of x divided by n
   xbar  # print xbar to screen
 }
 
@@ -216,6 +216,6 @@ The mean hurricane force diameter is $14.9207$ nautical miles.
 
 
 ::: {.callout-note}
-This is code is way more complicated than needed. This was intended to be a simple one line command answer. We are going to use the built-in `mean()` function a lot this semester, so better you familiarize yourself with it. You do not want to get in a habit of recreating functions that already have scripts. Using code such as this on an exam is time consuming and inefficient; thus, you would not earn full credit for this work on homework or the exam since it is not a very elegant solution.
+This code is way more complicated than needed. This was intended to be a simple one line command answer. We are going to use the built-in `mean()` function a lot this semester, so better you familiarize yourself with it. You do not want to get in a habit of recreating functions that already have scripts. Using code such as this on an exam is time consuming and inefficient; thus, you would not earn full credit for this work on homework or the exam since it is not a very elegant solution.
 :::
 
