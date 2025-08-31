@@ -43,7 +43,7 @@ Homework is a time to further explore concepts we have discussed in class, ident
  
 --- 
  
-On the exams this semester, you are not allowed to us AI. You are not allowed to use any technology besides possibly a calculator. It is best to be honest with yourself in the learning process. Getting everything correct on homework with AI does not mean you will be able to answer similar questions on an exam without AI. If AI is helping your learn, grow, and understand concepts you previously struggled to understand great. If AI is giving you correct answer but you don't understand, you are not likely to do well on exams. **Avoid overreliance on AI to solve your problems!**
+On the exams this semester, you are not allowed to us AI. You are not allowed to use any technology besides possibly a calculator. It is best to be honest with yourself in the learning process. Getting everything correct on homework with AI does not mean you will be able to answer similar questions on an exam without AI. If AI is helping you learn, grow, and understand concepts you previously struggled to understand great. If AI is giving you correct answer but you don't understand, you are not likely to do well on exams. **Avoid overreliance on AI to solve your problems!**
 
 **If you are relying on AI to answer a few questions on an assignment, this is warning that you might not be grasping the content as rigorously as needed** to continue to grow and learn concepts in the future. Be sure you indicate in your work (both to you and I) which questions you could not solve yourself and needed the help of AI to solve. Review that content further and try another similar example to see if you have corrected the misunderstanding. If you are totally stuck, you should ask a human (me preferably!) for help.
 
@@ -59,10 +59,9 @@ Presenting someone else's work, words, or ideas as your own without proper attri
 It is not my intention to imply you are dishonest or have violated the policy. I am just curious and want to understand your work and thought process. I am more interested in *how* you solve than I am about *what* is your final answer. You are not in trouble, I just want to make sure your methods are vaild and allowed in the course, and more importantly you understand your own solution. If you are unable to explain your work to me, then that is problematic, and that might be an indication that you have violated the policy. 
 
 - The first instance, at minimum you will not be able to earn credit for the work. Depending on the extent, the penalty can be worse.
-- The second instance, at minimum you will lose credit on the entire assignment and maybe worse depending on the circumstances.
-- If the violation happens a third time, you will lose credit on the entire assignment (maybe worse depending). In addition, I will file an academic integrity report which can lead to more severe consquences.
+- If the violation happens a second time, you will lose credit on the entire assignment. Depending on the extent, the penalty can be worse. In addition, I will file an academic integrity report which can lead to more severe consquences.
 
-I went to emphasize if I reach out to you, am I just genuinely curious to understand your process for solving the problem. Our discussion is intended to help us both get on the same page and make sure you are on track in the class. If it becomes clear during those conversations you have claimed somebody else's work as your own, then that is indeed plagiarism and a violation of the academic integrity policy.
+I want to emphasize if I reach out to you, am I just genuinely curious to understand your process for solving the problem. Our discussion is intended to help us both get on the same page and make sure you are on track in the class. If it becomes clear during those conversations you have claimed somebody else's work as your own, that is plagiarism and a violation of the academic integrity policy.
 
 
 # Collaboration with Others {#sec-collab}
@@ -71,7 +70,7 @@ I went to emphasize if I reach out to you, am I just genuinely curious to unders
 
 Collaboration with others in the course is encouraged as long as you do so responsibly. Talking with classmates is a great way to provide/receive help and learn. It is totally fine to compare work on a homework question. If all parties have independently reached the same answer using very similar methods, that is not plagiarism. If your answers are different, then you are not permitted to use someone's answer and claim it as your work. Your classmate can explain a similar example to you and then you can correct your work on the homework problem yourself for example. 
 
-It is not okay to permit or allow another student to use your work. If I suspect you have taken or shared work with another student, then I will reach out to all parties to make sure everyone can explain the work to me individually. If it becomes clear that a student has submitted work they do not understand or are unable to explain to me, then I reserve the right to penalize all parties involved (the giver and taker of ideas) according to the policy explained in the previous section.
+It is not okay to permit or allow another student to use your work. If I suspect you have taken or shared work with another student, then I will reach out to all parties to make sure everyone can explain the work to me individually. If it becomes clear that a student has submitted work they do not understand or are unable to explain to me, then I reserve the right to penalize all parties involved (the giver and taker of ideas) according to the policy explained in the [previous section](#sec-ai-integrity).
 
 
 # Examples of Showing Work on Homework {#sec-examples}
