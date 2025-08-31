@@ -1,5 +1,5 @@
 ---
-title: "Homework: Why, What, and How"
+title: "Homework and AI: Why, What, and How"
 author: 
   - name: "Adam Spiegler"
     affiliation: "University of Colorado Denver"
@@ -43,7 +43,7 @@ Homework is a time to further explore concepts we have discussed in class, ident
  
 --- 
  
-On the exams this semester, you are not allowed to us AI. You are not allowed to use any technology besides possibly a calculator. It is best to be honest with yourself in the learning process. Getting everything correct on homework with AI does not mean you will be able to answer similar questions on an exam without AI. If the AI is helping learn, grow, and understand concepts you previously struggled to understand great. If AI is giving you correct answer but you don't understand, you are not likely to do well on exams. **Avoid overreliance on AI to solve your problems!**
+On the exams this semester, you are not allowed to us AI. You are not allowed to use any technology besides possibly a calculator. It is best to be honest with yourself in the learning process. Getting everything correct on homework with AI does not mean you will be able to answer similar questions on an exam without AI. If AI is helping your learn, grow, and understand concepts you previously struggled to understand great. If AI is giving you correct answer but you don't understand, you are not likely to do well on exams. **Avoid overreliance on AI to solve your problems!**
 
 **If you are relying on AI to answer a few questions on an assignment, this is warning that you might not be grasping the content as rigorously as needed** to continue to grow and learn concepts in the future. Be sure you indicate in your work (both to you and I) which questions you could not solve yourself and needed the help of AI to solve. Review that content further and try another similar example to see if you have corrected the misunderstanding. If you are totally stuck, you should ask a human (me preferably!) for help.
 
