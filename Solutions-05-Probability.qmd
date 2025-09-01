@@ -1,0 +1,1235 @@
+---
+title: "Solutions Module 5: Essentials of Probability"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+editor: source
+#execute:
+#  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+
+## Additional Reading
+
+---
+
+- [Appendix A and B Overview of Probability and Statistics](https://jfrench.github.io/LinearRegression/prob-review.html) from *A Progressive Introduction to Linear Models*
+- [Chapter 2 Probability Essentials](https://aspiegler.github.io/Statistical-Theory/04-Overview-of-Probability.html) from *Statistical Methods: Exploring the Uncertain*
+
+
+# Random Variables
+
+---
+
+A **random variable** is a mapping that assigns a real number $X(\omega)$ to each outcome $\omega \in \Omega$.
+
+$$X: \Omega \to \mathbb{R}$$
+
+- We say $X$ is a discrete random variable if the domain is a set of integers. These are typically used when counting.
+- We say $X$ is a continuous random variable if the domain is a continuous interval of real numbers. These are typically used when measuring.
+
+
+::: {.callout-note title="Discrete Example" appearance="simple"}
+Let discrete random variable $X$ denote the number of pop songs in a randomly selected playlist of 40 songs.
+
+- The **sample space** $\Omega$ is all possible playlists of 40 songs (say picking with replacement).
+- An **outcome** $\omega$ is one randomly selected playlist of 40 songs.
+- $X$ maps each $\omega$ to a value in the set of integers $\left\{ 0, 1, 2, \ldots, 39, 40 \right\}$
+:::
+
+
+::: {.callout-note title="Continuous Example" appearance="simple"}
+Let continuous random variable $X$ denote the weight (in ounces) of a randomly selected book from the library.
+
+- The **sample space** $\Omega$ is all possible books in the library.
+- An **outcome** $\omega$ is one book in the library.
+- $X$ maps each $\omega$ to a value in the interval $( 0, \infty )$
+:::
+
+# Loading Required Packages
+
+---
+
+The `Ecdat` package contains a number of data sets related to economics and political science. If you have not already installed the package, be sure to run `install.packages("Ecdat")` in the console below. Then load the package by running the command below.
+
+```{r}
+library(Ecdat)  # package with some econ data
+library(tidyverse)
+library(ggthemes)  # to access color palette and other themes
+```
+
+
+The [Panel Study of Income Dynamics (PSID)](https://psidonline.isr.umich.edu/) is a long-running, nationally representative survey of U.S. families. It has followed the same families since 1968, gathering data on income, employment, wealth, housing, marriage, and other socioeconomic factors. The data in `PSID` is a subset (from 1993) of the full data set containing 4856 observations with 8 variables listed below:
+
+
+- `intnum`: 1968 interview ID number
+- `persnum`: person number
+- `age`: in years
+- `educatn`: highest grade completed
+- `earnings`: total labor income
+- `hours`: annual work hours
+- `kids`: live births to this individual
+- `married`: last known marital status (married, never married, windowed, divorced, separated, NA/DF, no histories)
+
+
+```{r}
+# load PSID data to data frame named PSID
+data(PSID)
+```
+
+```{r}
+# take a peak at the data
+summary(PSID)
+```
+
+
+```{r}
+# which value(s) were used for NA
+sort(PSID$educatn, decreasing = TRUE)[1:250]  # sort in decreasing order
+```
+
+```{r}
+PSID$educatn[PSID$educatn >= 98] <- NA  # replace 98 and 99 with NA
+summary(PSID$educatn)
+```
+
+
+
+
+
+## Question 1: Probability Questions
+
+---
+
+[According to US Census data](https://www.census.gov/content/dam/Census/library/publications/1994/demo/p20-477/p20-477.pdf), in 1993 the proportion of adults in the US that were married was 47%. What is the probability of picking a random sample of 50 adults in the US in 1993 that has exactly 25 married adults? At most 25 married adults? At least 25 married adults?
+
+
+
+::: {.callout-tip}
+Use a binomial distribution! [See the appendix](#sec-append-binom) for help using functions such as `dbinom`, `pbinom`, `rbinom` and/or `qbinom`.
+:::
+
+### Solution to Question 1
+
+---
+
+```{r}
+# dbinom(x, n, p) where n is sample size and
+# p is prob of "success"
+dbinom(25, 50, 0.47)  # exactly 25
+pbinom(25, 50, 0.47)  # at most 25 includes 25
+1 - pbinom(24, 50, 0.47) # at least 25 includes 25
+```
+
+<br>  
+<br>  
+
+## Question 2: A Statistical Question
+
+---
+
+A random sample of 50 adults in the US in 1993 is randomly selected. If 24 out of the 50 adults in the sample are married, what is the proportion of all adults in the US in 1993 that are married?
+
+
+
+### Solution to Question 2
+
+---
+
+If the sample is picked randomly, then it should resemble the population. The proportion of the sample that is married (a statistic denoted $\hat{p}$), should be "close" to proportion of all US adults in 1993 that were married (a parameter denoted $p$).
+
+::: {.callout-note}
+It is common to use "hat" notation to indicate something is an estimator for a parameter. The "hat" over the symbol means "an estimator for". We denote the sample proportion $\hat{p}$ (pronounced p-hat) since we use it to estimate the parameter $p$.
+:::
+
+
+#### Point Estimates
+
+---
+
+We have a sample proportion $\hat{p} = \frac{24}{50} = 0.48$. Thus, a reasonable estimate is $p \approx \hat{p} = 0.48$. When we estimate a population parameter with one value, this is called a **point estimate**. Two common methods for finding point estimates for a parameter given sample data are:
+
+- Maximum Likelihood Estimates (MLE) use probability methods and optimization.
+- Method of Moments (MoM) are a curving fitting approach that involves a system of non-linear equations.
+
+Of course, sample statistics will vary. We might get another sample with the proportion married people equal to $0.46$. A third sample might have $0.49$ as the proportion of married people. They all should be "close" to the value of $p$ (bias) Using the same method results in different point estimates. We consider various properties when deciding which estimator is best. Below some are some common properties to consider.
+
+- An estimator is **unbiased** if, on average, the estimate equals the value of the parameter, $E \left( \hat{\theta} \right) = \theta$.
+- The **efficiency** is $\text{Var}\left( \hat{\theta} \right)$ which measures the variability of the estimator.
+- The **Mean Square Error (MSE)** is a property to takes into account both the bias and variability of an estimator.
+- An estimator is **consistent** if its value converges to the value of the parameter as the sample size $n \to \infty$.
+  
+
+::: {.callout-caution}
+If we pick a sample with 50 adults from a population with $47\%$ that is married, we will never get a point estimate $\hat{p} = 0.47$, so it is impossible to get a point estimate (using this method) that equals the actual value of parameter $p$.
+:::
+
+#### Interval Estimates
+
+---
+
+Rather than give a single value to estimate the population parameter, we often try to quantify the variability of the sample statistics (for example using the standard error of an underlying sampling distribution). Then we can build a margin of error into our estimate to account for this variability and give an **interval estimate** for the parameter. **Confidence intervals** are interval estimates that have the a specified success rate (confidence level) of containing the parameter. For example, a 95% confidence interval has a 95% chance of containing the actual value of the unknown population parameter.
+
+- For some statistics (such as means and proportions), we can theoretically model the underlying sampling distribution using the Central Limit Theorem (CTL) as long as certain conditions have been satisfied.
+  - CLT only applies for a small number of statistics, means and proportions most commonly.
+  - CLT gets more accurate as the sample size increases, and it may not apply if samples are not large enough.
+- We can almost always apply resampling methods such as bootstrapping to approximate a sampling distribution.
+  - Resampling methods can be used to simulate sampling distributions for any statistic.
+
+
+```{r}
+# using a Wald confidence interval with no continuity correction
+p_hat <- 0.48  # point est is p = p_hat
+se <- sqrt(0.48 * (1 - 0.48) / 50)  # compute standard error
+
+# putting each calculation in parentheses prints to screen as well
+(wald_low <- p_hat - 1.96 * se) 
+(wald_up <- p_hat + 1.96 * se)
+```
+ 
+ 
+**The interval from $0.341$ to $0.618$ has a 95% chance of containing the proportion of all adults in the US that were married in 1993.**
+ 
+```{r}
+# score confidence interval with a continuity correction
+prop.test(24, 50, conf.level = 0.95)
+```
+
+**The interval from $0.339$ to $0.624$ has a 95% chance of containing the proportion of all adults in the US that were married in 1993.**
+
+We can use resampling methods to construct a Bootstrap Confidence Interval. We can represent our initial sample of $n=50$ with 24 married adults as a vector of logicals. We have 24 `TRUE` entries and 26 `FALSE` entries stored in `my_samp` to represent our sample of adults
+
+```{r}
+my_samp <- c(rep(TRUE, 24), rep(FALSE, 26))
+my_samp
+mean(my_samp)  # sample proportion married adults
+```
+
+
+```{r}
+set.seed(101)  # set seed for fixed randomization
+N <- 10^5  # Number of bootstrap samples
+boot_prop <- numeric(N)  # create vector to store bootstrap proportions
+
+# for loop that creates bootstrap dist
+for (i in 1:N)
+{
+  x <- sample(my_samp, size = 50, replace = TRUE)  # pick a bootstrap resample
+  boot_prop[i] <- mean(x)  # compute bootstrap sample proportion
+}
+
+(boot_low <- quantile(boot_prop, 0.025))  # lower cutoff
+(boot_up <- quantile(boot_prop, 0.975))  # upper cutoff
+```
+
+**The interval from $0.34$ to $0.62$ has a 95% chance of containing the proportion of all adults in the US that were married in 1993.**
+
+
+```{r}
+# plot bootstrap distribution
+hist(boot_prop,  
+     breaks=20, 
+     xlab = "p-hat, sample proportion",
+     main = "Bootstrap Distribution for Sample Proportion")
+
+# blue lines at each cutoff
+abline(v = boot_low, col = "blue", lwd = 2, lty = 2)
+abline(v = boot_up, col = "blue", lwd = 2, lty = 2)
+```
+
+## Probability Density Functions
+
+---
+
+If $X$ is a discrete random variable, we define the  **probability mass function (pmf)** for $X$, denoted $p_X(x)$, as the probability random variable $X$ is exactly equal to $x$, $p_X(x) = P(X=x)$.
+
+
+If $X$ is a continuous random variable, we denote the **probability density function (pdf)** for $X$ as $f_X(x)$ and we interpret the value differently from the discrete case. The units of $f_X(x)$ are proportion per unit of $X$.
+
+- We compute probabilities from the pdf of a continuous random variable using **areas** under the graph of $f_X(x)$.
+- We use definite integrals to compute probabilities from a pdf,
+$$P(a < X < b) = \int_a^b f_X(x) \, dx = \text{an area under } f_X(x).$$
+
+::: {.callout-caution}
+Be careful to interpret the output of pdf's and pmf's differently. If $X$ is a continuous random variable, the output of the pdf $f_X(a)$ is NOT the probability that $X=a$. The probability that a continuous random variable $X$ is exactly equal to any value is 0, $P(X = a) = 0$. 
+:::
+
+::: {.callout-note title="Example" appearance="simple"}
+Let continuous random variable $X$ denote the height (in inches) of a randomly selected adult. Suppose we know $f_X(70) = 0.02$.
+
+- The probability that a random person is *exactly* 70 inches is 0%. Thus $P(X = 70) = 0$.
+- $f_X(70) = 0.02$ tells us about 2% of the population is between $69.5$ and $70.5$ inches tall.
+:::
+
+
+## Cumulative Distribution Functions
+
+---
+
+If $X$ is a random variable, we define the **cumulative distribution function (cdf)** as $F_X(x)=P(X \leq x)$. It gives the proportion of all values less than or equal to $x$.
+
+- For a discrete random variable, we sum: 
+$$F_X(x) = P(X \leq x) = \sum_{k=\text{min value}}^x p_X(k).$$
+- For a continuous random variable, we integrate: 
+$$F_X(x) = P(X \leq x) = \int_{-\infty}^x f_X(t) \, dt.$$
+  - The cdf $F_X(x)$ is an antiderivative of the pdf $f_X(x)$.
+  - The pdf is the derivative of the cdf.
+  
+
+## Expected Value
+
+---
+
+The average or **expected value** for a discrete random variable $X$ is denote $E(X)$ or $\mu_X$ and computed using the formulas below depending on whether the random variable $X$ is discrete or continuous.
+
+- For a discrete random variable, we sum: $\displaystyle E(X) = \mu_X =  \sum_x \left( x \cdot p_X(x) \right)$.
+- For a continuous random variable, we integrate: $\displaystyle E(X) = \mu_X =  \int_{-\infty}^{\infty} x \cdot f_X(x) \, dx$.
+
+
+
+Let $X$ and $Y$ denote two random variables and $a$ and $b$ denote two constants. Then we have:
+
+::: {.callout-note title="Properties of Expected Value" appearance="simple"}
+- $E(a) = a$
+
+- $E(aX + bY) = aE(X) + bE(Y)$
+
+- $E(XY) = E(X)E(Y) + \text{Cov}(X, Y)$
+:::
+
+## Variance and Standard Deviation
+
+---
+
+The **variance** for a discrete random variable $X$ is one common way to measure how spread out (in relation to the expected value) are the values of $X$. The variance is denoted $\text{Var}(X)$ or $\sigma^2_X$ and computed using the formulas:
+
+$$\text{Var}(X) = \sigma^2_X =  \sum_x \left( (x-\mu)^2 \cdot p_X(x) \right) \quad \text{or} \quad \text{Var}(X) = \sigma^2_X =  \int_{-\infty}^{\infty} (x-\mu)^2 \cdot f_X(x) \, dx .$$
+
+
+The **standard deviation** for a discrete random variable $X$ is the square root of the variance and is denoted by $\sigma_X$. It more or less measures the average of the distances for each value of $X$ from the mean $\mu$.
+$$\text{SD}(X) = \sigma_X =  \sqrt{\text{Var}(X)} $$
+
+
+::: {.callout-note}
+We often use the standard error instead of the variance when describing the spread of $X$ since the standard deviation has the same units as $X$ and is easier to interpret in practical terms.
+:::
+
+
+Let $X$ and $Y$ denote two random variables and $a$ denote a constant. Then we have:
+
+::: {.callout-note title="Properties of Variance" appearance="simple"}
+- $\text{Var}(a) = 0$
+
+- $\text{Var}(aX) = a^2 \text{Var}(X)$
+
+- $\text{Var}(X) = E(X^2)  - \big( E(X) \big)^2 = E(X^2)  - \mu_X^2$
+
+- $\text{Var}(X + Y) = \text{Var}(X) \text{Var}(Y) + 2\text{Cov}(X,Y)$
+:::
+
+## Question 3
+
+---
+
+Using properties of discrete random variables, show that for any discrete random variable $X$ with pmf $p(X)$ and expected value $E(X) = \mu$, we have
+
+$$\text{Var}(X) = E(X^2)  - \mu^2.$$
+
+### Solution to Question 3
+
+---
+
+**Finish the proof below!**
+
+Let $X$ be a discrete random variable with pmf $p(x)$ and expected value $E(X)=\mu$. Then we have
+
+$$\begin{array}{rcll}
+\text{Var}(X) &=&  \sum_x \left( (x-\mu)^2 \cdot p(x) \right) & \text{(by definition)}\\
+ &=& \sum_x \left( (x^2 -2 \mu x + \mu^2) \cdot p(x) \right) & \text{(distributing squared term)}\\
+ &=& \sum_x \left( x^2 \cdot p(x) -2 \mu x  \cdot p(x)  + \mu^2  \cdot p(x)  \right) & \text{(distributing p(x))}\\
+ &=& \sum_x \left( x^2 \cdot p(x) \right) - \sum_x \left(2 \mu x  \cdot p(x) \right)  + \sum_x \left( \mu^2  \cdot p(x)  \right) & \text{(properties of summation)}\\
+ &=& ?? & \text{(??)} \\
+ &=& ?? & \text{(??)} \\
+ &=& ?? & \text{(??)} \\
+ &=& ?? & \text{(??)} \\
+\end{array}$$
+
+$$\begin{array}{rcll}
+\text{Var}(X) &=&  \sum_x \left( (x-\mu)^2 \cdot p(x) \right) & \text{(by definition)}\\
+ &=& \sum_x \left( (x^2 -2 \mu x + \mu^2) \cdot p(x) \right) & \text{(distributing squared term)}\\
+ &=& \sum_x \left( x^2 \cdot p(x) -2 \mu x  \cdot p(x)  + \mu^2  \cdot p(x)  \right) & \text{(distributing p(x))}\\
+ &=& {\color{blue}{\sum_x \left( x^2 \cdot p(x) \right)}} - \sum_x \left(2 \mu x  \cdot p(x) \right)  + \sum_x \left( \mu^2  \cdot p(x)  \right) & \text{(properties of summation)}\\
+ &=& {\color{blue}{E(X^2)}} - \sum_x \left({\color{red}{2 \mu}} x  \cdot p(x) \right)  + \sum_x \left( {\color{red}{\mu^2}}  \cdot p(x)  \right) & \text{(definition of } E(X^2) \text{)}\\
+ &=& E(X^2) - {\color{red}{2 \mu}} {\color{blue}{\sum_x \left(x  \cdot p(x) \right)}}  +  {\color{red}{\mu^2}} \sum_x p(x) & \text{(prop. of summation)}\\
+ &=& E(X^2) - 2 \mu {\color{blue}{E(X)}}  +  +  \mu^2 {\color{red}{\sum_x p(x)}}  & \text{(definition of } E(X) \text{)} \\
+ &=& E(X^2) - 2 {\color{blue}{\mu^2}} + \mu^2 \cdot {\color{red}{1}}  & \text{(prop. of pmf's)} \\
+ &=& E(X^2) - \mu^2 & \text{(algebra)} \\
+\end{array}$$
+
+
+Therefore, we see that $\text{Var}(X) = E(X^2)  - \mu^2$.
+
+<br>  
+<br>  
+
+
+
+
+# Comparing Two or More Random Variables
+
+---
+
+Let $X$ and $Y$ denote two random variables (either both discrete or both continuous). The **joint probability distribution** is a multivariate function denoted $p(x,y)$ or $f(x,y)$ that describes the behavior of two (or more) random variables simultaneously.
+
+- If $X$ and $Y$ are discrete, $p(a,b) = P(X = a \cap Y = b)$.
+- If $X$ and $Y$ are continuous, we can use $f(x,y)$ to compute probabilities as follows:
+$$P \big( (a < X < b) \cap (c < Y < d) \big) = \int_c^d \int_a^b f(x,y) \, dx \, dy = \int_a^b \int_c^d f(x,y) \, dy \, dx.$$
+
+A joint probability distribution can be used to understand how likely different combinations of these variables are to occur and if there is a relation between the variables.
+
+
+## Marginal Distributions
+
+---
+
+A **marginal distribution function of $X$** is denoted $p_X(x)$ or $f_X(x)$ and gives the probability $X$ takes certain values, independent of the values of $Y$. The marginal distribution of $X$ is derived from the joint probability distribution as follows:
+
+$$p_X(x) = P(X=x) = \sum_{y} p(x,y) \quad \text{or} \quad f_X(x) = \int_{-\infty}^{\infty} f(x,y) \, dy.$$
+
+Likewise, we can find the marginal distribution function for $Y$:
+
+$$p_Y(y) = P(Y=y) = \sum_{x} p(x,y) \quad \text{or} \quad f_Y(y) = \int_{-\infty}^{\infty} f(x,y) \, dx.$$
+
+
+## Independent Random Variables
+
+---
+
+Informally, we say two random variables $X$ and $Y$ are **independent** random variables if the value of one has no effect on the value of the other. More formally, if $X$ and $Y$ denote two random variables with joint distribution $f(x,y)$, then $X$ and $Y$ are independent if and only if
+
+$$f(x,y) = f_X(x) f_Y(y) , \quad \text{for all } (x,y) \text{ in the domain of } f.$$
+
+If $X$ and $Y$ are two independent random variables and $a$ and $b$ are two constants, then the following special properties hold:
+
+::: {.callout-note title="Properties of Independent Random Variables" appearance="simple"}
+- $E(XY) = E(X) E(Y)$
+
+- $\text{Var}(aX + bY) = a^2 \text{Var}(X) + b^2 \text{Var}(Y)$
+
+- $\text{Cov}(X,Y) = 0$ (more on this in a second)
+:::
+
+::: {.callout-warning}
+We cannot use any of the properties listed in the bullets above if $X$ and $Y$ are dependent random variables.
+:::
+
+
+## Question 4 {#q4}
+
+---
+
+Let random variables $X$ and $Y$ denote the education level (in years) and income (in dollars), respectively, of a randomly selected adult.
+
+- Do you believe $X$ and $Y$ are independent random variables? Why or why not? 
+- If a person is has a lot of education (say an MS degree), then what would you expect the sign of $x-\mu_X$ to be? The sign  of $y-\mu_Y$?
+- If a person has less education (say did not complete HS), then what would you expect the sign of $x-\mu_X$ to be? The sign  of $y-\mu_Y$? 
+- What would you expect the sign of the product $(x-\mu_X)(y-\mu_Y)$ to be? 
+
+
+### Solution to Question 4
+
+---
+
+- No, the level of education is associated with higher income earnings.
+- Both $x-\mu_X$ and $y-\mu_Y$ would be positive since their education and income would be better than average.
+- Both $x-\mu_X$ and $y-\mu_Y$ would be negative since their education and income would be below than average.
+- Thus, the $(x-\mu_X)(y-\mu_Y)$ will be positive (most of the time).
+
+
+<br>  
+<br>  
+
+## Covariance
+
+---
+
+The **covariance** of random variables $X$ and $Y$ measures how strong is the dependence between two variables and is denoted $\text{Cov}(X,Y)$. The covariance is defined using the formula,
+
+$$\text{Cov}(X,Y) = E\bigg( (X-\mu_X)(Y-\mu_Y) \bigg) .$$ 
+
+- If  $\text{Cov}(X,Y) > 0$ increasing $X$ leads to larger values of $Y$.
+  - We say $X$ and $Y$ have a **positive association**. 
+  
+- If  $\text{Cov}(X,Y) < 0$ increasing $X$ leads to smaller values of $Y$.
+  - We say $X$ and $Y$ have a **negative association**. 
+  
+- If $X$ and $Y$ are independent, then $\text{Cov}(X,Y) = 0$.
+
+::: {.callout-caution}
+$\text{Cov}(X,Y) = 0$ does not always imply that $X$ and $Y$ are independent. It is true that if $X$ and $Y$ are independent, then $\text{Cov}(X,Y) = 0$, but the converse is not true. It is possible that $\text{Cov}(X,Y) = 0$, but $X$ and $Y$ are dependent.
+:::
+
+
+Let $X$ and $Y$ denote two random variables and $a$ and $b$ two constants, then the following properties hold:
+
+::: {.callout-note title="Properties of Covariance" appearance="simple"}
+
+- $\text{Cov}(X, a) = 0$
+
+- $\text{Cov}(X, X) = \text{Var}(X) = \sigma^2_X$
+
+- $\text{Cov}(X, Y) = \text{Cov}(Y, X)$
+
+- $\text{Cov}(aX, bY) = ab \ \text{Cov}(X,Y)$
+
+- $\text{Cov}(X + a, Y + b) = \text{Cov}(X, Y)$
+
+- $\text{Cov}(X,Y) = E(XY) = E(X)E(Y)$
+:::
+
+## Question 5
+
+---
+
+For any two random variables $X$ and $Y$, prove $\text{Cov}(X,Y) = E(XY) = E(X)E(Y)$.
+
+
+### Solution to Question 5
+
+---
+
+We start with the definition of covariance and expected value and distributing terms inside the integral. Then we apply properties of integrals and break up sums and pull out multiplication by constants in the work below.
+
+$$\begin{align}
+\text{Cov}(X,Y) &= E\big( (X-\mu_X)(Y-\mu_Y) \big) \\
+&= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} (x-\mu_x)(y-\mu_Y) f(x,y) \, dx \, dy \\
+&= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \big( xy f(x,y) + \mu_X \mu_Y f(x,y) - x \mu_Y f(x,y) - y \mu_X f(x,y)  \big) \, dx \, dy\\
+&= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \big( xy f(x,y) \big) \, dx \, dy +
+\mu_X \mu_Y \int_{-\infty}^{\infty} \int_{-\infty}^{\infty}  f(x,y) \, dx \, dy  \\
+& \ \ \ \ \ - \mu_Y \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} x  f(x,y) \, dx \, dy - 
+\mu_X \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} y  f(x,y)  \bigg) \, dx \, dy\\
+\end{align}$$ 
+
+Next, we recall the following from probability:
+
+- By definition of expected value, $\displaystyle \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \big( xy f(x,y) \big) \, dx \, dy = E(XY)$
+- By properties of probability distributions, we know definition $\displaystyle \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} f(x,y) \, dx \, dy = 1$.
+
+Using the two observations above and the fact $x$ is treated like a constant when we integrate by $y$, and likewise $y$ is treated like a constant when we integrate by $x$, we simplify further. Not one of the double integrals we reverse the order of integration.
+
+$$\begin{align}
+\text{Cov}(X,Y) &= \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} \big( xy f(x,y) \big) \, dx \, dy +
+\mu_X \mu_Y \int_{-\infty}^{\infty} \int_{-\infty}^{\infty}  f(x,y) \, dx \, dy \\
+& \ \ \ \ \ - \mu_Y \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} x  f(x,y) \, dx \, dy - 
+\mu_X \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} y  f(x,y)  \bigg) \, dx \, dy \\
+&= E(XY) + \mu_X \mu_Y - \mu_Y \int_{-\infty}^{\infty} x \left( \int_{-\infty}^{\infty}   f(x,y) \, dy \right) \, dx -  \mu_x \int_{-\infty}^{\infty} y \left( \int_{-\infty}^{\infty}   f(x,y) \, dx \right) \, dy \\
+&= E(XY) + E(X)E(Y) - E(X) \int_{-\infty}^{\infty} y f_Y(y) \, dy - E(Y) \int_{-\infty}^{\infty} x f_X(x) \, dx
+\end{align}$$ 
+
+In the last line of work above, we use the definition of marginal distribution:
+
+- $\displaystyle f_X(x) = \int_{-\infty}^{\infty}   f(x,y) \, dy$, and
+- $\displaystyle f_Y(y) = \int_{-\infty}^{\infty}   f(x,y) \, dx$.
+
+Lastly, we apply the definition of expected value $E(X)$ and $E(Y)$ and simplify.
+
+$$\begin{align}
+\text{Cov}(X,Y) &= E(XY) + E(X)E(Y) - E(X) \int_{-\infty}^{\infty} y f_Y(y) \, dy - E(Y) \int_{-\infty}^{\infty} x f_X(x) \, dx \\
+&= E(XY) + E(X)E(Y) - E(X)E(Y) - E(Y)E(X) \\
+&= E(XY) - E(X)E(Y).
+\end{align}$$ 
+
+This concludes the proof.
+
+<br>  
+<br>  
+
+
+## Question 6
+
+---
+
+Compute the covariance and correlation coefficient between the variables `edcuatn` and `earnings` in the `PSID` data frame. How does it align with your answer to [Question 4](#q4)?
+
+::: {.callout-tip}
+R has built-in functions `cov(x, y)` and `cor(x, y)` that calculate the covariance and Pearson's correlation coefficient between two `numeric` variables. We'll discuss Pearson's correlation coefficient next time!
+:::
+
+### Solution to Question 6
+
+---
+
+```{r}
+cov(PSID$educatn, PSID$earnings, use = "complete.obs")  # covariance matrix
+cor(PSID$educatn, PSID$earnings, use = "complete.obs")  # correlation matrix
+```
+
+Both values are positive which indicates a positive relationship which does line up with our answers in [Question 4](#q4).
+
+<br>  
+<br>  
+
+
+### Covariance, Correlation, and Scatter Plot Matrices
+
+---
+
+We can use the `cov()` and `cor()` functions to compute the covariance and correlation matrix which gives all values for each pair of numeric variables. We first remove the `factor` variables which in this case is just `married`. We also filter out all observations with missing values for `educatn`.
+
+```{r}
+psid_num_clean <- PSID |> select(-married) |> filter(!is.na(educatn)) # clean data
+cov(psid_num_clean)  # compute covariance matrix
+```
+
+
+
+## Question 7 {#q7}
+
+---
+
+Which variable has the biggest positive covariance with `earnings` (excluding `earnings` itself)? Which variable has the most negative covariance with `earnings`? Which variable has the covariance with `earnings` that is closest to 0? Interpret these observations in practical terms.
+
+
+### Solution to Question 7
+
+---
+
+The variable `hours` has the largest covariance with `earnings`. This makes sense since the more hours a person works, typically the more they earn.
+
+The variable `intnum` has the most negative covariance with `earnings`. This does not make too much sense on the surface since `intnum` seems to be some sort of ID number assigned to households in the 60's. I would expect the ID to not be associated with `earnings` either way, but perhaps there is some characteristics that are associated with both the `intnum` and `earnings` based on how ID's were determined?
+
+The variable `age` has covariance with `earnings` that is closest to 0. This is a little surprising to me since I'd think as `age` increases, so do `earnings`, and that would be a strong association. The value is positive, hinting at a positive association, but not as strong as others.
+
+<br>  
+<br>  
+
+
+```{r}
+cor(psid_num_clean)  # compute correlation matrix
+```
+
+
+## Question 8
+
+---
+
+Which variable has correlation with `earnings` that is closest to $1$ (excluding `earnings` itself)? Which variable has correlation with `earnings` that is closest to $-1$ ? Which variable has correlation with `earnings` that is closest to $0$ ? Interpret these observations in practical terms. How do the compare with your answers to [Question 7](#q7)?
+
+
+### Solution to Question 8
+
+---
+
+The variable `hours` also has the correlation with `earnings`. This makes sense since the more hours a person works, typically the more they earn.
+
+The variable `intnum` also has the most negative correlation with `earnings`. Again, as stated in the previous question, this might seem odd on the surface without knowing what `intnum` is capturing in the ID (if anything) 
+
+The variable `persnum` has correlation value with `earnings` that is closest to 0 which is different from the covariance, `cov(age, earnings)`, was closest to zero. This makes a little more sense since I would expect the `earnings` to be independent from `persnum` which is an ID assigned (at random?).
+
+We can see covariance and correlation seem to be similar and related, but the are capturing something different about the relationship.
+
+<br>  
+<br>  
+
+
+```{r}
+# scatter plot matrix to visualize instead
+# not particularly helpful here
+pairs(PSID)
+```
+
+## Question 9
+
+---
+
+Pick the one variable that you believe has the strongest linear relation with `earnings`. Construct a scatter plot displaying `earnings` on the $y$-axis and your predictor variable on the $x$-axis. If you use `ggplot2`, add a smoother to the plot to represent the regression line.
+
+### Solution to Question 9
+
+---
+
+Based on the previous question, the variable with the correlation coefficient closest to 1 with `earnings` and `hours`. Thus, we choose `hours` as our predictor and `earnings` as the response variable.
+
+
+```{r}
+# default using base R with married mapped to color
+# should add a legend since not added by default
+plot(earnings ~ hours, data = PSID, col = married)
+```
+
+
+```{r}
+# default using ggplot2 mapping married to color
+ggplot(PSID, aes(x = hours, y = earnings, color = married)) + 
+  geom_point()
+```
+
+
+
+
+```{r}
+ggplot(PSID, aes(x = hours, y = earnings, color = married)) + 
+  geom_point() + 
+  facet_wrap(~married) + 
+  scale_color_colorblind()  # adjust color palette
+```
+
+
+```{r}
+ggplot(PSID, aes(x = hours, y = earnings)) + 
+  geom_point(aes(x = hours, y = earnings, color = married)) + 
+  geom_smooth(method = "lm") + 
+  scale_color_colorblind()  # adjust color palette
+```
+
+```{r}
+ggplot(PSID, aes(x = hours, y = earnings, color = married)) + 
+  geom_point() + 
+  geom_smooth(method = "lm") +
+  facet_wrap(~married) + 
+  scale_color_colorblind()  # adjust color palette
+```
+
+
+```{r}
+# using base R with viridis color palette and legend
+num_col <- nlevels(PSID$married)  # counts number of levels for married
+my_pal <- hcl.colors(n = num_col, palette = "viridis")  # use viridis color palette
+
+# create scatter plot
+plot(earnings ~ hours, data = PSID, col = my_pal[married])
+
+# Add a legend to explain the colors
+legend("topleft",
+  legend = levels(PSID$married),  # creates character vector containing level names
+  col = my_pal[PSID$married], 
+  pch = 16
+)
+```
+
+
+<br>  
+<br>  
+
+
+# A First Look at Linear Regression in R
+
+---
+
+We can use the base R function `lm(y ~ x , data = df)` find estimates for the coefficients, denoted $\hat{beta}_0$ and $\hat{\beta}_1$, in linear regression model of the form $y = \beta_0 + \beta_1 x$. Run `?lm` from the console to learn more.
+
+```{r}
+lmod <- lm(earnings ~ hours, data = PSID)
+summary(lmod)
+```
+
+From the `summary` output above, we see the linear relation is statistically significant with an extremely small p-value (`2.2e-16`). A 95% confidence interval for the slope is approximately $10.7218 \pm 1.96 (0.1871)$ which contains only positive values which is why the result is statistically significant. The linear model that best fits the data is
+
+$$\widehat{\text{earnings}} = 999.4906 + 10.7218 \cdot \widehat{\text{hours}}$$
+
+## The Output of `lm`
+
+---
+
+
+
+```{r}
+class(lmod)
+```
+
+An object of class `lm` is a list containing many components. Run `?lm` in the console to see the full list in the help manual. Below we view a few of the most commonly used.
+
+```{r}
+lmod$coefficients  # vector where values of coefficients are stored
+#lmod$fitted.values  # vector predicted y values
+#lmod$residuals  # vector of errors (actual y value) - (predicted y value)
+```
+
+
+
+## Plotting the Residuals
+
+---
+
+The error of the predicted values are called the residuals. 
+
+```{r}
+# residual plot
+plot(resid(lmod),
+     main = "Plot of Errors",
+     xlab = "Index",
+     ylab = "Error")
+```
+
+From the plot above, we might infer our model is biased in the sense it gives some very large overestimates, but the underestimates are not as drastic.
+
+
+## Making Predictions
+
+---
+
+The `predict()` function is used to make predictions based on results of various model fitting functions, `lm()` being of such model fitting function.
+
+The `predict()` function
+
+```{r}
+# must store feature values in a data frame
+# one column of values 0, 1000, ... 8000, 24*365
+new_data <- data.frame(hours = c(seq(0, 8000, 1000), 24*365))
+```
+
+
+```{r}
+# prediction corresponding to hours values stored in new_data
+predictions <- predict(lmod, new_data)
+predictions
+```
+
+
+## Question 10: Practice with Joint Distributions
+
+---
+
+A large insurance agency services a number of customers who have purchased both a homeowner’s policy and an automobile policy from the agency. For each type of policy, a deductible amount must be specified. For an automobile policy, the choices are $\$100$ and $\$250$, whereas for a homeowner’s policy, the choices are $\$0$, $\$100$, and $\$200$.
+
+Suppose an individual with both types of policy is selected at random from the agency’s files. Let $A$ be the deductible amount on the auto policy and $H$ the deductible amount on the homeowner’s policy. The **joint probability mass function** for $A$ and $H$ is denoted $p(a,h)=P(A=a \mbox{ and } H=h)$ and is summarized in the two-way table below.
+
+<br> 
+
+![Table of Insurance Deductibles](https://raw.githubusercontent.com/CU-Denver-MathStats-OER/Statistical-Theory/main/Images/09fig-joint-table.png){width=50%}
+
+
+- Interpret the meaning of the value $p(100,0)=0.2$ in this context.
+- Write piecewise formulas for $p_A(a)$ and $p_H(h)$ and interpret their values.
+- Are random variables $A$ and $H$ independent? Explain.
+- Compute $\text{Cov}(A, H)$.
+
+### Solution to Question 10
+
+---
+
+#### Interpreting Joint Probability Mass Functions
+
+
+$p(100, 0) = 0.2$ means 20% of customers have an auto deductible of $\$100$ and no deductible for home insurance.
+
+
+#### Finding and Interpreting Marginal Distributions
+
+By definition, we can find the marginal distribution of $A$ as follows: 
+
+$$\begin{align}
+p_A (100) &= \sum_h p(100, h) = 0.20 + 0.10 + 0.2 = 0.5 \\
+p_A (250) &= \sum_h p(100, h) = 0.20 + 0.10 + 0.2 = 0.5 
+\end{align}$$
+
+Practically speaking, this means half of the customers have a $\$100$ auto deductible and the other half have a $\$250$ auto deductible. Their customers are equally likely to choose any one of the two options for their auto deductible.
+
+We can express the marginal distribution of $A$ as the piecewise function below.
+
+$$p_A(a) = \left\{ \begin{array}{ll}
+0.5 & a=100 \\
+0.5 & a=250 \\
+0 & \mbox{otherwise}
+\end{array} \right.$$
+
+
+Similarly, we have the marginal distribution of $H$ which we compute by essentially calculating the column total for each value of $H$.
+
+
+$$p_H(h) = \left\{ \begin{array}{ll}
+0.25 & h=0 \\
+0.25 & h=100 \\
+0.5 & h=200 \\
+0 & \mbox{otherwise}
+\end{array} \right.$$
+
+
+One quarter of their customers chose a home owners policy with no deductible, one quarter chose a $\$100$ home deductible, and the remaining 50% chose a $\$200$ home deductible.
+
+#### Independence?
+
+We can first think about this intuitively, and then do some math to see if our intuition lines up with the data. The two variables are likely to be dependent since we expect (maybe) a person who chooses a higher auto deductible to also choose a higher home deductible. Conversely, a person who chooses a lower auto deductible to also choose a lower home deductible. We should not claim there is a casual relation, just some association between the two. There are likely confounding variables that effect the deductible amounts people choose such as possibly risk aversion, socioeconomic status, age, gender, and race to new some.
+
+Let's do the math. By definition, to random variables are independent if and only if 
+
+$$p(a, h) = p_A(a) p_H(h) \quad \text{for all } (a, h) \text{ in the domain of } p(a,h).$$
+
+Let's consider the point $(100, 0)$ in the domain of $p(a, h)$. We have
+
+- $p(100,0) = 0.2$
+- $p_A(100) p_H(0) = (0.5)(0.25) = 0.125$
+- $p(100,0) \ne p_A(100) p_H(0)$
+
+We have identified one point where $p(a, h) = p_A(a) p_H(h)$ which is enough to show $A$ and $H$ are dependent random variables. To confirm they are independent, we would need to show $p(a, h) = p_A(a) p_H(h)$ for all possible pairs $(a, h)$  in the table. 
+
+#### Calculating Covariance
+
+Since we have already found $p_A(a)$ and $P_H(h)$, we compute $E(X)$, $E(Y)$, and $E(XY)$ and use the property $\text{Cov}(X,Y) = E(XY) - E(X)E(Y)$.
+
+$$\begin{align}
+E(A) &= \sum_A (a \cdot p_A(a)) = (100) (0.5) + 250 (0.5) = 175\\
+E(H) &= \sum_H (h \cdot p_H(h)) = (0)(0.25) + (100) (0.25) + (200) (0.5) = 125\\
+\end{align}$$
+
+The average of the auto deductibles is $\$175$ (though that is not an option for any single person to select), and the average of the home deductibles is $\$125$ (which is also not an option for any one person).
+
+Next we compute the expected value of the product of the deductible values $ah$. This does not really have practical significance in this context.
+
+$$\begin{align}
+E(AH) &= \sum_{(a,h)} \bigg( (ah) \cdot p(a,h) \bigg)\\
+&= (100 \cdot 0)p(100, 0) + (100 \cdot 100) p(100,100) + (100 \cdot 200) p(100,200) + \ldots + (250 \cdot 200) p(250, 200) \\
+&= 23,\!750
+\end{align}$$
+
+From these calculations, we have
+
+$$\text{Cov}(A, H) = E(AH) - E(A)E(H) = 23,\!750 - (175)(125) = 1,\!875$$
+
+The covariance is positive which lines up with our initial intuition.
+
+```{r}
+exp_ah <- 100 * 0 * 0.2 + 
+  100 * 100 * 0.1 + 
+  100 * 200 * 0.2 + 
+  250 * 0 * 0.05 +
+  250 * 100 * 0.15 + 
+  250 * 200 * 0.3
+
+exp_ah
+```
+
+```{r}
+cov_ah <- exp_ah - 175 * 125
+cov_ah
+```
+
+<br>  
+<br>
+
+
+
+
+# Appendix A: Common Discrete Random Variables {#sec-append-A}
+
+---
+
+## The Binomial Distribution {#sec-append-binom}
+
+---
+
+$X \sim \text{Binom}(n,p)$ is number of successes from $n$ identical and independent trials each with probability of success $p$.
+
+
+$$f(x; n, p) = \left\{ \begin{array}{ll} \left( \begin{array}{c} n\\ x \end{array} \right) p^x(1-p)^{n-x} \ \ & \text{for } x =0,1,2, \ldots , n\\    & \\    0 \ \ & \text{otherwise} \end{array} \right.$$
+
+- The expected value is $E(X) = \mu_X = np$.
+- The variance is $\text{Var} (X) = \sigma_X^2 = np(1-p)$.
+- Use `dbinom(x, n, p)` to calculate $p(x) = P(X = x)$.
+- Use `pbinom(x, n, p)` to calculate $F(x) = P(X \leq x)$.
+- Use `rbinom(m, n, p)` to generate a random sample of size $m$ from population $X \sim \text{Binom}(n,p)$.
+- Use `qbinom(q, n, p)` to find the q^th^ percentile of $X \sim \text{Binom}(n,p)$.
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: true
+par(mfrow=c(1,2))  # plot in a 1 by 2 array
+x <- 0:20  # vector of values 1, 2, ..., 20
+
+# plot pmf n=40 and p = 0.25
+plot(x, dbinom(x, size=40, prob=0.25), 
+     type='p')  # point plot
+
+# plot cdf n=40 and p = 0.25
+plot(x ,pbinom(x, size=40, prob=0.25),
+     type='s',  # stairs plot
+     main='X ~ Binom(40, 0.25)',
+     ylab='Probability',
+     xlab ='At most x Successes',
+     lwd=3)
+```
+
+## The Discrete Uniform Distribution {#sec-append-unif}
+
+---
+
+There are $k$ distinct outcomes each with an equal likelihood of occurring. 
+
+$$f(x; k) = \left\{ \begin{array}{ll} \dfrac{1}{k} \ \ & \text{for } x = 1, 2, \ldots,  k\\ 0 \ \ & \text{otherwise} \end{array} \right.$$
+
+- The expected value is $\displaystyle E(X) = \mu_X = \frac{k+1}{2}$.
+- The variance is $\displaystyle \text{Var} (X) = \sigma_X^2 = \frac{k^2-1}{12}$.
+- Note functions such as `dunif()`, `punif()`, `runif()`, and `qunif()` are for the **continuous** (not discrete) uniform distribution.
+- It is typically easier to calculate probabilities directly rather than use technology.
+
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: true
+par(mfrow=c(1,2))  # plot in a 1 by 2 array
+x.min <- 1
+x.max <- 6
+x <- x.min:x.max  # vector of integers  x.min,  ..., x.max
+p.x <- rep(1/(x.max - x.min+1), length(x) ) 
+c.x <- p.x * (x)
+
+plot(x, p.x, 
+     type='p',  # point plot
+     main='PMF')  
+
+plot(x, c.x, 
+     type='s',  # stairs plot
+     main='CDF') 
+```
+
+## The Geometric Distribution {#sec-append-geom}
+
+---
+
+$X \sim \text{Geom}(p)$ is the number of failures that occur before the first success, where $p$ denotes the probability of a success and $q=1-p$ is the probability of a failure.
+
+$$f(x; p) = \left\{ \begin{array}{ll} q^xp  \ \ & \text{for }  x = 0, 1, 2, \ldots  \\
+0 & \text{otherwise} \end{array} \right.  .$$
+
+- The expected value is $E(X) = \mu_X = \dfrac{q}{p}$.
+- The variance is $\text{Var} (X) = \sigma_X^2 = \dfrac{q}{p^2}$.
+- Use `dgeom(x, p)` to calculate $p(x) = P(X = x)$.
+- Use `pgeom(x, p)` to calculate $F(x) = P(X \leq x)$.
+- Use `rgeom(m, p)` to generate a random sample of size $m$ from population $X \sim \text{Geom}(p)$.
+- Use `qgeom(q, p)` to find the q^th^ percentile of $X \sim \text{Geom}(p)$.
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: true
+par(mfrow=c(1,2))  # plot in a 1 by 2 array
+x <- 0:8 
+
+plot(x, dgeom(x, prob=0.75), 
+     type='p',  # point plot
+     main='PMF')  
+
+plot(x, pgeom(x, prob=0.75),
+     type='s',  # stairs plot
+     main='CDF') 
+```
+
+## The Poisson Distribution {#sec-append-pois}
+
+---
+
+$X \sim \text{Pois}(\lambda)$ is the number of times an event occurs in a fixed time period, where $\lambda$ denotes the mean number of occurrences in the given time period.
+
+
+$$f(x; \lambda) = \left\{ \begin{array}{ll}  e^{-\lambda} \dfrac{\lambda^x}{x!} \ \ & \text{for } x = 0, 1, 2, \ldots  \\
+0 & \text{otherwise} \end{array} \right. .$$
+
+- The expected value is $E(X) = \mu_X = \lambda$.
+- The variance is $\text{Var} (X) = \sigma_X^2 =  \lambda$.
+- Use `dpois(x, lambda)` to calculate $p(x) = P(X = x)$.
+- Use `ppois(x, lambda)` to calculate $F(x) = P(X \leq x)$.
+- Use `rpois(m, lambda)` to generate a random sample of size $m$ from population $X \sim \text{Pois}(\lambda)$.
+- Use `qpois(q, lambda)` to find the q^th^ percentile of $X \sim \text{Pois}(\lambda)$.
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: true
+par(mfrow=c(1,2))  # plot in a 1 by 2 array
+x <- 0:15  # creates vector of possible occurrences
+lam <- 5  # on average 5 occurrence per time period
+
+plot(x, dpois(x, lam), 
+     type='p',  # point plot
+     main='PMF')  
+
+plot(x, ppois(x, lam),
+     type='s',  # stairs plot
+     main='CDF') 
+```
+
+
+
+# Appendix B: Common Continuous Random Variables {#sec-append-B}
+
+---
+
+## Normal Distributions {#sec-append-normal}
+
+---
+
+If $X$ is <span style="color:dodgerblue">**normally distributed**</span> with mean $\mu$ and standard deviation $\sigma$, we write $\color{dodgerblue}{X \sim N( \mu ,\sigma)}$. The formula for the probability density is called the Gaussian and is given below.
+
+
+$$f(x; \mu, \sigma) = \dfrac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2} \left( \frac{x-\mu}{\sigma} \right)^2}$$
+
+- The expected value is $E(X) = \mu$.
+- The variance is $\text{Var} (X) = \sigma^2$.
+- Use `dnorm(x, mu, sigma)` to calculate $f(x)$.
+  - <span style="color:tomato">Recall for continuous distributions, $f(x)$ gives the height of the pdf.</span>
+  - <span style="color:tomato">Probabilities are areas under $f(x)$ (not the heights).</span>
+  - <span style="color:tomato">**DO NOT use `dnorm()` to compute probabilities.**</span>
+- <span style="color:mediumseagreen">**Use `pnorm(x, mu, sigma)` to calculate $P(X \leq x)$, the area to the left of $X=x$.**</span>
+   -   <span style="color:mediumseagreen">**One last warning, be sure to use `pnorm()` to compute probabilities not `dnorm()`.**</span>
+- Use `rnorm(n, mu, sigma)` to generate a random sample of size $n$ from population $X \sim N(mu, sigma)$.
+- Use `qnorm(q, mu, sigma)` to find the q^th^ percentile.
+- We have the [**68%-95%-99.5% Empirical Rule**](#sec-empirical).
+- We can standardize the normal distribution using [**z-scores**](#sec-zscore):
+$$z = \frac{x - \mu}{\sigma}$$
+
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: true
+par(mfrow=c(1,2))  # plot in a 1 by 2 array
+
+x <- seq(15, 65, length=1000)
+
+plot(x, dnorm(x, 40, 5), type="l", col = "red", xlab="x value",
+  ylab="Density", main="pdf for N(40,5)")
+
+plot(x, pnorm(x, 40, 5), type="l", col = "blue", xlab="x value",
+  ylab="Density", main="cdf for N(40,5)")
+```
+
+## Continuous Uniform Distributions {#sec-append-unif-cont}
+
+---
+
+$X$ is a <span style="color:dodgerblue">**continuous uniform distribution**</span> when $X$ is equally likely to equal to any value on the closed, continuous interval $\lbrack a , b \rbrack$. If a continuous random variable is uniformly distributed on the interval $\lbrack a , b \rbrack$, the pdf is
+
+$$f(x; a,b) = \left\{ \begin{array}{ll} \dfrac{1}{b-a} & a \leq x \leq b\\ 0 & \text{otherwise} \end{array} \right. .$$
+
+The corresponding cdf is
+
+$$F(x) = \left\{ \begin{array}{ll} 
+0, &  x<a \\ 
+\frac{x-a}{b-a}, &  a \leq x \leq b \\ 
+1,  &  x>b 
+\end{array} \right. .$$
+
+-   The expected value is $E(X) = \dfrac{a+b}{2}$ 
+-   The variance is $\text{Var}(X) = \dfrac{(b-a)^2}{12}$
+
+When working with uniform distributions, it is typically easier to calculate probabilities "by hand" without the need for technology. However, R does have functions to help!
+
+- Use `dunif(x, a, b)` to find the height of the pdf function, which is $\frac{1}{b-a}$.
+  - There is really no need to use the function since the pdf has a constant height.
+  - <span style="color:tomato">**DO NOT use `dunif()` to compute probabilities.**</span>
+- Use `punif(x, a, b)` to calculate $P(X \leq x)=\int_a^x \frac{1}{b-a} \, dt = \frac{x-a}{b-a}$.
+  - **Probabilities can be found by computing areas of rectangles which may be easier!**
+- Use `runif(n, a, b)` to generate a random sample of size $n$ from population $X \sim \text{Unif}(a, b)$.
+- Use `qunif(q, a, b)` to find the q^th^ percentile.
+
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: true
+par(mfrow=c(1,2))  # plot in a 1 by 2 array
+x <- seq(3, 5, length=1000)
+y <- seq(2.5, 5.5, length=1000)
+
+plot(x, dunif(x, 3, 5), type="l", col = "red", xlab="x value",
+  ylab="Density", main="pdf Uniform on [3,5]",
+  xlim = c(2.5, 5.5), ylim = c(0, 0.75))
+
+g = function(y) {
+  (y < 3) * (0) + (y >= 3 & y <= 5) * (punif(y, 3, 5)) + (y > 5) * (1)
+}
+
+plot(y, g(y), type="l", col = "blue", xlab="x value",
+  ylab="Density", main="cdf Uniform on [3,5]",
+  xlim = c(2.5, 5.5))
+```
+
+## Exponential Distributions {#sec-append-exp}
+
+---
+
+Let $X$ be the amount of time between the successive events if we know the average time between occurrences is $\mu$. The <span style="color:dodgerblue">**rate parameter** $\lambda = \frac{1}{\mu}$</span> is the average number of times the event occurs per unit of time. Then $X$ is <span style="color:dodgerblue">**exponentially distributed**</span> with rate parameter $\lambda$, and we write $\color{dodgerblue}{X \sim \text{Exp} (\lambda)}$.
+
+The pdf for $X \sim \text{Exp} (\lambda)$ is the exponential function 
+
+$$f(x; \lambda) = \lambda e^{-\lambda x} \quad \text{for } x >0 .$$
+
+-   The expected value is $E(X) = \dfrac{1}{\lambda}=\mu$ 
+-   The variance is $\text{Var}(X) = \dfrac{1}{\lambda^2} = \mu^2$.
+- Use `dexp(x, lambda)` to find the height of the pdf function, which is $\lambda e^{-\lambda x}$.
+  - <span style="color:tomato">**DO NOT use `dexp()` to compute probabilities.**</span>
+- Use `pexp(x, lambda)` to calculate $P(X \leq x)=\int_0^x \lambda e^{-\lambda t} \, dt$.
+  - It never hurts to practice your integration and check with `pexp()`!
+- Use `rexp(n, lambda)` to generate a random sample of size $n$ from population $X \sim \text{Exp}(\lambda)$.
+- Use `qexp(q, lambda)` to find the q^th^ percentile.
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: true
+par(mfrow=c(1,2))  # plot in a 1 by 2 array
+
+x <- seq(0, 20, length=1000)
+
+plot(x, dexp(x, 1/5), type="l", col = "red", xlab="x value",
+  ylab="Density", main="pdf of Exp(1/5)",
+  xlim = c(-0.5, 20))
+
+plot(x, pexp(x, 1/5), type="l", col = "blue", xlab="x value",
+  ylab="Density", main="cdf of Exp(1/5)",
+  xlim = c(-0.5, 20))
+```
+
+## Gamma Distributions {#sec-append-gamma}
+
+---
+
+A <span style="color:dodgerblue">**gamma distribution**</span> is a distribution that arises naturally in processes for which the waiting times between events are relevant. Suppose we know that $\mu$ is the mean amount of time between successive occurrences of an event. Let $X$ be the amount of time it takes for the event to occur $r$ times.
+
+- The <span style="color:dodgerblue">**rate parameter**</span> $\color{dodgerblue}{\lambda = \frac{1}{\mu}}$ tells us how many times an event occurs per unit of time. 
+- The <span style="color:dodgerblue">**shape parameter**</span> $\color{dodgerblue}{r}$ denotes the total number of occurrences we will wait to occur.
+
+Then $X$ will follow a gamma distribution that we denote $\color{dodgerblue}{X \sim \text{Gamma} ( r, \lambda)}$. The pdf is given by
+
+$$f(x;r, \lambda) = \frac{1}{(r-1)!} \lambda^r x^{r-1} e^{-\lambda x} \quad \text{for } x >0 .$$
+
+
+- The expected value is $E(X) = \dfrac{r}{\lambda}$
+- The variance is $\text{Var}(X) = \dfrac{r}{\lambda^2}$.
+- Use `dgamma(x, r, lambda)` to find the height of the pdf function which is generally not too useful.
+  - <span style="color:tomato">**DO NOT use `dgamma()` to compute probabilities.**</span>
+- Use `pgamma(x, r, lambda)` to calculate $P(X \leq x)$.
+- Use `rgamma(n, r, lambda)` to generate a random sample of size $n$ from population $X \sim \text{Gamma}(r, \lambda)$.
+- Use `qgamma(q, r, lambda)` to find the q^th^ percentile.
+
+```{r}
+#| eval: true
+#| echo: false
+#| output: true
+par(mfrow=c(1,2))  # plot in a 1 by 2 array
+
+x <- seq(0, 25, length=1000)
+
+plot(x, dgamma(x, 3, 1/2), type="l", col = "red", xlab="x value",
+  ylab="Density", main="pdf of Gamma(3, 1/2)",
+  xlim = c(-0.5, 25))
+
+plot(x, pgamma(x, 3, 1/2), type="l", col = "blue", xlab="x value",
+  ylab="Density", main="cdf of Gamma(3, 1/2)",
+  xlim = c(-0.5, 25))
+```
+
+
+
