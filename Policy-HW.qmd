@@ -20,57 +20,56 @@ license: "CC BY-NC-SA"
 
 ---
 
-This semester, your performance is assessed using different forms of work such as reading quizzes, a final project, exams, and homework. Homework plays a critical role in learning the material for this course. Learning new things requires practice. Somebody can explain really well how to play a guitar. No matter how clearly they present the lesson, you won't know which parts you can do well and which you need to work on more until you try to play the chords yourself. It takes repetition to build muscle memory. The more practice, the more efficient you are likely to become. 
-
-I do not expect your homework to be flawless this semester. There are going to be times you make mistakes. Some are minor, others will help bring into focus where you need to focus your practice and/or which concepts to review further. Success in this course does not mean you are not making any errors. How you manage the occasions when you do get stuck is how to be successful in this course! 
+This semester your performance is assessed using different forms of work such as reading quizzes, a final project, exams, and homework. Homework plays a critical role in learning the material for this course. Learning new things requires practice. Somebody can explain really well how to play a guitar. No matter how clearly they present the lesson, you won't know which parts you can do well and which you need to work on more until you try to play the chords yourself. It takes repetition to build muscle memory. The more practice, the more efficient you are likely to become. 
 
 Homework is a time to further explore concepts we have discussed in class, identify where you need more practice, and build connections with previous material. Your ideas are still forming. Studying is the period where concepts come into focus and crystallize. After the exam, you are ready to build more levels on top of your foundation. If your foundation never settles, you may experience difficulty learning and incorporating new ideas and methods on top of a shaky or incomplete foundation.
+
+I do not expect your homework to be flawless this semester. There are going to be times you make mistakes. Some are minor, others will help bring into focus which concepts you should review further. Success in this course does not mean you are not making any errors. How you manage the occasions when you do get stuck is how to be successful in this course! 
+
 
 # Use of AI on Homework {#sec-use-ai}
 
 ---
 
-**My intention is that there is no need for you to use AI this semester**. I present material in class and assign readings/videos that cover all of the topics and learning objectives for the course. Thus, you might not use AI at all this semester. This course is designed for you to complete homework based on the methods we discuss in class. When you do run into questions or get stuck on a question, you can ask me for help. If you make some errors on your homework, that is to be expect and a part of the learning process. I will provide comments and suggestions on your returned work to help you improve and avoid making a similar error in the future. If you want me to clarify or expand on my comments, we can discuss further. Making mistakes can be frustrating, but that is also when long lasting lessons are learned. This is how people have been learning for thousands of years. **It is possible you never use AI this semester, and that is totally fine with me.**
+**My intention is that there is no need for you to use AI this semester**. I present material in class and assign readings/videos that cover all of the topics and learning objectives for the course. This course is designed for you to complete homework based on the methods presented in class. If you make some errors on your homework, that is to be expected and a part of the learning process. When you do run into questions, you can ask me for help. Making mistakes can be frustrating, but that is also when deep and lasting learning occurs. **This course is designed so you do not need to use AI this semester, and my preference is you ask me for help if you are stuck.**
 
 
-**It is totally fine to use AI this semester.** It can be an extremely useful teaching/learning tool. AI can also harm to your learning and prevent you from growing, so be careful and mindful how you use AI. AI provides access to tons of information, just be warned some of the information is accurate and factual and some is incorrect. AI can provide confusing, misleading, and inaccurate results, and sometimes it might not be clear what is the source of the information. AI is available 24 hours a day and can provide more immediate responses than email or waiting to come to my next drop-in help, so I get it. As your instructor, I want to make sure you are consuming accurate information from reliable sources. I also want to make sure you are using AI as a tool for learning and not a crutch. If we take the AI away, you still need to be able to stand on your own understanding.
+**It is totally fine to use AI this semester.** It can be an extremely useful teaching/learning tool. AI can also harm to your learning and prevent you from growing, so be careful and mindful how you use AI. AI provides access to tons of information. Some of the information is accurate, but AI can also provide confusing, misleading, and incorrect results. Sometimes it is not clear what is the source of the information. As your instructor, I want to make sure you are consuming accurate information from reliable sources. I also want to make sure you are using AI as a tool for learning and not over relying on AI and using it as a crutch. If we take the AI away, you still need to be able to stand on your own understanding.
 
-**You are allowed to use AI to check or verify your own work.** In that case, please include your own original answer first. If your AI prompt returns the same or a very similar answer, then there is no need to tell me you used AI to check your answer. If AI returns a different answer or method, then I would like you to summarize that interaction and explain how your answer evolved to your final answer. [See examples](#sec-examples) to help illustrate what that might look like. Please omit any prompts that were not relevant or useful in your process. 
+**You are allowed to use AI to check or verify your own work.** In that case, please include your own original answer first. If your AI prompt returns the same or a very similar answer, then there is no need to tell me you used AI to check your answer. If AI returns a different answer or method, then I would like you to summarize that interaction and explain how your answer evolved to your final answer. [See examples](#sec-examples) to help illustrate what that might look like. 
 
-**You are allowed to use AI to help you answer a question you are unable to answer yourself.** In that case, you should indicate you were unable to get started on the problem. You are not in trouble if you find yourself in this situation, so please be honest with me and yourself. It is helpful for us both to know. In that case, please include a summary of that interaction and explain how your answer evolved to your final answer. [See examples](#sec-examples) to help illustrate what that might look like. Please omit any prompts that were not relevant or useful in your process. 
+**You are allowed to use AI to help you answer a question you are unable to answer yourself.** In that case, you must indicate you were unable to get started on the problem. You are not in trouble if you find yourself in this situation, so please be honest with me and yourself. It is helpful for us both to know. In that case, please include a summary of your interaction with AI that led you to your final answer. [See examples](#sec-examples) to help illustrate what that might look like. Please omit any prompts that were not relevant or useful in your process. 
 
 # Thoughts About Preparing for Exams  {#sec-exams}
  
 --- 
  
-On the exams this semester, you are not allowed to us AI. You are not allowed to use any technology besides possibly a calculator. It is best to be honest with yourself in the learning process. Getting everything correct on homework with AI does not mean you will be able to answer similar questions on an exam without AI. If AI is helping you learn, grow, and understand concepts you previously struggled to understand great. If AI is giving you correct answer but you don't understand, you are not likely to do well on exams. **Avoid overreliance on AI to solve your problems!**
+On the exams this semester, you are not allowed to us AI. You are not allowed to use any technology besides possibly a calculator. It is best to be honest with yourself in the learning process. If you are getting everything correct on homework but relying on AI, you are not likely to do well on the exam when you cannot use AI. If AI is helping you learn, grow, and understand concepts you previously struggled to understand great.  **Avoid over reliance on AI to solve your problems!**
 
-**If you are relying on AI to answer a few questions on an assignment, this is warning that you might not be grasping the content as rigorously as needed** to continue to grow and learn concepts in the future. Be sure you indicate in your work (both to you and I) which questions you could not solve yourself and needed the help of AI to solve. Review that content further and try another similar example to see if you have corrected the misunderstanding. If you are totally stuck, you should ask a human (me preferably!) for help.
+**If you are relying on AI to answer a few questions on an assignment, this is a warning there are gaps in your understanding that should be explored further** so you can  continue to grow and learn concepts in the future. Be sure you indicate in your work which questions you could not solve yourself and needed the help of AI to solve. Review that content further (try another similar example) to see if you have corrected the misunderstanding. If you are totally stuck, you should ask a human (me preferably) for help.
 
-**If you are relying on AI to answer most of the questions on an assignment, this an indication you are likely struggling to learn the material on the assignment**. However, you are not in trouble from a disciplinary point of view. This is also an indication that you might continue to have trouble learning material on the next assignment unless you fill in the missing gap in content. Remember it is how you manage these situations that will determine whether the misunderstanding can be turned in a productive learning experience. Please reach out to me for help. You are not in trouble and you can recover. The sooner you seek help, the better! It is very possible I reach out to you to see if I can help support you. Please do not think there is something wrong. I just want you to succeed in the course, and I'm offering to help. We can work together to get you back on track, and you can be very successful in the course if you seek help.
+**If you are relying on AI to answer most of the questions on an assignment, this an indication you struggling to understand the material on the assignment**. However, you are not in trouble from a disciplinary point of view. This is a warning that you will continue to have trouble learning material on the next assignment unless you fill in the missing gap in content. The sooner you seek help, the better! It is very possible I reach out to you to see if I can help support you. Please do not think there is something wrong. I just want you to succeed in the course, and I'm offering to help. We can work together to get you back on track, and you can be very successful in the course if you seek help.
 
 
 # AI and Academic Integrity {#sec-ai-integrity}
 
 ---
 
-Presenting someone else's work, words, or ideas as your own without proper attribution or citation is called **plagarism**. This includes taking work/ideas from other students in the course, from other sources you find online, as well as using responses from AI that you claim are your own. If I see work that is seems "off" from methods we have discussed or I suspect may not be your original work, then I will reach out to you. 
+**Presenting someone else's work, words, or ideas as your own without proper attribution or citation is called plagarism**. This includes taking work/ideas from other students in the course, from other sources you find online, as well as using responses from AI that you claim are your own. If I see work that seems odd or different from methods we've discussed and it is not explained how you arrived at that answer, I will reach out to you to make sure it is indeed your work. If it becomes clear during that conversation you have claimed somebody else's (which includes AI) work as your own, that is plagiarism and a violation of the academic integrity policy.
 
-It is not my intention to imply you are dishonest or have violated the policy. I am just curious and want to understand your work and thought process. I am more interested in *how* you solve than I am about *what* is your final answer. You are not in trouble, I just want to make sure your methods are vaild and allowed in the course, and more importantly you understand your own solution. If you are unable to explain your work to me, then that is problematic, and that might be an indication that you have violated the policy. 
+- The first instance, at minimum you will not be able to earn credit for the work. Depending on the extent (for example multiple questions on a single assignment), the penalty can be worse.
+- If the violation happens a second time, you will lose credit on the entire assignment. Depending on the extent, the penalty can be worse. In addition, I will file an academic integrity report with the University.
 
-- The first instance, at minimum you will not be able to earn credit for the work. Depending on the extent, the penalty can be worse.
-- If the violation happens a second time, you will lose credit on the entire assignment. Depending on the extent, the penalty can be worse. In addition, I will file an academic integrity report which can lead to more severe consquences.
-
-I want to emphasize if I reach out to you, am I just genuinely curious to understand your process for solving the problem. Our discussion is intended to help us both get on the same page and make sure you are on track in the class. If it becomes clear during those conversations you have claimed somebody else's work as your own, that is plagiarism and a violation of the academic integrity policy.
+It is not my intention to make any accusations or imply you have violated the academic integrity policy. I am genuinely curious and want to understand your process for solving the problem. I am more interested in *how* you solve than I am about *what* is your final answer. You are not in trouble provided the work is yours. If you are unable to explain your work to me, then that is problematic, and that might be an indication that you have violated the policy. 
 
 
 # Collaboration with Others {#sec-collab}
 
 ---
 
-Collaboration with others in the course is encouraged as long as you do so responsibly. Talking with classmates is a great way to provide/receive help and learn. It is totally fine to compare work on a homework question. If all parties have independently reached the same answer using very similar methods, that is not plagiarism. If your answers are different, then you are not permitted to use someone's answer and claim it as your work. Your classmate can explain a similar example to you and then you can correct your work on the homework problem yourself for example. 
+**Collaboration with others in the course is encouraged as long as you do so responsibly**. Talking with classmates is a great way to provide/receive help and learn. It is totally fine to compare work on a homework question. If all parties have independently reached the same answer using very similar methods, that is not plagiarism. If your answers are different, then you are not permitted to use someone's answer and claim it as your work. For example, a classmate can explain a similar example to you, and then you can correct your work on the homework problem yourself. 
 
-It is not okay to permit or allow another student to use your work. If I suspect you have taken or shared work with another student, then I will reach out to all parties to make sure everyone can explain the work to me individually. If it becomes clear that a student has submitted work they do not understand or are unable to explain to me, then I reserve the right to penalize all parties involved (the giver and taker of ideas) according to the policy explained in the [previous section](#sec-ai-integrity).
+**It is not okay to allow another student to use your work**. If I suspect you have taken or shared work with another student, then I will reach out to all parties to make sure everyone can explain the work to me individually. If it becomes clear that a student has submitted work they do not understand or are unable to explain to me, then I reserve the right to penalize all parties involved (the giver and taker of ideas) according to the policy explained in the [previous section](#sec-ai-integrity).
 
 
 # Examples of Showing Work on Homework {#sec-examples}
@@ -114,7 +113,7 @@ The mean hurricane force diameter is `NA` nautical miles, but this does not make
 
 
 ::: {.callout-note}
-You were close. You knew to use the `mean()` function so you will earn some partial credit. You tried this on your own and were not quite correct. I would leave a comment in your work about using the argument `na.rm = TRUE` when the vector contains missing values. Hopefully you can avoid making that mistake again. I would recommend practicing another similar example after your work is returned to check your understanding. It's great you tried to solve this on your own!
+You were close. You knew to use the `mean()` function so you will earn some partial credit. You tried this on your own and were not quite correct. I would leave a comment in your work about using the argument `na.rm = TRUE` when the vector contains missing values. Hopefully you can avoid making that mistake again. It's great you tried to solve this on your own!
 :::
 
 
@@ -153,7 +152,7 @@ This is better than my original answer since (1) it is more accurate and (2) the
 
 
 ::: {.callout-note}
-In documenting this process, there is learning going on, and you have a record of your though process when you review these materials for the exam.
+In documenting this process, there is learning going on, and you have a record of your thought process when you review these materials for the exam.
 :::
 
 ::: {.callout-tip}
@@ -186,7 +185,7 @@ mean(my_values)  # compute mean of vector with no missing values
 The mean hurricane force diameter is $14.9207$ nautical miles.
 
 ::: {.callout-note}
-Good for you and I to both know you were stuck and unable to solve at first without getting help for AI. I might suggest trying another similar example in a day or so to see if this workflow is helping you learn the concept or whether you still need to rely on AI to answer the question. For example, practice by finding the mean `tropicalstorm_force_diameter`. If you are not able to do similar examples, this is an indication you are not fully grasping the concept. If so, this is a good time to ask for help.
+Good for you and I to both know you were stuck and unable to solve at first without getting help for AI. You are not in trouble. I might suggest trying another similar example in a day or so to see if this workflow is helping you or if relying on AI is hindering you. If you are not able to do similar examples, then it is a good time to ask a human (me) for help.
 :::
 
 
@@ -216,6 +215,6 @@ The mean hurricane force diameter is $14.9207$ nautical miles.
 
 
 ::: {.callout-note}
-This code is way more complicated than needed. This was intended to be a simple one line command answer. We are going to use the built-in `mean()` function a lot this semester, so better you familiarize yourself with it. You do not want to get in a habit of recreating functions that already have scripts. Using code such as this on an exam is time consuming and inefficient; thus, you would not earn full credit for this work on homework or the exam since it is not a very elegant solution.
+This code is way more complicated than needed. This was intended to be a simple one line command answer. Using code such as this on an exam is time consuming and inefficient; thus, you would not earn full credit for this work on homework or the exam since it is not an elegant way to compute a mean.
 :::
 
