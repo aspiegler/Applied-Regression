@@ -1,0 +1,403 @@
+---
+title: "Homework 2"
+author: 
+  - name: "Enter your name"
+    affiliation: "University of Colorado Denver"
+format: 
+  html:
+    embed-resources: true    
+editor: source
+warning: false
+---
+
+# Homework 2: Due Wed, Sep 10 at 2:00 PM
+
+---
+
+
+## Instructions:
+
+---
+
+1.  <span style="color:red">Be sure to download and save the file so you are working with your own private copy of the file.</span>
+
+2.  <span style="color:green">After you have copied the Quarto file onto your computer, you can begin editing and saving your work.</span>
+
+**Submit your work electronically as two separate files:**
+
+-   A Quarto markdown file with file extension `.qmd` with all code cells run and relevant output displayed in the document.
+-   After you have completed all questions, render your completed work to an html file.
+-   Submit the html file that is created with file extension `.html`.
+
+Upload both files into the Homework 2 assignment in Canvas before <span style="color:blue">**2 PM on Wed, Sep 10.**</span>
+
+**You must provide supporting work for your all of your answers.**
+
+-   <span style="color:blue">That work will include using R code cells.</span>
+    -   Feel free to insert as much R code as you like.
+    -   When asked, you must explain how the output of a code cell is used to solve the question.
+    -   Code with incomplete interpretation of the output  may not receive full credit.
+    -   Code that involves methods we have not discussed this semester may not receive full credit.
+-   <span style="color:blue">Your work may also involve typing explanations and justifications in text cells.</span>
+    -   Be sure to type up your work/explanation so I can see how you arrived at your answer.
+    -   <span style="color:blue">**When you need to type math expressions, use LaTeX.**</span>
+
+## Important Academic Policies:
+
+---
+
+-   **Be your own work.** Though you may collaborate with others, everyone is responsible for writing up the work in their own way using their own methods. Plagiarism of any form is not tolerated.
+-   **Be complete.** You must provide all work and/or explanations needed to find the solution. Answers with insufficient or incomplete supporting work may lose credit.
+-   **Adhere to the Code of Academic Honesty.**
+-   **Be clearly typed.** Your solution to a question must be clear and typed in complete sentences. 
+
+### <span style="color:blue">Let me know if you need help, and GOOD LUCK!!!</span>
+
+---
+
+
+# Be Sure to Do the Following Once Completed
+
+---
+
+-   Be sure you have run ALL code cells before saving your work.
+-   Be sure all relevant code output is displayed in Quarto document.
+-   Then be sure to save the your work as a Quarto document.
+-   Finally, be sure you render your final work to a static `html` that you submit along with your Quarto file in Canvas.
+
+# Importing Data and Packages
+
+---
+
+```{r}
+#| message: false
+library(tidyverse)  # includes dplyr, ggplot2, readr, ...
+```
+
+
+The data set *spotify-hits.csv*^[Downloaded from [Kaggle](https://www.kaggle.com/datasets/paradisejoy/top-hits-spotify-from-20002019){target="_blank"} May 4, 2023] is stored online and contains audio statistics of the top 2000 tracks on Spotify from 2000-2019. The data is stored in a comma separated file (csv). We can use the base R function `read.csv()` to import the csv file into an R data frame we call `hits`.
+
+```{r}
+hits <- read.csv("https://raw.githubusercontent.com/CU-Denver-MathStats-OER/Statistical-Theory/main/Data/spotify-hits.csv")
+```
+
+You can learn about each variable by checking out the [documentation found on Kaggle](https://www.kaggle.com/datasets/paradisejoy/top-hits-spotify-from-20002019). 
+
+
+```{r}
+head(hits)
+```
+
+
+# Question 1
+
+---
+
+Clean up any initial issues with the data in `hits`. What are some issues with the data and how did you address them? Be sure to include relevant code chunks below that do the cleaning and include an explanation of what the code cells are doing. 
+
+## Solution to Question 1 
+
+---
+
+
+
+<br>  
+<br>  
+
+
+# Question 2
+
+---
+
+Answer the following questions about `hits`
+
+## Question 2a
+
+---
+
+How many observations are in the data set?
+
+### Solution to Question 2a
+
+---
+
+
+
+<br>  
+<br>  
+
+
+## Question 2b
+
+---
+
+Which artist had the most hits?
+
+
+### Solution to Question 2b
+
+---
+
+
+
+<br>  
+<br>  
+
+
+## Question 2c
+
+---
+
+Which song has the highest `danceability` score? The lowest `danceability` score? Provide supporting code and the associated output to support your answer. Be sure to type your answers in the space below naming the artist, song name, and `danceability` score.
+
+
+### Solution to Question 2c
+
+---
+
+- The maximum `danceability` score is ??.
+
+- The minimum `danceability` score is ??.
+
+
+
+<br>  
+<br>  
+
+
+## Question 2d
+
+---
+
+Which artist has the greatest mean popularity?
+
+
+::: {.callout-tip}
+Try experimenting with the `dplyr` functions `group_by()` and `summarize()` to help. [See background and examples](https://colab.research.google.com/drive/1CbbU6lFRgNxunHfEyhtV6eNuP7un6pLp#scrollTo=wxAPnfFBUZJf) for help. 
+:::
+
+
+### Solution to Question 2d
+
+---
+
+
+
+<br>  
+<br>  
+
+
+
+
+## Question 2e
+
+---
+
+Create a plot (of your choice) to display the distribution of one of the variables being stored as a `double`.
+
+
+### Solution to Question 2e
+
+
+---
+
+
+
+
+<br>  
+<br>  
+
+
+## Question 2f
+
+---
+
+Create side by side box plots to show the distribution of `tempo` values for the group of not explicit songs compared to the group of songs that is classified as explicit.
+
+
+### Solution to Question 2f
+
+---
+
+
+<br>  
+<br>  
+
+
+# Question 3
+
+---
+
+Give an example of a pair of numeric variables in `hits` that have a positive association. Explain in practical, intuitive terms why you believe the pair has a positive association. Then check your intuition by computing the covariance (using R) between the two variables.
+
+## Solution to Question 3
+
+---
+
+
+
+
+<br>  
+<br>  
+
+
+# Question 4
+
+---
+
+Give an example of a pair of numeric variables in `storms` that you believe have close to no association (they are independent). Explain in practical, intuitive terms why you believe the pair has no (or little) association. Then check your intuition by computing the covariance (using R) between the two variables. Keep in mind in actual sample data it is rare to find two variables that are perfectly independent.
+
+## Solution to Question 4
+
+---
+
+
+
+<br>  
+<br>  
+
+
+# Question 5
+
+---
+
+Construct a covariance matrix to compare all numeric variables in `hits`.  Based covariance output you include below, which variable has the greatest positive association with `popularity`? The strongest negative association with `popularity`? Does these relations make practical sense? Explain.
+
+::: {.callout-tip}
+The output might display better if you display values rounded to 4 decimal places. Also, recall you may need to first subset the `hits` data frame to extract only `numeric` variables.
+:::
+
+## Solution to Question 5
+
+---
+
+
+
+<br>  
+<br>  
+
+
+# Question 6
+
+---
+
+Construct a correlation matrix to compare all numeric variables in `hits`.  Based on the correlation output you include below, which variable has the largest positive correlation with `popularity`? The most negative correlation with `popularity`? Do these these relations make practical sense? Explain.
+
+::: {.callout-tip}
+The output might display better if you display values rounded to 4 decimal places.
+:::
+
+## Solution to Question 6
+
+---
+
+
+
+<br>  
+<br>  
+
+
+# Question 7
+
+---
+
+Create a scatter plot with `acousticness` the predictor on the $x$-axis and `energy` the response variable on the $y$-axis. Map the variable `explicit` to the color of the points. Each point has a different color based on the `explicit` classification of the song.
+
+## Solution to Question 7
+
+---
+
+
+
+<br>  
+<br>  
+
+
+# Question 8
+
+---
+
+Let $\theta$ denote a parameter and $\hat{\theta}$ an estimator for the parameter. We define the bias of the estimator as
+
+$$\text{Bias}( \hat{\theta} ) = E(\hat{\theta}) - \theta .$$
+
+If the bias is $0$, we say $\hat{\theta}$ is an unbiased estimator. Otherwise, we say $\hat{\theta}$ is biased.  Let $X \sim \mbox{Binom}(n, p)$ and consider two possible estimators that are often used to estimate the population proportion $p$:
+
+$$\hat{p} = \frac{X}{n} \quad \text{and} \quad \tilde{p} = \frac{X+2}{n+4} .$$
+
+Determine whether or not each estimator is biased or unbiased. **Show supporting work using LaTeX to typeset math expressions.**
+
+::: {.callout-tip}
+Use properties of expected value and the fact that if $X \sim \mbox{Binom}(n, p)$, then $E(X) = np$ and $\text{Var}(X) = np(1-p)$.
+:::
+
+## Solution to Question 8
+
+---
+
+
+
+
+<br>  
+<br>  
+
+
+---
+
+# MATH 4387 students, you are done! 
+
+## Math 5387, not quite (but almost).
+
+---
+
+# Question 9: Math 5387 Student Only
+
+---
+
+Let $X \sim \mbox{Binom}(n, p)$ and consider the same two possible estimators that are often used to estimate the population proportion $p$:
+
+$$\hat{p} = \frac{X}{n} \quad \text{and} \quad \tilde{p} = \frac{X+2}{n+4} .$$
+
+Compute the variance of each, $\text{Var}(\hat{p})$ and $\text{Var}(\tilde{p})$. **Show supporting work using LaTeX to typeset math expressions.** 
+
+The comment on the relation between the two variances of each estimator, which might depend on the value of $p$. For example, it is possible for some values of $p$, $\text{Var}(\hat{p}) < \text{Var}(\tilde{p})$ and for other values of $p$ $\text{Var}(\hat{p}) > \text{Var}(\tilde{p})$. Or it is possible one is less than the other always. 
+
+::: {.callout-tip}
+Use properties of variance and the fact that if $X \sim \mbox{Binom}(n, p)$, then $E(X) = np$ and $\text{Var}(X) = np(1-p)$.
+:::
+
+## Solution to Question 9
+
+---
+
+
+
+
+<br>  
+<br>  
+
+
+
+# Question 10: MATH 5387 Students Only
+
+---
+
+Let $\theta$ denote a parameter and $\hat{\theta}$. We define the **mean square error** (MSE) the estimator as
+
+$$\text{MSE}(\hat{\theta}) = E \left[ (\hat{\theta} - \theta)^2 \right] .$$
+
+Prove $$\text{MSE}(\hat{\theta}) = \text{Var}(\hat{\theta}) + \left( \text{Bias}(\hat{\theta}) \right)^2.$$ 
+
+**Show supporting work using LaTeX to typeset math expressions.**
+
+
+## Solution to Question 10
+
+---
+
+
+
+
+<br>  
+<br>  
+

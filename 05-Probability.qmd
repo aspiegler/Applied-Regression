@@ -3,7 +3,7 @@ title: "Module 5: Essentials of Probability"
 author: 
   - name: "Adam Spiegler"
     affiliation: "University of Colorado Denver"
-format:
+format: 
   html:
     toc: true
     toc-location: left
