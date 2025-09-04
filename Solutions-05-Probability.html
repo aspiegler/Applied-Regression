@@ -3066,6 +3066,7 @@ vertical-align: -.125em;
   <li><a href="#covariance" id="toc-covariance" class="nav-link" data-scroll-target="#covariance">Covariance</a></li>
   <li><a href="#question-5" id="toc-question-5" class="nav-link" data-scroll-target="#question-5">Question 5</a></li>
   <li><a href="#question-6" id="toc-question-6" class="nav-link" data-scroll-target="#question-6">Question 6</a></li>
+  <li><a href="#covariance-correlation-and-scatter-plot-matrices" id="toc-covariance-correlation-and-scatter-plot-matrices" class="nav-link" data-scroll-target="#covariance-correlation-and-scatter-plot-matrices">Covariance, Correlation, and Scatter Plot Matrices</a></li>
   <li><a href="#q7" id="toc-q7" class="nav-link" data-scroll-target="#q7">Question 7</a></li>
   <li><a href="#question-8" id="toc-question-8" class="nav-link" data-scroll-target="#question-8">Question 8</a></li>
   <li><a href="#question-9" id="toc-question-9" class="nav-link" data-scroll-target="#question-9">Question 9</a></li>
@@ -3554,16 +3555,6 @@ Properties of Variance
 \text{Var}(X) &amp;=&amp;  \sum_x \left( (x-\mu)^2 \cdot p(x) \right) &amp; \text{(by definition)}\\
 &amp;=&amp; \sum_x \left( (x^2 -2 \mu x + \mu^2) \cdot p(x) \right) &amp; \text{(distributing squared term)}\\
 &amp;=&amp; \sum_x \left( x^2 \cdot p(x) -2 \mu x  \cdot p(x)  + \mu^2  \cdot p(x)  \right) &amp; \text{(distributing p(x))}\\
-&amp;=&amp; \sum_x \left( x^2 \cdot p(x) \right) - \sum_x \left(2 \mu x  \cdot p(x) \right)  + \sum_x \left( \mu^2  \cdot p(x)  \right) &amp; \text{(properties of summation)}\\
-&amp;=&amp; ?? &amp; \text{(??)} \\
-&amp;=&amp; ?? &amp; \text{(??)} \\
-&amp;=&amp; ?? &amp; \text{(??)} \\
-&amp;=&amp; ?? &amp; \text{(??)} \\
-\end{array}\]</span></p>
-<p><span class="math display">\[\begin{array}{rcll}
-\text{Var}(X) &amp;=&amp;  \sum_x \left( (x-\mu)^2 \cdot p(x) \right) &amp; \text{(by definition)}\\
-&amp;=&amp; \sum_x \left( (x^2 -2 \mu x + \mu^2) \cdot p(x) \right) &amp; \text{(distributing squared term)}\\
-&amp;=&amp; \sum_x \left( x^2 \cdot p(x) -2 \mu x  \cdot p(x)  + \mu^2  \cdot p(x)  \right) &amp; \text{(distributing p(x))}\\
 &amp;=&amp; {\color{blue}{\sum_x \left( x^2 \cdot p(x) \right)}} - \sum_x \left(2 \mu x  \cdot p(x) \right)  + \sum_x \left( \mu^2  \cdot p(x)  \right) &amp; \text{(properties of summation)}\\
 &amp;=&amp; {\color{blue}{E(X^2)}} - \sum_x \left({\color{red}{2 \mu}} x  \cdot p(x) \right)  + \sum_x \left( {\color{red}{\mu^2}}  \cdot p(x)  \right) &amp; \text{(definition of } E(X^2) \text{)}\\
 &amp;=&amp; E(X^2) - {\color{red}{2 \mu}} {\color{blue}{\sum_x \left(x  \cdot p(x) \right)}}  +  {\color{red}{\mu^2}} \sum_x p(x) &amp; \text{(prop. of summation)}\\
@@ -3786,8 +3777,9 @@ Tip
 <p><br><br>
 <br></p>
 </section>
-<section id="covariance-correlation-and-scatter-plot-matrices" class="level3">
-<h3 class="anchored" data-anchor-id="covariance-correlation-and-scatter-plot-matrices">Covariance, Correlation, and Scatter Plot Matrices</h3>
+</section>
+<section id="covariance-correlation-and-scatter-plot-matrices" class="level2">
+<h2 class="anchored" data-anchor-id="covariance-correlation-and-scatter-plot-matrices">Covariance, Correlation, and Scatter Plot Matrices</h2>
 <hr>
 <p>We can use the <code>cov()</code> and <code>cor()</code> functions to compute the covariance and correlation matrix which gives all values for each pair of numeric variables. We first remove the <code>factor</code> variables which in this case is just <code>married</code>. We also filter out all observations with missing values for <code>educatn</code>.</p>
 <div class="cell">
@@ -3812,7 +3804,6 @@ hours     891164.7958  -1053.669846
 kids       -1053.6698    201.468214</code></pre>
 </div>
 </div>
-</section>
 </section>
 <section id="q7" class="level2">
 <h2 class="anchored" data-anchor-id="q7">Question 7</h2>

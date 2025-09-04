@@ -353,16 +353,6 @@ $$\text{Var}(X) = E(X^2)  - \mu^2.$$
 
 Let $X$ be a discrete random variable with pmf $p(x)$ and expected value $E(X)=\mu$. Then we have
 
-$$\begin{array}{rcll}
-\text{Var}(X) &=&  \sum_x \left( (x-\mu)^2 \cdot p(x) \right) & \text{(by definition)}\\
- &=& \sum_x \left( (x^2 -2 \mu x + \mu^2) \cdot p(x) \right) & \text{(distributing squared term)}\\
- &=& \sum_x \left( x^2 \cdot p(x) -2 \mu x  \cdot p(x)  + \mu^2  \cdot p(x)  \right) & \text{(distributing p(x))}\\
- &=& \sum_x \left( x^2 \cdot p(x) \right) - \sum_x \left(2 \mu x  \cdot p(x) \right)  + \sum_x \left( \mu^2  \cdot p(x)  \right) & \text{(properties of summation)}\\
- &=& ?? & \text{(??)} \\
- &=& ?? & \text{(??)} \\
- &=& ?? & \text{(??)} \\
- &=& ?? & \text{(??)} \\
-\end{array}$$
 
 $$\begin{array}{rcll}
 \text{Var}(X) &=&  \sum_x \left( (x-\mu)^2 \cdot p(x) \right) & \text{(by definition)}\\
@@ -580,7 +570,7 @@ Both values are positive which indicates a positive relationship which does line
 <br>  
 
 
-### Covariance, Correlation, and Scatter Plot Matrices
+## Covariance, Correlation, and Scatter Plot Matrices
 
 ---
 
