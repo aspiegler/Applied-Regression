@@ -245,7 +245,7 @@ Give an example of a pair of numeric variables in `hits` that have a positive as
 
 ---
 
-Give an example of a pair of numeric variables in `storms` that you believe have close to no association (they are independent). Explain in practical, intuitive terms why you believe the pair has no (or little) association. Then check your intuition by computing the covariance (using R) between the two variables. Keep in mind in actual sample data it is rare to find two variables that are perfectly independent.
+Give an example of a pair of numeric variables in `hits` that you believe have close to no association (they are independent). Explain in practical, intuitive terms why you believe the pair has no (or little) association. Then check your intuition by computing the covariance (using R) between the two variables. Keep in mind in actual sample data it is rare to find two variables that are perfectly independent.
 
 ## Solution to Question 4
 
