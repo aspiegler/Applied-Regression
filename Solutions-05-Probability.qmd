@@ -491,7 +491,7 @@ Let $X$ and $Y$ denote two random variables and $a$ and $b$ two constants, then 
 
 ---
 
-For any two random variables $X$ and $Y$, prove $\text{Cov}(X,Y) = E(XY) = E(X)E(Y)$.
+For any two random variables $X$ and $Y$, prove $\text{Cov}(X,Y) = E(XY) - E(X)E(Y)$.
 
 
 ### Solution to Question 5
