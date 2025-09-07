@@ -1,5 +1,5 @@
 ---
-title: "Module 5: Essentials of Probability"
+title: "Module 05: Essentials of Probability"
 author: 
   - name: "Adam Spiegler"
     affiliation: "University of Colorado Denver"
