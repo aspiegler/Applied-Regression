@@ -167,7 +167,7 @@ summary(lmod_small)  # display summary
 
 The line of best fit is therefore 
 
-$$\large{{\color{blue}{\hat{y} = 1.36 x}}}.$$
+$${\color{blue}{\hat{y} = 1.36 x}}. $$
 
 ### The `summary()` of `lm()`
 
