@@ -1,5 +1,5 @@
 ---
-title: "Solutions Module 6: Simple Linear Regression"
+title: "Solutions Module 06: Simple Linear Regression"
 author: 
   - name: "Adam Spiegler"
     affiliation: "University of Colorado Denver"
