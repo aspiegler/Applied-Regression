@@ -1,5 +1,5 @@
 ---
-title: "Module 6: Simple Linear Regression"
+title: "Solutions Module 6: Simple Linear Regression"
 author: 
   - name: "Adam Spiegler"
     affiliation: "University of Colorado Denver"
@@ -510,6 +510,18 @@ lmod_brain2 <- lm(??)
 
 We obtain the linear model $??$. (enter formula using LaTeX)
 
+### Delete solution
+
+```{r}
+lmod_brain2 <- lm(brain ~ body, data = mammals_clean)
+summary(lmod_brain2)
+```
+
+```{r}
+deviance(lmod_brain2)
+```
+
+We obtain the linear model $y = 56 + 1.24 x$.
 
 
 ## Using Formulas for OLS Estimates
@@ -582,12 +594,6 @@ optim(par = my_guess, fn = sse_mammal2)
 - We use the `plot(y ~ x, data = df)` function to generate a scatter plot.
 - We use the `abline(a, b)` function to add a line of the form $y = a + bx$ to the plot.
   - Regression coefficients are stored in the output of `lmod_brain2`.
-
-```{r}
-#| eval: true
-#| echo: false
-lmod_brain2 <- lm(brain ~ body, mammals_clean)
-```
 
 ```{r}
 plot(brain ~ body, mammals_clean)
@@ -675,20 +681,17 @@ Use any method to find a simple linear regression model of the form $\text{press
 
 
 ```{r}
-#| eval: false
-# store model and display summary
-lmod_wind <- ??
+lmod_wind <- lm(wind ~ pressure, data = storms)
 summary(lmod_wind)
 ```
 
 ```{r}
-# compute residuals
-
+sum(residuals(lmod_wind)^2)
 ```
 
 ```{r}
-# create plot with regression line
-
+plot(wind ~ pressure, storms, col = status)
+abline(lmod_wind, col = "blue", ltw = 2)
 ```
 
 <br>  
@@ -901,6 +904,9 @@ Compute the estimate for the variance of the errors for the `wind` and `pressure
 
 ---
 
+```{r}
+sigma(lmod_wind)
+```
 
 <br>  
 <br>  
@@ -915,13 +921,101 @@ Compute the estimate for the variance of the errors for the `wind` and `pressure
 autoplot(lmod_brain2)
 ```
 
-## Question 7
+## Question 6
 
 ---
 
 Use the `autoplot()` function from `ggfortify` to create plots associated to the residuals. How do some of the assumptions seem to check out?
 
-### Solution to Question 7
+### Solution to Question 6
+
+---
+
+```{r}
+autoplot(lmod_wind)
+```
+
+
+
+
+# Appendix: Minimizing SSE with Calculus
+
+---
+
+## OLS Estimate for $Y = \beta X + \epsilon$
+
+---
+
+Let $(x_i, y_i)$ denote the values of the body mass ($x_i$) and brain mass $(y_i)$ of each mammal in the cleaned data `mammal`.
+
+$$\text{SSE}(\beta) = \sum_{i=1}^n (\beta \cdot x_i - y_i)^2.$$
+
+
+$$\begin{align}
+\frac{d}{d\beta} \big( \text{SSE}(\beta) \big) &= \frac{d}{d\beta} \bigg( \sum_{i=1}^n (\beta \cdot x_i - y_i)^2 \bigg) \\
+&= \sum_{i=1}^n \bigg( \frac{d}{d\beta} (\beta \cdot x_i - y_i)^2 \bigg) \\
+&= \sum_{i=1}^n \bigg(  2x_i (\beta \cdot x_i - y_i) \bigg) \\
+&= \sum_{i=1}^n  (2x^2_i \beta - 2x_iy_i) \\
+&= 2 \beta \sum_{i=1}^n {x_i^2} - 2 \sum_{i=1}^n x_i y_i
+\end{align}.$$
+
+Setting the derivative equal to zero and solve for $\beta$ gives a formula for finding the OLS estimate for the slope that is denoted $\hat{\beta}$,
+
+$$\hat{\beta} = \frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x^2_i}.$$
+
+```{r}
+beta_hat <- sum(mammals_clean$body * mammals_clean$brain) / sum(mammals_clean$body^2)
+beta_hat
+```
+
+
+We obtain the linear model $\hat{y} = 56 + 1.24 x$.
+
+
+## OLS Estimate for $Y = \beta_0 + \beta_1 X + \epsilon$
+
+---
+
+We have a new SSE function:
+
+$$\text{SSE}(\beta_0, \beta_1)  =  \sum_{i=1}^n \big( (\beta_0 + \beta_1 \cdot x_i) - y_i \big)^2$$
+
+To minimize we find conditions so both partial derivatives are simultaneously $0$. Taking the derivative with respect to $\beta_0$ gives:
+
+$$SSE_{\beta_0} = \sum_{i=1}^n 2( \beta_0 + \beta_1 \cdot x_i - y_i) =0$$
+
+if $n \beta_0 + \beta_1 \sum_{i=1}^n x_i - \sum_{i=1}^n y_i = 0$, or
+
+$$ \beta_0 = \frac{\sum_{i=1}^n y_i}{n} - \beta_1 \frac{\sum_{i=1}^n x_i}{n} = \bar{y} - \beta_1 \bar{x}.$$
+We also have partial derivative
+
+$$SSE_{\beta_1} = \sum_{i=1}^n \big( 2x_i( \beta_0 + \beta_1 \cdot x_i - y_i) \big) =0 $$
+
+which is equal to zero if $\beta_0 \sum_{i=1}^n x_i + \beta_1 \sum_{i=1}^n x_i^2 - \sum_{i=1}^n  x_iy_i = 0$. Thus we have
+
+$$\beta_1 = \frac{\sum_{i=1}^n  x_iy_i}{\sum_{i=1}^n x_i^2} - \beta_0 \frac{ \sum_{i=1}^n x_i}{ \sum_{i=1}^n x_i^2}.$$
+
+Substituting $\beta_0 = \bar{y} - \beta_1 \bar{x}$ into the expression above gives :
+
+$$\beta_1 = \frac{\sum_{i=1}^n  x_iy_i}{\sum_{i=1}^n x_i^2} - (\bar{y} - \beta_1 \bar{x}) \frac{ \sum_{i=1}^n x_i}{ \sum_{i=1}^n x_i^2}.$$
+
+Grouping terms and solving for $\beta_1$ gives a formula for the OLS estimator for $\beta_1$,
+
+$$\hat{\beta}_1 = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2}$$
+## Question 6
+
+---
+
+Determine whether each of the models below is a linear model.
+
+
+a. $\displaystyle Y = \beta_0 + \beta_1 \left( X_1X_2X_3 \right) + \beta_2 e^{X_1^2+X_2^2+X_3^2} + \beta_3 \ln{(X_3)} + \epsilon$ 
+
+b. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}+ X_2^{\beta_2} + X_3^{\beta_2} \right) + \epsilon$ 
+
+c. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}X_2^{\beta_2} X_3^{\beta_2} \right) \epsilon$ 
+
+### Solution to Question 6
 
 ---
 
@@ -930,4 +1024,20 @@ Use the `autoplot()` function from `ggfortify` to create plots associated to the
 <br>  
 <br>  
 
+
+### Bonus Question
+
+---
+
+For the model(s) that are not linear, can you transform the model into a linear model?
+
+
+#### Solution to Bonus Question
+
+---
+
+
+
+<br>  
+<br>  
 
