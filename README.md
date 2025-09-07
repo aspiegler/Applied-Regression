@@ -6,7 +6,7 @@
 *Exploring Linear Regression* is a set of interactive course materials designed to explore linear regression. These materials are Open Education Resources (OER) designed to serve as in-class labs for MATH 4387/5387: Applied Linear Regression at University of Colorado Denver. 
 
 
-## How to ccess an Edit Documents
+## How to Access an Edit Documents
 
 ---
 
