@@ -1,0 +1,933 @@
+---
+title: "Module 06: Simple Linear Regression"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+editor: source
+#execute:
+#  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+
+## Additional Reading
+
+---
+
+- [Chapter 3 Linear Model Estimation](https://jfrench.github.io/LinearRegression/linear-model-estimation.html) from *A Progressive Introduction to Linear Models*
+- Chapter 3 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+- Chapter 1 of *Applied Linear Regression* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+
+
+# Loading Required Packages
+ 
+---
+
+```{r}
+library(tidyverse)
+library(MASS)
+library(plotly)
+library(ggfortify)  # for error plots
+```
+
+
+# Case Study: Relation Between Body and Brain Mass of Mammals
+
+---
+
+The brain mass of a mammal is approximately proportion to the overall body mass of the mammal. Larger mammal species tend to have larger brains than smaller species.  Consider the following three mammal species:
+
+- A jaguar has an average body mass of $100$ kg and brain mass of $157$ g.
+- A gorilla has an average body mass of $207$ kg and brain mass of $406$ g.
+- A horse has an average body mass of $521$ kg and brain mass of $655$ g.
+
+
+
+
+
+```{r}
+# create data frame
+mammal_small <- data.frame("species" = c("Jaguar", "Gorilla", "Horse"),
+                      "body" = c(100.0, 207.0, 521.0),
+                      "brain" = c(157.0, 406.0, 655.0)
+                      )
+
+mammal_small  # display data frame
+```
+
+
+## An Initial Model for the Data
+
+---
+
+Larger mammals typically have larger brains required to perform more complex tasks. Although the relationship between body mass and brain mass is not precisely linear, the relationship can be approximated using a linear model of the form
+
+$$y = \beta \cdot x.$$
+
+We initially assume the vertical intercept is 0 since a mammal that has no body mass would have no brain mass. The model has three ingredients:
+
+- The predictor $x$ is the observed `body` mass (on average), in kg, of the species.
+- The response $y$ is the `brain` mass (on average), in g,  of the species.
+- The coefficient $\beta$ denotes the slope in the linear model.
+
+Below we plot one possible model, $y = 1.5 x$, along with the corresponding errors for each prediction.
+
+
+
+```{r}
+#| echo: false
+# finding start and end points for each residual
+ybot <- c(min(mammal_small$brain[1], 1.5*mammal_small$body[1]),
+        min(mammal_small$brain[2], 1.5*mammal_small$body[2]),
+        min(mammal_small$brain[3], 1.5*mammal_small$body[3]))
+
+ytop <- c(max(mammal_small$brain[1], 1.5*mammal_small$body[1]),
+        max(mammal_small$brain[2], 1.5*mammal_small$body[2]),
+        max(mammal_small$brain[3], 1.5*mammal_small$body[3]))
+
+
+# scatter plot of observed data points
+plot(brain ~ body, data = mammal_small,
+     col = "black",
+     ylim = c(0,800),
+     main = "A Possible Linear Model: y = 1.5x",
+     xaxt = "n",  # turn of default x-axis ticks
+     yaxt = "n")  # turn of default y-axis ticks
+
+# adding elements to plot
+axis(1, seq(0, 500, 100))  # set x-axis ticks
+axis(2, seq(0, 800, 200))  # set y-axis ticks
+abline(0, 1.5, col = "blue")  # plots line y = 0 + 1.5x
+segments(x0 = mammal_small$body, y0 = ybot,
+         x1 = mammal_small$body, y1 = ytop,
+         col ="red")
+```
+
+## The Sum of the Squared Errors (SSE)
+
+---
+
+No model is perfect in the "real-world", so we should not expect each prediction, denoted $\hat{y}$, to be equal to the observed value, denoted $y$:
+
+$$y = \text{observed brain mass} \qquad \text{compared to} \qquad \hat{y} = \text{prediction} = \beta \cdot x .$$
+
+Which value of $\beta$ gives the "best" model? The [**residual**]{style="color:blue"} is the observed error between the predicted value $\hat{y}_i = \beta \cdot x_i$ and an observed value at $x_i$, denoted $y_i$:
+
+$$\hat{\epsilon}_i = ( \text{observed} -  {\color{blue}{\text{predicted}}}) =  (y_i - {\color{blue}{\hat{y}_i}} ) = \big( (y_i - {\color{blue}{\beta \cdot x_i}} ) \big) .$$
+
+
+- The magnitude of each residual is the length of the vertical line from the observed data point to the line of predictions.
+  - If the *error is positive* (observed point is above the line), the prediction is an **underestimate**.
+  - If the *error is negative* (observed point is below the line), the prediction is an **overestimate**.
+- One common measure of fit is the [**sum the squares of the errors** (**SSE**)]{style="color:blue"} which is also called the [**residual sum of squares** (**RSS**)]{style="color:blue"}.
+
+For the three species (jaguar, gorilla, and horse) in our data, we have:
+
+| `species` | $x_i$, `body` | $y_i$, `brain`  |   $\hat{\epsilon}_i = y_i - \hat{y}_i$ |
+|----------|---------------|------------------|--------------|-------------------|
+|Jaguar| $100$ | $157$ | $\beta \cdot 100$ | | $(157 - 100\beta)^2$ |
+|Gorilla| $207$ |  $406$ | $\beta \cdot 207$ |  $(406 - 207\beta)^2$ |
+|Horse| $521$ | $655$ | $\beta \cdot 521$ |  $(655 - 521\beta)^2$ |
+
+
+
+Summing together the square of the residuals (in the last column of the table), we obtain a general formula for the sum of the squared errors (SSE) as a function of the slope $\beta$** in our linear model:
+
+$$\text{SSE}(\beta) = (157 - 100\beta)^2 + (406 - 207\beta)^2 + (655 - 521\beta)^2 .$$
+
+
+Notice the SSE depends only on the value chosen for the slope, $\beta$. One of the most common methods for identifying the line of best fit is using the [**ordinary least squares (OLS)**]{style="color:blue"} find the value of the slope, denoted $\hat{\beta}$, that *minimizes the SSE*. We typically express the model of the form $y = \beta x$ that best fits the general formula as
+
+$$\hat{y} = \hat{\beta} x .$$
+
+## Using `lm()` to Find Regression Coefficient
+
+---
+
+We can use the base R function `lm(y ~ x , data = df)` find OLS estimates for the regression coefficient(s), denoted $\hat{\beta}_0$ and $\hat{\beta}_1$, in a linear regression model of the form $y = \beta_0 + \beta_1 x$. Run `?lm` from the console to learn more.
+
+::: {.callout-note}
+We initially set the intercept $\beta_0 = 0$ and consider a model with one parameter, $y = \beta x$. Thus, we define our model as `brain ~ body + 0`, setting the intercept to $0$. Generally, we include an intercept parameter in our model with the model `brain ~ body`.
+:::
+
+```{r}
+# fit linear model y = b x
+lmod_small <- lm(brain ~ body + 0, data = mammal_small)
+summary(lmod_small)  # display summary
+```
+
+The line of best fit is therefore 
+
+$$\large{{\color{blue}{\hat{y} = 1.36 x}}}.$$
+
+### The `summary()` of `lm()`
+
+---
+
+The `summary` function summarizes the results of our fitted model. 
+
+When an `lm` object is supplied to the `summary` function, it returns:
+
+- `Call`: the function call used to fit the model.
+- `Residuals`: A 5-number summary of $\hat{\epsilon}_1, \ldots, \hat{\epsilon}_n$.
+- `Coefficients`: A table that lists the regression coefficients along with measurements of variance/significance.
+- Various summary statistics:
+    - `Residual standard error` is the value of standard error of the residuals including the degrees of freedom.
+    - `Multiple R-squared` is a measure of model fit.
+    - `Adjusted R-squared` is a modified version of `Multiple R-squared`.
+    - `F-statistic` is the test statistic of the test that compares the model with a null model (only an intercept term). 
+
+
+
+
+```{r}
+#| echo: false
+# finding start and end points for each residual
+m <- lmod_small$coefficients[1]
+ybot <- c(min(mammal_small$brain[1], m*mammal_small$body[1]),
+        min(mammal_small$brain[2], m*mammal_small$body[2]),
+        min(mammal_small$brain[3], m*mammal_small$body[3]))
+
+ytop <- c(max(mammal_small$brain[1], m*mammal_small$body[1]),
+        max(mammal_small$brain[2], m*mammal_small$body[2]),
+        max(mammal_small$brain[3], m*mammal_small$body[3]))
+
+
+# scatter plot of observed data points
+plot(brain ~ body, data = mammal_small,
+     col = "black",
+     ylim = c(0,800),
+     main = "The Best Fitting Linear Model, y = b x",
+     xaxt = "n",  # turn of default x-axis ticks
+     yaxt = "n")  # turn of default y-axis ticks
+
+# adding elements to plot
+axis(1, seq(0, 500, 100))  # set x-axis ticks
+axis(2, seq(0, 800, 200))  # set y-axis ticks
+abline(lmod_small, col = "blue", lwt = 2)  # plots line y = 0 + b * x
+segments(x0 = mammal_small$body, y0 = ybot,
+         x1 = mammal_small$body, y1 = ytop,
+         col ="red")
+```
+
+
+
+```{r}
+# observed values of x
+x <- mammal_small$body  # observed values of x
+x
+```
+
+
+```{r}
+# compute predicted values y_hat
+y_hat <- lmod_small$coefficients[1] * mammal_small$body  # predicted values y = b x
+y_hat
+```
+
+
+```{r}
+# using output stored to lmod_small
+predict(lmod_small)
+```
+
+
+```{r}
+# compute residuals
+y <- mammal_small$brain
+y - y_hat
+```
+
+
+```{r}
+# compute SSE using output stored to lmod_small
+residuals(lmod_small)
+```
+
+
+```{r}
+# using output stored to lmod_small
+sum(residuals(lmod_small)^2)
+```
+
+
+## Finding a Formula for $\hat{\beta}$
+
+---
+
+Let's find a general formula for the OLS estimate for $\beta$ in the linear model $y = \beta \cdot x$. In general, we have
+
+$$\text{SSE}(\beta) = \sum_{i=1}^n (y_i - \hat{y}_i )^2 = \sum_{i=1}^n (y_i - \beta \cdot x_i )^2.$$
+
+We find the minimum by setting the derivative equal to $0$ to identify the critical points.
+
+$$\begin{align}
+\frac{d}{d{\color{blue}{\beta}}} \big( \text{SSE}({\color{blue}{\beta}}) \big) &= \frac{d}{d{\color{blue}{\beta}}} \bigg( \sum_{i=1}^n (y_i - {\color{blue}{\beta}} \cdot x_i )^2 \bigg) \\
+&= \sum_{i=1}^n \bigg( \frac{d}{d{\color{blue}{\beta}}} (y_i - {\color{blue}{\beta}} \cdot x_i )^2 \bigg) \\
+&= \sum_{i=1}^n \bigg(  -2x_i (y_i - \beta \cdot x_i) \bigg) \\
+&= \sum_{i=1}^n  (2x^2_i \beta - 2x_iy_i) \\
+&= 2 \beta \sum_{i=1}^n {x_i^2} - 2 \sum_{i=1}^n (x_i y_i)
+\end{align}.$$
+
+Setting the derivative equal to zero and solve for $\beta$ gives a formula for finding the OLS estimate for the slope that is denoted $\hat{\beta}$,
+
+$$\large{\hat{\beta} = \frac{\sum_{i=1}^n (x_i y_i)}{\sum_{i=1}^n x^2_i} }.$$  {#eq-only-slope}
+
+
+```{r}
+# compute beta using calc derived formula
+x <- mammal_small$body
+y <- mammal_small$brain
+
+beta_hat_small <- sum(x * y) / sum(x^2)
+beta_hat_small
+```
+
+
+This confirms the output from `lm()` stored in `lmod_small`.
+
+## Minimizing the SSE with `optimize()`
+
+---
+
+```{r}
+x <- mammal_small$body
+y <- mammal_small$brain
+
+# define a function for the SSE 
+sse_small <- function(m) {
+  sum( (m * x - y)^2 ) 
+}
+```
+
+```{r}
+# compute SSE as a function of beta
+sse_small(lmod_small$coefficients[1])
+```
+
+
+```{r}
+# minimize the SSE
+optimize(sse_small, c(0,10), maximum = FALSE)
+```
+
+
+This is consistent with both the `lm()` and analytic approaches!
+
+# A Larger `mammals` Data Set
+
+---
+
+The package `MASS` contains the `mammals` data frame which is "a data frame with average brain and body weights for 62 species of land mammals." 
+
+- `body` is the body weight in kg.
+- `brain` is the brain weight in g.
+- Each row also has a `rowname`, the name of the species.
+
+
+## Loading the Data
+
+---
+
+```{r}
+#library(MASS)  # requires MASS package
+data(mammals)  # load mammals data
+str(mammals)  # look at structure
+```
+
+
+```{r}
+# a peak at the full data
+head(mammals)
+```
+
+## Cleaning the Data
+
+---
+
+
+```{r}
+# add variable species, rather than rowname
+mammals <- data.frame(species = rownames(mammals),  # species variable
+                      body = mammals$body,
+                      brain = mammals$brain)
+
+head(mammals)  # print first 6 rows
+```
+
+
+### Inspecting the Data for Outliers
+
+---
+
+```{r}
+plot(brain ~ body, mammals)
+```
+
+
+## Plotting Data in `mammals_clean`
+
+---
+
+```{r}
+mammals_clean <- filter(mammals, body < 2000)
+plot(brain ~ body, mammals_clean)
+```
+
+
+# Model 1: $Y = \beta X$
+
+---
+
+
+Let's first consider using the same linear model as our initial data set of three species. Namely we first assume the vertical intercept is $0$ and consider a linear model with one parameter $y = \beta x$ that we fit to the cleaned `mammals` data.
+
+
+## Performing Regression with  `lm()`
+
+---
+
+```{r}
+lmod_brain <- lm(brain ~ body + 0, data = mammals_clean)
+summary(lmod_brain)
+```
+
+The linear model is $y = 1.417 x$
+
+## Using the OLS Formula 
+
+---
+
+We can also use equation [(1)](#eq-only-slope) to quickly find the OLS estimate for $\hat{beta}$.
+
+$$\hat{\beta} = \frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x^2_i}.$$
+
+```{r}
+x <- mammals_clean$body
+y <- mammals_clean$brain
+beta_hat <- sum(x * y) / sum(x^2)
+beta_hat
+```
+
+
+# Model 2: Adding an Intercept Term
+
+---
+
+Next we consider adding an additional parameter into our linear model, the vertical intercept. Thus, we consider a two parameter family:
+
+$$y = \beta_0 + \beta_1 \cdot x$$
+
+## Question 1 {#sec-play}
+
+---
+
+Play around with the slope and intercept in the code cell below to find the line of best. Once you think you have an adequate line, compute the SEE to assess the fit.
+
+
+```{r}
+#| echo: false
+#################
+slope <- 1.35
+intercept <- 55
+################
+
+# scatter plot of observed data points
+plot(brain ~ body, data = mammal_small,
+     col = "black",
+     ylim = c(0,800),
+     xaxt = "n",  # turn of default x-axis ticks
+     yaxt = "n")  # turn of default y-axis ticks
+
+axis(1, seq(0, 500, 100))  # set x-axis ticks
+axis(2, seq(0, 800, 200))  # set y-axis ticks
+abline(intercept, slope, col = "blue")  # plots line y = 0 + 1.5x
+```
+
+```{r}
+# run to compute corresponding sse
+sum( (intercept + slope * mammals_clean$body - mammals_clean$brain)^2 ) 
+```
+
+
+## Using `lm()` for Linear Model 2
+
+---
+
+By default, the `lm(y ~ x_1 + x_2 + ... + x_p, data = df)` function returns the coefficients and diagnostics corresponding the linear regression model
+
+$$y = \beta_0 + \beta_1 x_1 + \beta_2 x_2 + \ldots + \beta_p x_p + \epsilon $$ 
+
+::: {.callout-note}
+By default an intercept term is included in the model which is good since we normally do want to include that term in our linear models.
+:::
+
+R provides many additional methods (generic functions that do something specific when applied to a certain type of object) for lm objects. Commonly used ones include:
+
+
+- `residuals`: extracts the residuals, $\hat{\epsilon}_i$
+- `fitted`: extracts the fitted values,  $\hat{y}_i$
+- `predict`: can be used to make predictions at indicate values of predictor(s). By default, it computes the fitted values.
+- `coef` or `coefficients`: extracts the estimated coefficients, $\hat{\beta}_i$
+- `deviance`: extracts the RSS (or SSE)
+- `df.residual`: the degrees of freedom for the RSS
+- `sigma`: extracts the variance of the errors, $\hat{\sigma}$
+
+
+## Question 2
+
+---
+
+Use the `lm()` function to find the OLS estimates for the line of best fit. Then enter a formula to compute the corresponding SSE and compare with your results in the [previous question](#sec-play).
+
+::: {.callout-tip}
+You do not need to compute the residuals yourself to find the RSS. Instead, you may apply a function to the output of `lm()` to compute the RSS.
+:::
+
+### Solution to Question 2
+
+---
+
+```{r}
+#| eval: false
+lmod_brain2 <- lm(??)
+```
+
+```{r}
+# compute the SSE from lm output
+
+```
+
+
+We obtain the linear model $??$. (enter formula using LaTeX)
+
+
+
+## Using Formulas for OLS Estimates
+
+---
+
+We have a new SSE function:
+
+$$\text{SSE}(\beta_0, \beta_1)  =   \sum_{i=1}^n \big( y_i - {\color{blue}{\hat{y}_i}} \big) =  \sum_{i=1}^n \big( y_i -  ({\color{blue}{\beta_0 + \beta_1 \cdot x_i}}) \big)^2$$
+
+
+
+
+To minimize, we simultaneously solve the equations
+
+$$\left\{ \begin{align}
+\frac{\partial}{\partial \beta_0} \bigg( \text{SSE}(\beta_0, \beta_1) \bigg) &= 0\\
+\frac{\partial}{\partial \beta_1} \bigg( \text{SSE}(\beta_0, \beta_1) \bigg) &= 0
+\end{align} \right.$$
+
+Using multivariable calculus, we can obtain formulas for the OLS estimates:
+
+$$\large{\hat{\beta}_1 = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2}} \qquad \text{and} \qquad \large{\hat{\beta_0} = \bar{y} - \hat{\beta_1} \bar{x}} .$$
+ 
+
+```{r}
+x <- mammals_clean$body  # observed x
+y <- mammals_clean$brain  # observed y
+x_bar <- mean(x)  # sample mean x-bar
+y_bar <- mean(y)  # sample mean y-bar
+
+# using formulas above
+beta1_hat <- sum( (x - x_bar)*(y - y_bar)) / sum( (x - x_bar)^2 )
+beta0_hat <- y_bar - beta1_hat * x_bar
+
+beta1_hat  # estimate for slope
+beta0_hat  # estimate for intercept
+```
+
+
+
+
+### Multivariable Optimization with `optim()`
+
+---
+
+```{r}
+# define sse for y = b_0 + b_1 x
+sse_mammal2 <- function(params) {
+  b0 <- params[1]
+  b1 <- params[2]
+  sum( (b0 + b1 * mammals_clean$body - mammals_clean$brain)^2 ) 
+}
+```
+
+```{r}
+# use optim to find minimum
+my_guess <- c(b0 = 0, b1 = 1)
+optim(par = my_guess, fn = sse_mammal2)
+```
+
+# Adding a Regression Line to a Scatter Plot
+
+---
+
+## Using `base` R
+
+---
+
+- We use the `plot(y ~ x, data = df)` function to generate a scatter plot.
+- We use the `abline(a, b)` function to add a line of the form $y = a + bx$ to the plot.
+  - Regression coefficients are stored in the output of `lmod_brain2`.
+
+```{r}
+#| eval: true
+#| echo: false
+lmod_brain2 <- lm(brain ~ body, mammals_clean)
+```
+
+```{r}
+plot(brain ~ body, mammals_clean)
+abline(lmod_brain2, 
+       col = "blue",  # option to change color
+       lwt = 2)  # option to make line thicker
+```
+
+## Creating an Interactive Plot
+
+---
+
+```{r}
+ggbrain <- ggplot(mammals_clean, aes(x = body, y = brain)) +
+  geom_point(aes(text = species)) + 
+  geom_smooth(method = "lm") + 
+  theme_classic()
+
+ggplotly(ggbrain)
+```
+
+
+## Question 3 
+
+--- 
+
+Consider the following [simple linear regression model]{style="color:blue"} with response $Y$ the brain mass (in g) a mammal species and $X$ the species' average body mass (in kg). 
+
+$$y = 56 + 1.24 x  .$$
+
+- Interpret the practical and graphical interpretation of the $56$.
+- Interpret the practical and graphical interpretation of the $1.24$.
+- The average body mass of an arctic fox is $3.385$ kg. What does this model predict is the brain mass of an arctic fox?
+
+
+### Solution to Question 3
+
+---
+
+
+
+<br>  
+<br>  
+
+## Question 4
+
+---
+
+Looking at the interactive plot, why do you think the margin of error is smaller for smaller values of `body` mass but gets larger for predictions for larger `body` mass. Explain.
+
+
+### Solution to Question 4
+
+---
+
+
+<br>  
+<br>  
+
+
+## Question 5
+
+---
+
+Recall the `storms` data frame in the `dplyr` package of the `tidyverse`.
+
+```{r}
+data(storms)
+glimpse(storms)
+```
+
+- `wind` gives the wind speed in knots
+- `pressure` gives the storm pressure in millibars.
+
+Use any method to find a simple linear regression model of the form $\text{pressure} = \beta_0 + \beta_1 \cdot \text{wind}$. Then answer the following questions.
+
+- Give a formula for the regression line.
+- Interpret the coefficients in the model (if possible).
+- What is the predicted wind speed for a storm with pressure 900 millibars?
+- Create a plot to show the scatter plot with the regression line and color the points by storms `status` which is being stored properly as a `factor`.
+
+### Solution to Question 5
+
+---
+
+
+```{r}
+#| eval: false
+# store model and display summary
+lmod_wind <- ??
+summary(lmod_wind)
+```
+
+```{r}
+# compute residuals
+
+```
+
+```{r}
+# create plot with regression line
+
+```
+
+<br>  
+<br>  
+
+
+# What is a Regression Model? 
+
+---
+
+::: {.callout-note title="Definition" appearance="simple"}
+[**Regression models**]{style="color:blue"} are used to model the relationship between:
+
+- One or more [**predictor**]{style="color:blue"}  (also called feature, explanatory, regressor, input, or dependent) variables, and
+- One (or more) [**response**]{style="color:blue"} variable (also called outcome, output, or dependent).
+- Predictor variables $X_i$ are used to predict the value of the response variable $Y$ with error $\epsilon$.
+
+$$  Y = f(X_1, X_2, \ldots X_p) + \epsilon $$ 
+
+Because the variables in our model are often interrelated, describing these variables as independent or dependent variables is vague and is best avoided.
+:::
+
+A distinction is sometimes made between regression models and classification models. In that case:
+
+
+- [Regression models]{style="color:blue"} attempt to predict a numerical response.
+- [Classification models]{style="color:blue"} attempt to predict the level that a categorical response will have.
+
+
+## Goals of a Regression Model
+
+---
+
+::: {.callout-note title="Goals" appearance="simple"}
+The basic goals of a regression model are most commonly:
+
+
+1. [Describe relationships]{style="color:red"} (associations) between predictor variables and the response. 
+
+> What is the general relationship between the selling price of a home and the number of bedrooms the home has?
+  
+2. [Predict future or unknown response values]{style="color:red"} based on specified values of the predictors. 
+
+> If I add a bedroom, how much will my the selling price of my home go up?
+
+3. [Generalize]{style="color:red"} our results from the sample to a larger population of interest. 
+
+> After doing a double-blind, placebo trial on an experimental vaccine, is it safe for the general public?
+
+4. [Infer causality]{style="color:red"} between our predictors and the response. 
+
+> Did receiving the vaccine lead to a drop in infection rates? Hospitalizations?
+:::
+
+
+Our regression model will not be able to perfectly fit a *true model*  to the data. Thus, **finding the true model should not be the goal** of a regression analysis. A regression analysis should attempt to **find a model that adequately describes the relationship** between the response and relevant predictor variables (either in terms of prediction, association, generalization, causality, etc.)
+
+
+
+# Linear Regression Models
+
+---
+
+::: {.callout-note title="Definition" appearance="simple"}
+A [**linear model**]{style="color:blue"} is a regression model in which the regression coefficients enter the model linearly. For example:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p + \epsilon .$$ {#eq-lmdef}
+
+The model does not need to be linear in predictor variables:
+
+$$ Y = \beta_0 + \beta_1 X_1^2 + \beta_2 e^{X_2+X_3^2} +  \beta_3 \ln{(X_1X_2X_3)} + \epsilon $$
+
+The $\beta_i$'s are called the [**regression coefficients**]{style="color:blue"}, and these are unknown parameters we will estimate.
+
+- A [**simple linear regression model**]{style="color:blue"} has one predictor, $Y = \beta_0 + \beta_1 X + \epsilon$.
+- A [**multiple linear regression model**]{style="color:blue"} has more than one predictor variable.
+:::
+
+
+
+# Simple Linear Regression
+
+---
+
+The [**simple linear regression**]{style="color:blue"} is a linear regression model with a single predictor $X$ and a single response variable $Y$. It does not refer to the complexity of the linear model. The most common simple linear regression model is the familiar
+
+$$Y = \beta_0 + \beta_1 X + \epsilon .$$
+
+
+The [response variable]{style="color:blue"} $Y$: 
+
+- Is treated as a **random variable**.
+- We can observe values (denoted $\hat{Y}_i$) of $Y_i$ at each observation in our sample.
+
+---
+
+The [predictor variable]{style="color:blue"} $X$.
+
+- Is treated as a **fixed (non-random)** and **observable** value.
+- Does not need to be predicted or estimated.
+
+---
+
+The [regression coefficients]{style="color:blue"} $\beta_0$ and $\beta_1$:
+
+- Are **unknown parameters** that we will estimate from our sample data.
+- Are treated as **fixed (non-random)** but **not observable** values.
+- Most commonly estimated using OLS that are denoted $\hat{\beta}_0$ and $\hat{\beta}_1$.
+
+---
+
+The [error]{style="color:blue"} $\epsilon$ is the deviation of the response from its mean. It does not imply the model has a *mistake* or *malfunction*. The error is:
+
+- Treated as a **random variable** that is not observable, and 
+- Assumed to have $E(\epsilon) = 0$ (the model is not biased).
+- The errors of prediction are random and not equal to the **residuals** that we can use as estimates.
+
+## Why Do We Use Random Variables?
+
+---
+
+
+Let's consider a simple linear regression model (with one predictor) of the form $Y = \beta_0 + \beta_1 X + \epsilon$.  It is very possible different observations in the population can have the same value for the predictor, $X=x_i$, but have different values of the response variable, we denote $Y_i$.
+
+- Two different animals could have the same body mass but different brain mass.
+- That is why we consider each $Y_i$ a random variable. It's value varies due to randomness in sampling.
+- We cannot describe how $Y_i$ is distributed without having population data.
+
+
+The model gives the same prediction for each observations with $X=x_i$, namely $\widehat{y}_i = \hat{\beta}_0 + \hat{\beta}_1 x_i$; however, the observed values of $y_i$ when $X=x_i$ will vary. Thus:
+
+- The each error of prediction $\epsilon_i$ is considered a random variable.
+- We cannot describe how each $\epsilon_i$ is distributed without having population data.
+
+
+## Error Assumptions
+
+---
+
+A simple linear regression model of the form $Y = \beta_0 + \beta_1 X + \epsilon$ has the following key assumptions about the errors of prediction: 
+
+- [**Linearity**]{style="color:blue"}: $Y$ and $X$ have a linear relationship. In other words, the mean value of $Y$ is a straight-line function of $X$. If the have a nonlinear association, we should modify our model or transform predictor and/or response variables.
+
+$$E(Y | X=x_i) = \beta_0 + \beta_1 x_i$$
+
+
+- Mean Zero: We do not want our model to be biased.
+
+$$E(\epsilon_i) = E(\epsilon | X=x_i) = 0 \qquad \text{for all } x_i.$$
+
+- [**The Errors are Uncorrelated**]{style="color:blue"}: The error in one prediction does not effect the amount of error in any other prediction.
+
+$$\text{Cov}(\epsilon_i, \epsilon_j ) = 0 \qquad \text{for all } i \ne j .$$ 
+
+- [**Homoscedasticity**]{style="color:blue"}: The model is equally accurate everywhere. Thus, the errors of prediction have the same, constant variance. We do not want the model to be more accurate when $x$ is small and less accurate when $x$ is large.
+
+$$\text{Var}(\epsilon_i) = \text{Var}(\epsilon | X = x_i) = \sigma^2 \qquad \text{for all } x_i .$$
+
+- [**Normality**]{style="color:blue"}: The errors are normally distributed. Most observations of $Y_i$ are close to the prediction $\hat{Y}_i$, and we are less and less likely to observe values $Y_i$ farther and farther away from the prediction.
+
+
+We can summarize several of the assumptions on $\epsilon_i$ as follows. For all $\epsilon_i$, we have
+
+$$\large \epsilon_i \sim N(0, \sigma^2) .$$
+
+## Estimating $\sigma^2$, the Variance of the Errors
+
+---
+
+In the error assumptions, we denote the parameter for the error variance as $\sigma^2$. The error variance is a parameter describing the unknown distribution of prediction errors, $\epsilon$, which are random variables. We can use the residuals to estimate the error variance, denoted $\hat{\sigma}^2$, using the following formula:
+
+$$\hat{\sigma}^2 = \frac{SSE}{n-p} = \frac{RSS}{n-p}$$
+
+- The RSS and SSE are two different names for the same thing.
+- $n$ is the number of observations in the sample.
+- $p$ is the number of predictors, *which includes the intercept*.
+- The denominator $n-p$ is the [**degrees of freedom**]{style="color:blue"} of the RSS.
+- For simple linear regression (one predictor), we have $p=2$ and $df = n-2$.
+
+$$\text{Special case for simple linear regression:} \qquad\hat{\sigma}^2 =  \frac{RSS}{n-2}$$
+
+```{r}
+# calculating the variance of all residuals
+var(residuals(lmod_brain2))
+```
+
+
+```{r}
+# computing RSS / (n-2)
+n <- nrow(mammals_clean)
+sum(residuals(lmod_brain2)^2) / (n - 2)
+```
+
+```{r}
+# using functions from lm output
+deviance(lmod_brain2)  # RSS of the model
+df.residual(lmod_brain2) # degrees of freedom for RSS
+sigma(lmod_brain2) # st dev deviation of the errors
+(sigma(lmod_brain2))^2 # variance of the errors
+```
+
+## Question 6
+
+---
+
+Compute the estimate for the variance of the errors for the `wind` and `pressure` model you constructed earlier (stored in `lmod_wind`).
+
+
+### Solution to Question 6
+
+---
+
+
+<br>  
+<br>  
+
+
+## Checking Error Assumptions
+
+---
+
+```{r}
+#library(ggfortify)
+autoplot(lmod_brain2)
+```
+
+## Question 7
+
+---
+
+Use the `autoplot()` function from `ggfortify` to create plots associated to the residuals. How do some of the assumptions seem to check out?
+
+### Solution to Question 7
+
+---
+
+
+
+<br>  
+<br>  
+
+
