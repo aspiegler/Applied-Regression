@@ -922,6 +922,11 @@ sigma(lmod_wind)
 autoplot(lmod_brain2)
 ```
 
+::: {.callout-tip}
+We will discuss how to read and utlize each of the plots below to assess and improve linear models. [Here's a nice summary](https://rpubs.com/Amrabdelhamed611/669768) if you cannot wait! 
+:::
+
+
 ## Question 6
 
 ---

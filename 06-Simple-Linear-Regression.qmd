@@ -916,11 +916,17 @@ Compute the estimate for the variance of the errors for the `wind` and `pressure
 autoplot(lmod_brain2)
 ```
 
+::: {.callout-tip}
+We will discuss how to read and utlize each of the plots below to assess and improve linear models. [Here's a nice summary](https://rpubs.com/Amrabdelhamed611/669768) if you cannot wait! 
+:::
+
+
 ## Question 7
 
 ---
 
 Use the `autoplot()` function from `ggfortify` to create plots associated to the residuals. How do some of the assumptions seem to check out?
+
 
 ### Solution to Question 7
 
