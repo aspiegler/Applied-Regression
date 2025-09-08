@@ -132,9 +132,9 @@ $$\hat{\epsilon}_i = ( \text{observed} -  {\color{blue}{\text{predicted}}}) =  (
 
 For the three species (jaguar, gorilla, and horse) in our data, we have:
 
-| `species` | $x_i$, `body` | $y_i$, `brain`  |   $\hat{\epsilon}_i = y_i - \hat{y}_i$ |
+| `species` | $x_i$, `body` | $y_i$, `brain`  |  $\hat{y}_i = \beta x_i$ | $\hat{\epsilon}_i = y_i - \hat{y}_i$ |
 |----------|---------------|------------------|--------------|-------------------|
-|Jaguar| $100$ | $157$ | $\beta \cdot 100$ | | $(157 - 100\beta)^2$ |
+|Jaguar| $100$ | $157$ | $\beta \cdot 100$  | $(157 - 100\beta)^2$ |
 |Gorilla| $207$ |  $406$ | $\beta \cdot 207$ |  $(406 - 207\beta)^2$ |
 |Horse| $521$ | $655$ | $\beta \cdot 521$ |  $(655 - 521\beta)^2$ |
 
@@ -145,7 +145,7 @@ Summing together the square of the residuals (in the last column of the table), 
 $$\text{SSE}(\beta) = (157 - 100\beta)^2 + (406 - 207\beta)^2 + (655 - 521\beta)^2 .$$
 
 
-Notice the SSE depends only on the value chosen for the slope, $\beta$. One of the most common methods for identifying the line of best fit is using the [**ordinary least squares (OLS)**]{style="color:blue"} find the value of the slope, denoted $\hat{\beta}$, that *minimizes the SSE*. We typically express the model of the form $y = \beta x$ that best fits the general formula as
+Notice the SSE depends only on the value chosen for the slope, $\beta$. One of the most common methods for identifying the line of best fit is using the [**ordinary least squares (OLS)**]{style="color:blue"} to find the value of the slope, denoted $\hat{\beta}$, that *minimizes the SSE*. We typically express the model of the form $y = \beta x$ that best fits the general formula as
 
 $$\hat{y} = \hat{\beta} x .$$
 
@@ -784,7 +784,8 @@ $$Y = \beta_0 + \beta_1 X + \epsilon .$$
 The [response variable]{style="color:blue"} $Y$: 
 
 - Is treated as a **random variable**.
-- We can observe values (denoted $\hat{Y}_i$) of $Y_i$ at each observation in our sample.
+- We can observe values (denoted $y_i$) of $Y_i$ at each observation $x_i$ in our sample.
+- We estimate the mean value of $Y_i$ with $\hat{y}_i = \hat{\beta}_0 + \hat{\beta}_1 x_i$.
 
 ---
 
@@ -838,7 +839,7 @@ A simple linear regression model of the form $Y = \beta_0 + \beta_1 X + \epsilon
 $$E(Y | X=x_i) = \beta_0 + \beta_1 x_i$$
 
 
-- Mean Zero: We do not want our model to be biased.
+- [**Mean Zero**]{style="color:blue"}: We do not want our model to be biased.
 
 $$E(\epsilon_i) = E(\epsilon | X=x_i) = 0 \qquad \text{for all } x_i.$$
 
@@ -855,7 +856,7 @@ $$\text{Var}(\epsilon_i) = \text{Var}(\epsilon | X = x_i) = \sigma^2 \qquad \tex
 
 We can summarize several of the assumptions on $\epsilon_i$ as follows. For all $\epsilon_i$, we have
 
-$$\large \epsilon_i \sim N(0, \sigma^2) .$$
+$$\large \epsilon_i \sim N(0, \sigma^2) \qquad \text{and} \qquad \text{Cov}(\epsilon_i, \epsilon_j) = 0 \ \ \text{ if } i \ne j.$$
 
 ## Estimating $\sigma^2$, the Variance of the Errors
 
