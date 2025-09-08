@@ -442,7 +442,7 @@ intercept <- 55
 ################
 
 # scatter plot of observed data points
-plot(brain ~ body, data = mammal_small,
+plot(brain ~ body, data = mammals_clean,
      col = "black",
      ylim = c(0,800),
      xaxt = "n",  # turn of default x-axis ticks
@@ -450,7 +450,7 @@ plot(brain ~ body, data = mammal_small,
 
 axis(1, seq(0, 500, 100))  # set x-axis ticks
 axis(2, seq(0, 800, 200))  # set y-axis ticks
-abline(intercept, slope, col = "blue")  # plots line y = 0 + 1.5x
+abline(intercept, slope, col = "blue")  # plots line 
 ```
 
 ```{r}
