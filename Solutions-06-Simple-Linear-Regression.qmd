@@ -497,20 +497,7 @@ You do not need to compute the residuals yourself to find the RSS. Instead, you 
 
 ---
 
-```{r}
-#| eval: false
-lmod_brain2 <- lm(??)
-```
 
-```{r}
-# compute the SSE from lm output
-
-```
-
-
-We obtain the linear model $??$. (enter formula using LaTeX)
-
-### Delete solution
 
 ```{r}
 lmod_brain2 <- lm(brain ~ body, data = mammals_clean)
@@ -634,6 +621,24 @@ $$y = 56 + 1.24 x  .$$
 ---
 
 
+- A land mammal species with a body mass of 0 kg is predicted to have, on average, a brain mass of 56 g. The intercept might help our model's performance, but the value does not have any practical significance in this contect since we would not want to use this model to predict the brain mass of a land mammal with no body mass.
+
+- For each 1 kg increase in body mass, the brain mass is predicted to increase, on average, by $1.24$ g.
+
+```{r}
+# calculate prediction for each observation in data frame
+fox <- data.frame(body = c(3.385))
+predict(lmod_brain2, newdata = fox)
+```
+
+
+```{r}
+# extra first (arctic fox) prediction of model
+fitted(lmod_brain2)[1]
+```
+
+
+The predicted brain mass of an arctic fox is $60.158$ g.
 
 <br>  
 <br>  
@@ -648,6 +653,8 @@ Looking at the interactive plot, why do you think the margin of error is smaller
 ### Solution to Question 4
 
 ---
+
+There are more observations in the sample with body mass between 0 and 200 kg, so those predictions have less variability.
 
 
 <br>  
@@ -685,9 +692,21 @@ lmod_wind <- lm(wind ~ pressure, data = storms)
 summary(lmod_wind)
 ```
 
+A formula for the line of best fit is $y=1302 -1.26x$.
+
+- The intercept tells us the wind speed of a storm with no pressure would be $1302$ knots. This does not make practical sense in this context since there is no place on Earth where the pressure is ever zero. We have an atmosphere (thankfully).
+
+- The slope coefficient tells us for each increase in storm pressure by 1 millibar, the wind speed of the storm decreases on average by $1.26$ knots.
+
+
 ```{r}
-sum(residuals(lmod_wind)^2)
+# calculate prediction for each observation in data frame
+new_df <- data.frame(pressure = c(900))
+predict(lmod_wind, new_df)
 ```
+
+A storm with pressure 900 millibars is predicted to have a wind speed of $167.8262$ knots.
+
 
 ```{r}
 plot(wind ~ pressure, storms, col = status)
