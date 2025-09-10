@@ -1,0 +1,560 @@
+---
+title: "Homework 3"
+author: 
+  - name: "Enter your name"
+    affiliation: "University of Colorado Denver"
+format: 
+  html:
+    embed-resources: true    
+editor: source
+warning: false
+---
+
+
+# Solutions HW 3: Due Wed, Sep 17 at 2:00 PM
+
+ 
+
+
+1.  <span style="color:red">Be sure to download and save the file so you are working with your own private copy of the file.</span>
+
+2.  <span style="color:green">After you have copied the Quarto file onto your computer, you can begin editing and saving your work.</span>
+
+**Submit your work electronically as two separate files:**
+
+-   A Quarto markdown file with file extension `.qmd` with all code cells run and relevant output displayed in the document.
+-   After you have completed all questions, render your completed work to an html file.
+-   Submit the html file that is created with file extension `.html`.
+
+Upload both files into the Homework 3 assignment in Canvas before <span style="color:blue">**2 PM on Wednesday, September 17.**</span>
+
+**You must provide supporting work for your all of your answers.**
+
+-   <span style="color:blue">That work will include using R code cells.</span>
+    -   Feel free to insert as much R code as you like.
+    -   When asked, you must interpret or explain how the output of a code cell is being utilized to solve the question.
+    -   Code with incomplete or missing explanations of why the output is useful may not receive full credit.
+    -   Code that involves methods and commands we have not discussed this semester may not receive full credit.
+-   <span style="color:blue">Your work may also involve typing/writing proofs using mathematical expressions and/or explanations.</span>
+    -   Be sure to type out the steps of your work/explanation so I can see how you arrived at your answer.
+-   <span style="color:blue">**Questions 3-6 note you can either type your answer using LaTeX so that math expressions are nicely formatted or you may write your work on paper or tablet and submit written work. You have two options on those questions:**</span>
+    - Type your work neatly in this Quarto document using LaTeX for the math expressions and submit your work as usual.
+    - Write your work neatly and completely and submit on paper before class or upload a pdf version in Canvas.
+    - Do not type math expressions in this document that do not look good. I'd prefer written work on paper.
+    
+
+
+## Important Academic Policies:
+
+ 
+
+-   **Be your own work.** Though you may collaborate with others, everyone is responsible for writing up the work in their own way using their own methods. Plagiarism of any form is not tolerated.
+-   **Be complete.** You must provide all work and/or explanations needed to find the solution. Answers with insufficient or incomplete supporting work may lose credit.
+-   **Adhere to the Code of Academic Honesty.**
+-   **Be clearly typed.** Your solution to a question must be clear and typed in complete sentences. 
+
+## <span style="color:blue">Let me know if you need help, and GOOD LUCK!!!</span>
+
+ 
+
+
+# Be Sure to Do the Following Once Completed
+
+ 
+
+-   Be sure you have run ALL code cells before saving your work.
+-   Be sure all relevant code output is displayed in Quarto document.
+-   If you used LaTeX, make sure all of the formulas look good when rendering to html.
+-   Then be sure to save the your work as a Quarto document.
+-   Finally, be sure you render your final work to a static `html` that you submit along with your Quarto file in Canvas.
+-   If you preferred to write work on questions 3-6, be sure to submit either a paper copy to me or upload a pdf version of your written work into Canvas along with your other documents.
+
+# Importing Data and Packages
+
+ 
+
+```{r}
+#| message: false
+library(tidyverse)  # includes dplyr, ggplot2, readr, ...
+```
+
+
+# Question 1
+
+ 
+
+
+The data set `BikeRental.csv` is stored in GitHub and contains information on daily bicycle rentals from several establishments in Victoria, British Columbia, over approximately a two-year period. Suppose you are interested in examining some predictors of the number of bikes rented per day. The following variables are included in the data set:
+
+- `casid`: identification number
+- `season`: season of the year (`1` = fall, `2` = winter, `3` = spring, `4` = summer)
+- `holiday`: was the day a holiday? (`0` = no, `1` = yes)
+- `workday`: was it a normal workday? (`0` = no, `1` = yes)
+- `weather`: what was the weather like on that day? (`1` = sunny, `2` = cloudy, `3` = rainy)
+- `temperature`: average temperature (in degrees Celsius)
+- `humidity`: average humidity (relative humidity, as a percentage)
+- `windspeed`: average windspeed (kilometers per hour)
+- `casual`: number of casual bike renters
+- `registered`: number of registered bike renters
+- `rentals`: total number of bike rentals
+
+
+```{r}
+bike <- read.csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/BikeRentals.csv")
+```
+
+```{r}
+head(bike)
+```
+
+
+## Question 1a
+
+ 
+
+Use the `lm()` function to fit a linear model with `temperature` as the only predictor variable for the the response variable `rentals`. Include an intercept term in your model:
+
+$$Y = \beta_0 + \beta_1X + \epsilon.$$
+
+### Solution to Question 1a
+
+ 
+
+Include code and display the `summary()` output of your linear model to the screen. 
+
+
+
+
+
+
+<mark>Then type the formula for the line of best using LaTeX in the space below.</mark> 
+
+The line of best fit is: $??$.
+
+
+
+<br>  
+<br>  
+
+
+## Question 1b
+
+ 
+
+Create a scatter plot with the response `rentals` on the $y$-axis and the predictor `temperature` on the $x$-axis. Add the regression line you found in the previous question to your plot. Make the plot as fancy as you like using either `base` R or `ggplot2`.
+
+
+### Solution to Question 1b
+
+ 
+
+
+
+<br>  
+<br>  
+
+## Question 1c
+
+ 
+
+Compute the value of the RSS corresponding to your linear model? Include a code chunk in the space below and display the output to the screen. You do not need to explain anything.
+
+
+### Solution to Question 1c
+
+ 
+
+
+
+
+<br>  
+<br> 
+
+
+## Question 1d
+
+ 
+
+Interpret the practical meaning of the values of the slope and intercept coefficients in your model from part (a). Explain in the values in the context of this example (bike rentals and temperatures) using terms somebody with a limited math or stats background would understand (for example don't say slope or intercept), and include units in your explanations. If the value does not make practical sense, explain why not.
+
+
+### Solution to Question 1d
+
+ 
+
+
+
+
+<br>  
+<br>
+
+
+## Question 1e
+
+ 
+
+The first observation in the data set has a `temperature` of $14.110847^{\circ}$C and `rentals` are $985$. What is the value of the residual corresponding to this observation? Include an R code chunk that computes the residual and display the value on screen. There is no need to explain anything.
+
+
+### Solution to Question 1e
+
+ 
+
+
+
+
+
+<br>  
+<br>
+
+
+## Question 1f
+
+ 
+
+Create a density plot of all residuals corresponding to your linear model. Then comment on which error assumptions you can verify are approximately satisfied (if any), which error assumptions do not seem to be satisfied (if any), and which error assumptions we cannot determine anything, one way or another, from the density plot that is created. Support your answers an explanation. There is no right or wrong answers as long as you have good justifications for your answers.
+
+
+### Solution to Question 1f
+
+ 
+
+<mark>In the space below insert a code chunk to create the plot.</mark>
+
+
+
+
+
+<mark>In the space below comment on the error assumptions.</mark>
+
+
+
+
+<br>  
+<br>  
+
+
+
+# Question 2
+
+ 
+
+The simple linear regression model can be written in as $Y= \beta_0 + \beta_1 X + \epsilon$.  
+
+- Indicate whether each term is a **random variable**, a **parameter**, an **estimate**, a **prediction**, or a variable whose values we can **observe**.
+- Describe what each term represents (interpretation).
+
+I'll give an example below:
+
+- $\hat{\beta}_1$: This is an **estimate** for the slope $\beta_1$ in the model. It can be interpreted as the average change in the response variable for each one unit increase in the predictor variable.
+
+
+## Solution to Question 2
+
+ 
+
+Do something similar for each ingredient below. It is okay if some interpretations are brief when the concept is easier to explain.
+
+- $Y$:
+
+
+- $X$:
+
+
+- $\epsilon$:
+
+
+- $\beta_0$
+
+
+- $\hat{Y}$:
+
+
+- $\hat{\epsilon}$:
+
+
+
+<br>  
+<br>  
+
+
+ 
+
+# How to Submit Work on Remaining Questions
+
+
+- If you know or want to [learn LaTeX](https://artofproblemsolving.com/wiki/index.php/LaTeX:Symbols), I encourage you to type your answers using LaTeX.
+- Typing in LaTeX might take more time then writing it out.
+- You may choose to write solutions to the remaining problems on paper or a tablet. That is fine too!
+- However you choose to submit your, make sure you work is neatly organized, easy to read, and complete.
+- Here's a great [dictionary of LaTeX symbols](https://artofproblemsolving.com/wiki/index.php/LaTeX:Symbols) to help if interested.
+
+ 
+
+
+# Question 3
+
+ 
+
+Suppose that $Y_1,Y_2, \ldots ,Y_n$ are identically and independently distributed (i.i.d.) random variables. This means each $Y_i$ has the same distribution with the same mean and variance.
+
+Consider the linear model $Y_i = \beta_0 + \epsilon_i$ where each $\epsilon_i$ has:
+
+$$E(\epsilon_i) = 0 \ , \quad \text{Var}(\epsilon_i) = \sigma^2 \text{ , and } \quad \text{Cov}(\epsilon_i, \epsilon_j) = 0 \text{ when } i \ne j .$$
+
+Note this linear model has no $\beta_1 X$ term. Just one intercept parameter, $\beta_0$.
+
+## Question 3a
+
+ -
+
+
+Compute $E(Y_i)$. Your answer may depend on $\beta_0$, $\epsilon_i$, and/or $\sigma^2$.
+
+### Solution to Question 3a
+
+ 
+
+
+
+
+<br>  
+<br>  
+
+
+## Question 3b
+
+ -
+
+Compute $\text{Var}(Y_i)$.  Your answer may depend on $\beta_0$, $\epsilon_i$, and/or $\sigma^2$.
+
+### Solution to Question 3b
+
+ 
+
+
+
+
+<br>  
+<br>  
+
+
+## Question 3c
+
+ -
+
+Explain how you can determine that $\text{Cov}( Y_i, Y_j) =0$ when $i \ne j$.
+
+### Solution to Question 3c
+
+ 
+
+
+
+
+<br>  
+<br>  
+
+
+## Question 3d
+
+ -
+
+
+Using calculus, find the estimate $\widehat{\beta}_0$ that minimizes the value of the RSS. Hint:  In this context, our objective function is 
+
+$$\text{RSS}(\beta_0)= \sum_{i=1}^n \left( Y_i - \beta_0 \right)^2 .$$
+
+
+
+### Solution to Question 3d
+
+ 
+
+
+
+
+
+<br>  
+<br>. 
+
+
+## Question 3e
+
+ -
+
+Find $E \left( \widehat{\beta}_0 \right)$ and determine whether this estimator is biased. 
+
+
+### Solution to Question 3e
+
+ 
+
+
+
+<br>  
+<br>  
+
+
+
+# Question 4
+
+ 
+
+Let random variable $Y$ have a simple linear regression model $Y = \beta_0 + \beta_1 X + \epsilon$. 
+
+## Question 4a
+
+ 
+
+Using calculus (minimizing the RSS), show the OLS estimator of $\beta_0$ is
+
+$$\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{x}. $$
+
+
+::: {.callout-note}
+It is fine to leave the OLS estimator for $\beta_1$ in your answer (as shown above) for now.
+:::
+
+
+### Solution to Question 4a
+
+ 
+
+
+
+
+<br>  
+<br>  
+
+
+## Question 4b
+
+ 
+
+We can similarly show (though the algebra is much worse) that the OLS estimator for $\beta_1$ is
+
+$$\hat{\beta}_1 = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2} .$$
+Show the estimator $\hat{\beta}_1$ above is an unbiased estimator for $\beta_1$. I am not asking you to derive the formula above. If we assume the formula for the estimator is true, show that the estimator $\hat{\beta}_1$is unbiased.
+
+
+### Solution to Question 4b
+
+ 
+
+
+
+
+
+<br>  
+<br>  
+
+
+## Question 4c
+
+ 
+
+Show that the OLS estimator of $\beta_0$ from part (a) is unbiased.
+
+
+::: {.callout-tip}
+You will need to use the previous result. Namely, $E(\hat{\beta}_1) = \beta_1$.
+:::
+
+
+### Solution to Question 4c
+
+ 
+
+
+
+
+<br>  
+<br>  
+
+
+## Question 4d
+
+ 
+
+Find an expression for  $\text{Var}( \widehat{\beta}_0)$, the variance of the estimator $\hat{\beta}_0 = \bar{Y} - \hat{\beta}_1 \bar{x}$. Your answer will depend on $\text{Var}(\widehat{\beta}_1)$, and that is fine. You do not need to evaluate $\text{Var}(\widehat{\beta}_1)$, just leave that term in your final answer.
+
+
+::: {.callout-tip}
+In addition to $\text{Var}(\widehat{\beta}_1)$, your answer may also depend on $\sigma$ and/or $\bar{x}$. 
+:::
+
+::: {.callout-tip}
+Note you can treat $\bar{x}$ is a constant value in your work. For example. $E(\bar{x}) = \bar{x}$. However, $\bar{Y}$ and $\hat{\beta}_1$ are estimators. For example, 
+
+$$E(\bar{Y}) = E \left(  \frac{\sum_i Y_i}{n} \right) = E \left( \frac{\sum_i (\beta_0 + \beta_1 x_i + \epsilon_i)}{n} \right) = \ldots .$$
+:::
+
+
+
+### Solution to Question 4d
+
+ 
+
+
+
+
+<br>  
+<br>  
+
+
+# MATH 4387 students, you are done! 
+
+## Math 5387, not quite (but almost).
+
+ 
+
+# Question 5: Math 5387 Student Only
+
+ 
+
+One useful property when doing the algebra to simplify the expression in the denominator for the OLS estimator $\hat{\beta}_1$ is
+
+$$\sum_{i=1}^n \big( (x_i - \bar{x})x_i \big) =  \sum_{i=1}^n (x_i - \bar{x})^2 .$$
+
+Prove the summation property above.
+
+
+## Solution to Question 5
+
+ 
+
+
+
+
+<br>  
+<br>  
+
+
+
+# Question 6: MATH 5387 Students Only
+
+ 
+
+Using the previous result, we can express the OLS estimator as
+
+$$\hat{\beta}_1 =  \frac{\sum_{i=1}^n (x_i - \bar{x})Y_i}{\sum_{i=1}^n (x_i - \bar{x})^2} .$$
+
+
+Find $\text{Var} ( \hat{\beta}_1)$ based on the expression for $\hat{\beta}_1$ above.
+
+
+::: {.callout-caution} 
+You cannot cancel out the $(x_i - \bar{x})$ terms in the numerator and denominator since they are inside sums.
+:::
+
+## Solution to Question 6
+
+ 
+
+
+
+
+<br>  
+<br>  
+
