@@ -675,7 +675,7 @@ glimpse(storms)
 - `wind` gives the wind speed in knots
 - `pressure` gives the storm pressure in millibars.
 
-Use any method to find a simple linear regression model of the form $\text{pressure} = \beta_0 + \beta_1 \cdot \text{wind}$. Then answer the following questions.
+Use any method to find a simple linear regression model of the form $\text{wind} = \beta_0 + \beta_1 \cdot \text{pressure}$. Then answer the following questions.
 
 - Give a formula for the regression line.
 - Interpret the coefficients in the model (if possible).
@@ -701,7 +701,7 @@ A formula for the line of best fit is $y=1302 -1.26x$.
 
 ```{r}
 # calculate prediction for each observation in data frame
-new_df <- data.frame(pressure = c(900))
+new_df <- data.frame(pressure = c(900, 1000))
 predict(lmod_wind, new_df)
 ```
 
@@ -913,6 +913,11 @@ sigma(lmod_brain2) # st dev deviation of the errors
 (sigma(lmod_brain2))^2 # variance of the errors
 ```
 
+
+::: {.callout-note}
+In a regression analysis, we use $\frac{\text{RSS}}{n-p}$ to estimate the variance of the model's error term because it is an unbiased estimator. Calculating $\text{Var}(\hat{\epsilon})$ divides the RSS by $n$ and that is a biased estimator since the residuals are calculated from the estimated regression line, not the actual population regression line (which is unknown).
+:::
+
 ## Question 6
 
 ---
@@ -925,7 +930,15 @@ Compute the estimate for the variance of the errors for the `wind` and `pressure
 ---
 
 ```{r}
+sum(residuals(lmod_wind)^2) / (length(storms$wind)-2)
+```
+
+```{r}
 sigma(lmod_wind)
+```
+
+```{r}
+sigma(lmod_wind)^2
 ```
 
 <br>  
@@ -937,6 +950,40 @@ sigma(lmod_wind)
 ---
 
 ```{r}
+# residual vs fitted plot
+# check linearity and homoscedasticity and unrelatedness
+plot(lmod_brain2, which = 1)
+```
+
+```{r}
+# residual qqplot to check normality assumption
+plot(lmod_brain2, which = 2)
+```
+
+
+```{r}
+# plot the sqrt standardized residuals vs fitted values 
+plot(lmod_brain2, which = 3)
+```
+
+```{r}
+# plot Cook's dist to identify influential pts
+plot(lmod_brain2, which = 4)
+```
+
+
+```{r}
+# another plot for identifying influential pts
+plot(lmod_brain2, which = 5)
+```
+
+
+```{r}
+plot(density(residuals(lmod_brain2)))
+```
+
+```{r}
+# get several residual plots at once
 #library(ggfortify)
 autoplot(lmod_brain2)
 ```
@@ -961,108 +1008,16 @@ autoplot(lmod_wind)
 ```
 
 
+- Normality. From the QQ plot, we can see the distribution of is approximately normal, but there is some deviation in each tail. The deviation from the normal distribution is a little more drastic on the left than on the right. 
 
+- Expected value of the errors is reasonably close to 0 for predictions for the fitted values between 0 and about 150 knots. We can see this in the residuals vs fitted plot. The blob of points above zero is roughly the same as the blob of points below zero. The blob is roughly symmetric about the horizontal line through 0 for fitted values with less than 150 knots.
 
-# Appendix: Minimizing SSE with Calculus
+However, there does seem to be some bias in the error for larger fitted values, say beyond 150 knots. Beyond that point, nearly all the errors are negative which means the model is giving only underestimates. The model is biased to underestimates when making predictions for storms that have very high wind speeds. The model is underestimate very strong storms, which can be very problemtic if our goal is to accurately predict strong storms. This underestimates very strong storms.
 
----
+- The variance does not appear to be constant. We can observe this in the residuals vs fitted plot. We would hope the pattern points in the plot would be a sort of rectangle with the horizontal line through 0 going right through the middle of the rectangle. This is not the case. The shape of the points in the residuals vs fitted plot looks a little more "egg-shaped" mean the variance is small for smaller fitted values, larger for most fitted values in the middle, and the variance is smaller for larger fitted values. The variance does not appear to be constant.
 
-## OLS Estimate for $Y = \beta X + \epsilon$
-
----
-
-Let $(x_i, y_i)$ denote the values of the body mass ($x_i$) and brain mass $(y_i)$ of each mammal in the cleaned data `mammal`.
-
-$$\text{SSE}(\beta) = \sum_{i=1}^n (\beta \cdot x_i - y_i)^2.$$
-
-
-$$\begin{align}
-\frac{d}{d\beta} \big( \text{SSE}(\beta) \big) &= \frac{d}{d\beta} \bigg( \sum_{i=1}^n (\beta \cdot x_i - y_i)^2 \bigg) \\
-&= \sum_{i=1}^n \bigg( \frac{d}{d\beta} (\beta \cdot x_i - y_i)^2 \bigg) \\
-&= \sum_{i=1}^n \bigg(  2x_i (\beta \cdot x_i - y_i) \bigg) \\
-&= \sum_{i=1}^n  (2x^2_i \beta - 2x_iy_i) \\
-&= 2 \beta \sum_{i=1}^n {x_i^2} - 2 \sum_{i=1}^n x_i y_i
-\end{align}.$$
-
-Setting the derivative equal to zero and solve for $\beta$ gives a formula for finding the OLS estimate for the slope that is denoted $\hat{\beta}$,
-
-$$\hat{\beta} = \frac{\sum_{i=1}^n x_i y_i}{\sum_{i=1}^n x^2_i}.$$
-
-```{r}
-beta_hat <- sum(mammals_clean$body * mammals_clean$brain) / sum(mammals_clean$body^2)
-beta_hat
-```
-
-
-We obtain the linear model $\hat{y} = 56 + 1.24 x$.
-
-
-## OLS Estimate for $Y = \beta_0 + \beta_1 X + \epsilon$
-
----
-
-We have a new SSE function:
-
-$$\text{SSE}(\beta_0, \beta_1)  =  \sum_{i=1}^n \big( (\beta_0 + \beta_1 \cdot x_i) - y_i \big)^2$$
-
-To minimize we find conditions so both partial derivatives are simultaneously $0$. Taking the derivative with respect to $\beta_0$ gives:
-
-$$SSE_{\beta_0} = \sum_{i=1}^n 2( \beta_0 + \beta_1 \cdot x_i - y_i) =0$$
-
-if $n \beta_0 + \beta_1 \sum_{i=1}^n x_i - \sum_{i=1}^n y_i = 0$, or
-
-$$ \beta_0 = \frac{\sum_{i=1}^n y_i}{n} - \beta_1 \frac{\sum_{i=1}^n x_i}{n} = \bar{y} - \beta_1 \bar{x}.$$
-We also have partial derivative
-
-$$SSE_{\beta_1} = \sum_{i=1}^n \big( 2x_i( \beta_0 + \beta_1 \cdot x_i - y_i) \big) =0 $$
-
-which is equal to zero if $\beta_0 \sum_{i=1}^n x_i + \beta_1 \sum_{i=1}^n x_i^2 - \sum_{i=1}^n  x_iy_i = 0$. Thus we have
-
-$$\beta_1 = \frac{\sum_{i=1}^n  x_iy_i}{\sum_{i=1}^n x_i^2} - \beta_0 \frac{ \sum_{i=1}^n x_i}{ \sum_{i=1}^n x_i^2}.$$
-
-Substituting $\beta_0 = \bar{y} - \beta_1 \bar{x}$ into the expression above gives :
-
-$$\beta_1 = \frac{\sum_{i=1}^n  x_iy_i}{\sum_{i=1}^n x_i^2} - (\bar{y} - \beta_1 \bar{x}) \frac{ \sum_{i=1}^n x_i}{ \sum_{i=1}^n x_i^2}.$$
-
-Grouping terms and solving for $\beta_1$ gives a formula for the OLS estimator for $\beta_1$,
-
-$$\hat{\beta}_1 = \frac{\sum (x_i - \bar{x})(y_i - \bar{y})}{\sum (x_i - \bar{x})^2}$$
-## Question 6
-
----
-
-Determine whether each of the models below is a linear model.
-
-
-a. $\displaystyle Y = \beta_0 + \beta_1 \left( X_1X_2X_3 \right) + \beta_2 e^{X_1^2+X_2^2+X_3^2} + \beta_3 \ln{(X_3)} + \epsilon$ 
-
-b. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}+ X_2^{\beta_2} + X_3^{\beta_2} \right) + \epsilon$ 
-
-c. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}X_2^{\beta_2} X_3^{\beta_2} \right) \epsilon$ 
-
-### Solution to Question 6
-
----
+- The errors appear to be uncorrelated. If the errors were correlated, we typically would be able to recognize some patter to the points in the residual vs fitted plot. There is no discernable pattern, so there is no clear correlation between the errors that we can observe. 
 
 
 
-<br>  
-<br>  
-
-
-### Bonus Question
-
----
-
-For the model(s) that are not linear, can you transform the model into a linear model?
-
-
-#### Solution to Bonus Question
-
----
-
-
-
-<br>  
-<br>  
 
