@@ -1,0 +1,313 @@
+---
+title: "Solutions Module 7: Multiple Linear Regression"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+editor: source
+#execute:
+#  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+
+## Additional Reading
+
+---
+
+- [Chapter 3 Linear Model Estimation](https://jfrench.github.io/LinearRegression/linear-model-estimation.html) from *A Progressive Introduction to Linear Models*
+- Chapter 4 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+- Chapter 3 of *Applied Linear Regression* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+
+
+# Loading Required Packages
+ 
+---
+
+
+```{r}
+library(WDI)  # import world development indicators
+library(tidyverse)
+#library(MASS)
+#library(plotly)
+```
+
+
+> What is the best way to improve the economic status of your citizens? Education, health care, or space to spread out?
+
+# Loading Country Data
+
+See [WDI help documentation](https://cran.r-project.org/web/packages/WDI/WDI.pdf).
+
+```{r}
+lit <- WDI(country = "all",
+  indicator = "SE.ADT.LITR.ZS",  # Literacy rate  (% of pop above 15)
+  latest = 1 #returns tmost recent non-empty value
+)
+```
+
+
+```{r}
+print(lit)
+```
+
+## Question
+
+What are the variables? Which are worth keeping?  What are the observations? Which are worth keeping?
+
+### Solution to Question
+
+```{r}
+# find row index of Afghanistan
+lit_start <- which(lit$country == "Afghanistan")
+lit_start
+```
+
+
+## Question 
+
+Is `liet_start` is what data type? `lit_start` is what data storage?
+
+
+```{r}
+typeof(lit_start) 
+is.vector(lit_start)
+```
+
+```{r}
+lit_clean <- lit |>
+  slice(lit_start:n()) |>  # keep countries only (not aggregates)
+  select(country, country_code = iso3c, year_lit = year, lit_rate = SE.ADT.LITR.ZS)
+lit_clean
+```
+
+
+
+```{r}
+# import life expectancy
+health <- WDI(country = "all",
+  indicator = "SP.DYN.LE00.IN",  # Life Expectancy in (years)
+  latest = 1 #returns most recent non-empty value
+)
+```
+
+```{r}
+# import land area
+area <- WDI(country = "all",
+  indicator = "AG.LND.TOTL.K2",  # Land Area (sq.km)
+  latest = 1 #returns most recent non-empty value
+)
+```
+
+```{r}
+# import gdp per capita
+wealth <- WDI(country = "all",
+  indicator = "NY.GDP.PCAP.PP.CD",  # GDP per cap (ppp)
+  latest = 1 #returns most recent non-empty value
+)
+```
+
+
+```{r}
+# find row index of Afghanistan
+health_start <- which(health$country == "Afghanistan")
+area_start <- which(area$country == "Afghanistan")
+wealth_start <- which(wealth$country == "Afghanistan")
+```
+
+
+```{r}
+health_clean <- health |>
+  slice(health_start:n()) |>  # keep countries only (not aggregates)
+  select(country, country_code = iso3c, year_health = year, life_exp = SP.DYN.LE00.IN)
+health_clean
+```
+
+
+
+```{r}
+area_clean <- area |>
+  slice(area_start:n()) |>  # keep countries only (not aggregates)
+  select(country, country_code = iso3c, year_area = year, land_area = AG.LND.TOTL.K2)
+area_clean
+```
+
+
+
+```{r}
+wealth_clean <- wealth |>
+  slice(wealth_start:n()) |>  # keep countries only (not aggregates)
+  select(country, country_code = iso3c, year_wealth = year, gdp_per_cap = NY.GDP.PCAP.PP.CD)
+wealth_clean
+```
+
+
+```{r}
+# merge data frames
+country <- merge(lit_clean, merge(health_clean, merge(area_clean, wealth_clean)))
+head(country)
+```
+
+```{r}
+country <- country |>
+  select(country, gdp_per_cap, lit_rate, life_exp, land_area)
+head(country)
+```
+
+
+## Another Way to Import Cleaned Data
+
+
+```{r}
+#| echo: false
+#| eval: false
+write_csv(country, "Data/country.csv")
+```
+
+```{r}
+#| echo: false
+#| eval: false
+country <- read_csv("Data/country.csv")
+country
+```
+
+# Exploring Relations
+
+
+The covariance is one statistic we can use to measure the relation between two variables:
+
+$$\text{Cov}(X,Y) = E \big[ (X - \mu_x)(Y - \mu_y) \big]$$
+
+The Pearson correlation coefficient is a normalized measure of the linear association between two variables that results in a value between $-1$ and $1$.
+
+$$\rho_{X,Y} = \frac{\text{Cov}(X,Y)}{\sigma_x \sigma_y}$$
+
+When working with sample data, we denote the correlation coefficient with $r$, and we can interpret the value as follows:
+
+- If $r$ is close to zero, then there not a strong linear association between the two variables.
+- If $r$ is positive, there is a positive linear association between the variables.
+- If $r$ is negative, there is a negative linear association between the variables.
+- The closer the $|r|$ is to $1$, the stronger the linear relationship.
+- Two variables can very strongly related and have $r \approx 0$ if the relation is not linear.
+
+![Image with Different Correlation Values](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Correlation_examples2.svg/500px-Correlation_examples2.svg.png)
+
+
+
+```{r}
+cor(country[-1])  # exclude column 1
+```
+
+
+```{r}
+pairs(country[-1])
+```
+
+## Transform Data
+
+```{r}
+country_log <- country |> 
+  mutate(log_gdp = log(gdp_per_cap), .after = gdp_per_cap)
+country_log
+```
+
+```{r}
+cor(country_log[-1])  # exclude column 1
+```
+
+```{r}
+pairs(country_log[-1])  # exclude column 1
+```
+
+
+## Comparing Models
+
+---
+
+```{r}
+wealth_lmod <- lm(gdp_per_cap ~ lit_rate, country)
+summary(wealth_lmod)
+```
+
+```{r}
+plot(gdp_per_cap ~ lit_rate, data = country,
+     pch = 20,
+#     col=ifelse(literacy_rate > 94.50318 & literacy_rate < 94.5032, "red", "sea green"),
+     main = "Scatterplot of Education vs Wealth",
+     xlab = "Literacy Rate (%)",
+     ylab = "GDP per Capita")
+abline(wealth_lmod, col = "red", lwd = 2)
+```
+
+```{r}
+plot(wealth_lmod, which = 1)
+```
+
+
+```{r}
+log_lmod <- lm(log_gdp ~ lit_rate, country_log)
+summary(log_lmod)
+```
+
+
+```{r}
+plot(log_gdp ~ lit_rate, data = country_log,
+     pch = 20,
+#     col=ifelse(literacy_rate > 94.50318 & literacy_rate < 94.5032, "red", "sea green"),
+     main = "Scatterplot of Education vs Wealth",
+     xlab = "Literacy Rate (%)",
+     ylab = "LN of GDP per Capita")
+abline(log_lmod, col = "red", lwd = 2)
+```
+
+```{r}
+plot(log_lmod, which = 1)
+```
+
+# Simple Linear Regression
+
+The [**simple linear regression**]{style="color:blue"} is a linear regression model with a single predictor $X$ and a single response variable $Y$. It does not refer to the complexity of the linear model. The most common simple linear regression model is the familiar
+
+$$Y = \beta_0 + \beta_1 X + \epsilon .$$
+
+
+
+## Error Assumptions
+
+---
+
+A simple linear regression model of the form $Y = \beta_0 + \beta_1 X + \epsilon$ has the following key assumptions about the errors of prediction: 
+
+- [**Linearity**]{style="color:blue"}: $Y$ and $X$ have a linear relationship. In other words, the mean value of $Y$ is a straight-line function of $X$. If the have a nonlinear association, we should modify our model or transform predictor and/or response variables.
+
+$$E(Y | X=x_i) = \beta_0 + \beta_1 x_i$$
+
+
+- [**Mean Zero**]{style="color:blue"}: We do not want our model to be biased.
+
+$$E(\epsilon_i) = E(\epsilon | X=x_i) = 0 \qquad \text{for all } x_i.$$
+
+- [**The Errors are Uncorrelated**]{style="color:blue"}: The error in one prediction does not effect the amount of error in any other prediction.
+
+$$\text{Cov}(\epsilon_i, \epsilon_j ) = 0 \qquad \text{for all } i \ne j .$$ 
+
+- [**Homoscedasticity**]{style="color:blue"}: The model is equally accurate everywhere. Thus, the errors of prediction have the same, constant variance. We do not want the model to be more accurate when $x$ is small and less accurate when $x$ is large.
+
+$$\text{Var}(\epsilon_i) = \text{Var}(\epsilon | X = x_i) = \sigma^2 \qquad \text{for all } x_i .$$
+
+- [**Normality**]{style="color:blue"}: The errors are normally distributed. Most observations of $Y_i$ are close to the prediction $\hat{Y}_i$, and we are less and less likely to observe values $Y_i$ farther and farther away from the prediction.
+
+
+We can summarize several of the assumptions on $\epsilon_i$ as follows. For all $\epsilon_i$, we have
+
+$$\large \epsilon_i \sim N(0, \sigma^2) \qquad \text{and} \qquad \text{Cov}(\epsilon_i, \epsilon_j) = 0 \ \ \text{ if } i \ne j.$$
+
+
