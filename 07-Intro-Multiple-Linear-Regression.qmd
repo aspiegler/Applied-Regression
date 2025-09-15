@@ -1,0 +1,676 @@
+---
+title: "Module 7: Intro to Multiple Linear Regression"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+editor: source
+#execute:
+#  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+
+## Additional Reading
+
+---
+
+- [Chapter 3 Linear Model Estimation](https://jfrench.github.io/LinearRegression/linear-model-estimation.html) from *A Progressive Introduction to Linear Models*
+- Chapter 4 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+- Chapter 3 of *Applied Linear Regression* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+
+
+# Loading Required Packages
+ 
+---
+
+
+```{r}
+library(tidyverse)
+library(plotly)  # for interactive 3d plots
+```
+
+
+# Loading Country Data
+
+
+[World Development Indicators (WDI)](https://datatopics.worldbank.org/world-development-indicators/) are a comprehensive dataset of globally comparable statistics on poverty and development, maintained by the World Bank, providing data on over 1,400 indicators for 217 economies across various themes like health, education, environment, and economy. 
+
+The data frame `country` was created using the `WDI` package to import several World Development Indicators from the World Bank Data Bank website. See the [Appendix](#sec-appendix) for the code used to created this data frame.
+
+```{r}
+#| message: false
+country <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/country.csv")
+head(country)
+```
+
+## Exploring Variables of Interest
+
+- `life_exp`: Life expectancy at birth (in years) is indicator [SP.DYN.LE00.IN](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/SP.DYN.LE00.IN).
+
+- `gdp_per_cap`: GDP per capita (in dollars) is indicator [NY.GDP.PCAP.PP.CD](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/NY.GDP.PCAP.PP.CD).
+
+- `lit_rate`: Adult literacy rate (in %) is indicator [SE.ADT.LITR.ZS](https://databank.worldbank.org/metadataglossary/environment-social-and-governance-(esg)-data/series/SE.ADT.LITR.ZS).
+
+- `fertility`: Fertility rate (total births per woman) is indicator [SP.DYN.TFRT.IN](https://databank.worldbank.org/metadataglossary/environment-social-and-governance-(esg)-data/series/SP.DYN.TFRT.IN).
+
+- `land_area`: Land area (in square km) is indicator [AG.LND.TOTL.K2](https://databank.worldbank.org/metadataglossary/world-development-indicators/series/AG.LND.TOTL.K2).
+
+
+## Question 1
+
+Explore the `country` data frame and answer questions such as:
+
+- Which 5 countries have the highest life expectancy? Shortest life expectancy?
+- Which 5 countries have the highest GDP per capita? Smallest GDP per capita?
+- Which 5 countries have the highest literacy rate? Lowest literacy rate?
+- Which 5 countries have the highest fertility rate? Lowest fertility rate?
+- Which 5 countries have the most land area? Least land area?
+
+
+::: {.callout-tip}
+The `slice_max()` and `slice_min()` functions from `dplyr` are very useful at answering these types of questions. If you are not familiar with these functions, run `?slice_max` and you will be!
+:::
+
+### Solution to Question 1
+
+
+
+<br>  
+<br>  
+
+
+# Linear Regression Models
+
+---
+
+::: {.callout-note title="Definition" appearance="simple"}
+A [**linear model**]{style="color:blue"} is a regression model in which the regression coefficients enter the model linearly. For example:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \ldots + \beta_p X_p + \epsilon .$$ {#eq-lmdef}
+
+The model does not need to be linear in predictor variables:
+
+$$ Y = \beta_0 + \beta_1 X_1^2 + \beta_2 e^{X_2+X_3^2} +  \beta_3 \ln{(X_1X_2X_3)} + \epsilon $$
+
+The $\beta_i$'s are called the [**regression coefficients**]{style="color:blue"}, and these are unknown parameters we will estimate.
+
+- A [**simple linear regression model**]{style="color:blue"} has one predictor, $Y = \beta_0 + \beta_1 X + \epsilon$.
+- A [**multiple linear regression model**]{style="color:blue"} has more than one predictor variable.
+:::
+
+
+# Exploring Relations
+
+Supose we want to explore the following question:
+
+> What is the best way to improve the life expectancy of citizens? Education, wealth, having children and/or space to spread out?
+
+
+## Revisiting Covariance and Correlation
+
+
+The [**covariance**]{style="color:blue"} is one statistic we can use to measure the relation between two variables:
+
+$$\text{Cov}(X,Y) = E \big[ (X - \mu_x)(Y - \mu_y) \big]$$
+
+The [**Pearson correlation coefficient**]{style="color:blue"} is a normalized measure of the linear association between two variables that results in a value between $-1$ and $1$.
+
+$$\rho_{X,Y} = \frac{\text{Cov}(X,Y)}{\sigma_x \sigma_y}$$
+
+When working with sample data, we denote the correlation coefficient with $r$, and we can interpret the value as follows:
+
+- If $r$ is close to zero, then there not a strong linear association between the two variables.
+- If $r$ is positive, there is a positive linear association between the variables.
+- If $r$ is negative, there is a negative linear association between the variables.
+- The closer the $|r|$ is to $1$, the stronger the linear relationship.
+
+
+::: {.callout-caution}
+Two variables can very strongly related even though they have $r \approx 0$ if the relation is not linear.
+:::
+
+
+![Image with Different Correlation Values](https://upload.wikimedia.org/wikipedia/commons/d/d4/Correlation_examples2.svg)
+
+## Question 2
+
+Run the code cell below to construct a correlation matrix to compute and compare pairwise correlation. Which other variable seems to have the strongest (positive or negative) correlation with `life_exp`?
+
+
+```{r}
+cor(country[-1])  # exclude column 1
+```
+
+### Solution to Question 2
+
+
+
+<br>  
+<br>  
+
+
+## Scatter Plot Matrix
+
+We can look at the relations using a scatter plot matrix since just because the correlation coefficient only tells us the strength of linear relations. Looking at pairwise scatter pltos we may see a strong non-linear relationship and adjust our model accordingly.
+
+```{r}
+pairs(country[-1])
+```
+
+## Question 3 {#sec-q3}
+
+Create a linear model named `life_lm` with `life_exp` as the response and `gdp_per_cap` as the one predictor. Interpret the practical meaning (if possible) of the slope and intercept. Then create a scatter plot with the regression line added.
+
+::: {.callout-warning}
+Be sure to store your linear model to an object called `life_lm` to be consistent with work to follow.
+:::
+
+### Solution to Question 3
+
+
+
+<br>  
+<br>  
+
+## Checking Error Assumptions {#sec-error1}
+
+
+Recall a simple linear regression model of the form $Y_i = \beta_0 + \beta_1 x_i + \epsilon_i$ has the following key assumptions about the errors of prediction: 
+
+- On average, we expect the errors to be zero, $E(\epsilon_i) = 0$ for $i=1, 2, \ldots, n$.
+- Homoscedasticity. The errors will all have the same variance, $\text{Var}(\epsilon_i) = \sigma^2$ or $i=1, 2, \ldots, n$.
+- The errors are uncorrelated, $\text{Cov}(\epsilon_i, \epsilon_j) = 0$ when $i \ne j$.
+- Each $\epsilon_i$ is normally distributed.
+
+
+$$\large \epsilon_i \sim N(0, \sigma^2) \qquad \text{and} \qquad \text{Cov}(\epsilon_i, \epsilon_j) = 0 \ \ \text{ if } i \ne j.$$
+
+### A New Assumption
+
+We will add an additional error assumption for multiple linear regression models.
+
+- [**Collinearity**]{style="color:blue"}: No combination of the predictor variables are directly interrelated. 
+
+
+```{r}
+#| eval: true
+#| echo: false
+life_lm <- lm(life_exp ~ gdp_per_cap, data = country)
+```
+
+## Question 4 
+
+Run the code cell below to generate the residuals vs fitted plot for the `life_lm` model created in [Question 3](#sec-q3). Comment about which [error assumptions](#sec-error1) seem to be satisfied and which do not. Explain how you used to plot to help determine your answers. 
+
+
+```{r}
+# residuals vs fitted plot
+plot(life_lm, which = 1)
+```
+
+### Solution to Question 4
+
+
+
+<br>  
+<br>  
+
+
+## A First Look at $R^2$
+
+
+In the output of `lm()`, the $R^2$ value corresponding to the model is computed. For example, `life_lm` has an $R^2$ value of $0.4978$. Informally, we can interpret this as about $50\%$ of the variability in `life_exp` is explained by `gdp_per_cap`. The other $50\%$, who knows?
+
+
+# Applying a Transformation
+
+In the code cell below, we take an initial look at the relation between `gdp_per_cap` and `life_exp`.
+
+```{r}
+plot(life_exp ~ gdp_per_cap, country)
+```
+
+
+There does seem to be a positive relation between the two, but maybe a linear relationship with `gdp_per_cap` is not the best model. In the code cell below apply the natural log (`log()`) to `gdp_per_cap`.
+
+```{r}
+country <- country |> 
+  mutate(log_gdp = log(gdp_per_cap), .before = gdp_per_cap) |>  # create log_gdp
+  select(-gdp_per_cap)  # remove gdp_per_cap
+country
+```
+
+The correlation coefficient between `life_exp` and `log_gdp` increased from $0.7055$ to $0.8414$, and it is now the variable with the strongest linear relation among the other possible predictors.
+
+```{r}
+cor(country[-1])  # exclude column 1
+```
+
+
+
+```{r}
+pairs(country[-1])  # exclude column 1
+```
+
+
+## Question 5
+
+Create a linear model named `life_log_lm` with `life_exp` as the response and `log_gdp` as the one predictor. Interpret the practical meaning (if possible) of the slope and intercept. Then create a scatter plot with the regression line added.
+
+::: {.callout-warning}
+Be sure to store your linear model to an object called `life_log_lm` to be consistent with work to follow.
+:::
+
+### Solution to Question 5
+
+
+
+<br>. 
+<br>  
+
+
+## Reassessing the Fit
+
+---
+
+The $R^2$ value for our updated model using `log_gdp` is now $R^2 = 0.7079$. Thus, about $70\%$ of the variability in `life_exp` is explained by `log_gdp` which is a big improvement from $R^2 = 0.4978$ in a previous model.
+
+## Question 6 
+
+Run the code cell below to generate the residuals vs fitted plot for the `life_log_lm` model. Comment about which [error assumptions](#sec-error1) seem to be satisfied and which do not. Explain how you used to plot to help determine your answers. 
+
+```{r}
+#| echo: false
+#| eval: true
+life_log_lm <- lm(life_exp ~ log_gdp, data = country)
+```
+
+
+```{r}
+# residuals vs fitted plot
+plot(life_log_lm, which = 1)
+```
+
+
+
+
+### Solution to Question 6
+
+
+<br>  
+<br>  
+
+
+
+## Question 7
+
+---
+
+Determine whether each of the models below is a linear model. For the model(s) that are not linear, can you transform the model into a linear model?
+
+
+a. $\displaystyle Y = \beta_0 + \beta_1 \left( X_1X_2X_3 \right) + \beta_2 e^{X_1^2+X_2^2+X_3^2} + \beta_3 \ln{(X_3)} + \epsilon$ 
+
+b. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}+ X_2^{\beta_2} + X_3^{\beta_2} \right) + \epsilon$ 
+
+c. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}X_2^{\beta_2} X_3^{\beta_2} \right) \epsilon$ 
+
+### Solution to Question 7
+
+---
+
+
+
+<br>  
+<br>  
+
+
+
+
+# Multiple Linear Regression Models
+
+
+A [**multiple linear regression**]{style="color:blue"} model is a linear regression model with more than one predictor $X_i$ and a single response variable $Y$. In general, we include an intercept term as a predictor, so if there are $p$ predictor variables, our model has $p+1$ regression coefficients,
+
+$$Y = \beta_0 + \beta_1 X_1  + \beta_2 X_2 + \ldots + \beta_p X_p + \epsilon .$$
+
+# Revisiting Country Data
+
+`life_exp` of a country likely depends on many factors. We do not need to pick the one variable that has the strongest linear relation. Why see how both `fertility` rate and `log_gdp` values are associated with `life_exp`. 
+
+- Let $X_1$ denote the natural log of a country's GDP per capita. Our sample is stored in `log_gdp`.
+- Let $X_2$ denote the fertility rate of a country. Our sample is stored in `fertility`.
+- We consider one response variable $Y$ which is a country's `life_exp`.
+
+
+Our linear model is now of the form:
+
+$$Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \epsilon .$$
+
+We can plot the sample in $\mathbb{R}^3$.
+
+```{r}
+#library(plotly)
+plot_ly(country, x=~log_gdp, y=~fertility,
+        z=~life_exp, type="scatter3d",
+        mode="markers")
+```
+
+
+
+The regression "line" is the 2-dimensional flat plane which we can embed in $\mathbb{R}^3$ that minimizes 
+
+$$RSS(\beta_0, \beta_1, \beta_2) = \sum_{i=1}^n \left( y_i - \hat{y}_i \right) = \sum_{i=1}^n \big( y_i - (\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2}) \big)$$
+
+
+```{r}
+#| eval: true
+#| echo: false
+#| warning: false
+library(plotly)
+library(reshape2) # for acast()
+
+model <- lm(life_exp ~ log_gdp + fertility, data = country)  # create model
+x_grid <- seq(min(country$log_gdp), max(country$log_gdp), length.out = 50)  # grid for x
+y_grid <- seq(min(country$fertility), max(country$fertility), length.out = 50)  # grid for y
+regression_grid <- expand.grid(log_gdp = x_grid, fertility = y_grid)  # grid for z
+regression_grid$life_exp_pred <- predict(model, newdata = regression_grid)  # fitted points
+z_matrix <- acast(regression_grid, fertility ~ log_gdp, value.var = "life_exp_pred")  # merge vectors
+
+plot_ly(country, x = ~log_gdp, y = ~fertility, z = ~life_exp,
+        type = "scatter3d", mode = "markers", name = "Data Points") |> 
+  add_surface(x = ~x_grid, y = ~y_grid, z = ~z_matrix,
+              name = "Regression Plane",
+              opacity = 0.5) |>
+  layout(
+    scene = list(
+      xaxis = list(title = "log(GDP)"),
+      yaxis = list(title = "Fertility"),
+      zaxis = list(title = "Life Expectancy")
+    )
+  )
+```
+
+
+
+## Question 8
+
+Construct a simple linear regression model named `life_fert_lm` with `life_exp` as the response variable and `fertility` as the only predictor. If possible, interpret the practical meaning of the slope and intercept.
+
+
+::: {.callout-warning}
+Be sure to store your linear model to an object called `life_fert_lm` to be consistent with work to follow.
+:::
+
+### Solution to Question 8
+
+
+
+
+<br>  
+<br>  
+
+
+## Comparing Simple Models with Multiple Regression Model
+
+
+
+```{r}
+#| eval: true
+#| echo: false
+life_fert_lm <- lm(life_exp ~ fertility, country)
+```
+
+
+```{r}
+par(mfrow = c(1, 2)) # arrange plots in 1 by 2 array
+
+plot(life_exp ~ log_gdp, data = country,
+     pch = 20,  # solid points
+     main = "Life Expectancy and Wealth",
+     xlab = "LN of GDP per Capita (in $)",
+     ylab = "Life Expectancy (in years")
+abline(life_log_lm, col = "red", lwd = 2)
+
+
+plot(life_exp ~ fertility, country,
+     pch = 20,  # solid points
+     main = "Life Expectancy and Fertility",
+     xlab = "Fertility Rate",
+     ylab = "Life Expectancy (in years")
+abline(life_fert_lm, col = "blue", lwd = 2)
+```
+
+
+## Question 9
+
+Construct a multiple linear regression model name `multi_lm` with `life_exp` as the response variable that is associated with two predictors, `log_gdp` and `fertility`. If possible, interpret the practical meaning of the values of the slopes and intercept.
+
+
+
+### Solution to Question 9
+
+
+
+
+
+<br>  
+<br>  
+
+
+
+## Question 10
+
+Are the coefficients in the multiple regression model the same or different from the coefficients in each of the simple linear regression models `life_log_lm` and `life_fert_lm`. Explain why the either remain approximately the same or whether the values have changed more substantially.
+
+### Solution to Question 10
+
+
+
+
+
+<br>  
+<br>  
+
+
+## Marginal Plot of Predictors
+
+[**Marginal plots**]{style="color:blue"} compare the relation between another possible predictor added to the model and the response variable, ignoring all other predictors. For example, in the model and plot below, we compare the values of `fertility` with the response `life_exp`.
+
+```{r}
+plot(life_exp ~ fertility, country,
+     pch = 20,  # solid points
+     main = "Life Expectancy and Fertility",
+     xlab = "Fertility Rate",
+     ylab = "Life Expectancy (in years")
+abline(life_fert_lm, col = "blue", lwd = 2)
+```
+
+
+## Added-Variable Plot for Predictors
+
+Residuals measure the variation in a response variable that is not explained by a predictor variable. The remaining variation may be associated with another predictor. 
+
+
+[**Added-value plots**]{style="color:blue"} compare residuals from models to help us see the effect of adding `fertility` to model that already includes `log_gdp`.
+
+- A strong linear relationship indicates the new predictor does account for some of the remaining variability in the response variable.
+- If the points are scattered with no discernible pattern, the variable doesn't add significant value to the model.
+
+
+```{r}
+# model for fertility on the first regressor log_gdp.
+fert_gdp_lm <- lm(fertility ~ log_gdp, data = country)
+
+par(mfrow = c(1, 2))
+
+resid1 <- residuals(life_log_lm)  # residuals from first model
+resid2 <- residuals(fert_gdp_lm)  # residuals from marginal model
+added_val <- data.frame(a = resid1, b = resid2)  
+added_val_lm <- lm(resid1 ~ resid2, data = added_val)  # model of residuals
+#summary(added_val_lm)
+
+
+plot(resid1 ~ resid2, data = added_val,
+     pch = 20,  # solid points
+     main = "Added-Variable Plot",
+     xlab = "Residuals from fertility on log_gdp model",
+     ylab = "Residuals from life_exp on log_gdp model")
+abline(added_val_lm, col = "blue", lwd = 2)
+
+
+plot(life_exp ~ fertility, country,
+     pch = 20,  # solid points
+     main = "Marginal Plot",
+     xlab = "Fertility Rate",
+     ylab = "Life Expectancy (in years")
+abline(life_fert_lm, col = "blue", lwd = 2)
+```
+
+
+# Appendix: Creating `country` Data Frame {#sec-appendix}
+
+
+## Importing World Development Indicators
+
+See [WDI help documentation](https://cran.r-project.org/web/packages/WDI/WDI.pdf).
+
+
+```{r}
+#| eval: false
+library(WDI)  # import world development indicators
+```
+
+```{r}
+#| eval: false
+# import literacy rate country data
+lit <- WDI(country = "all",
+  indicator = "SE.ADT.LITR.ZS",  # Literacy rate  (% of pop above 15)
+  latest = 1 #returns tmost recent non-empty value
+)
+```
+
+
+```{r}
+#| eval: false
+# import life expectancy
+health <- WDI(country = "all",
+  indicator = "SP.DYN.LE00.IN",  # Life Expectancy in (years)
+  latest = 1 #returns most recent non-empty value
+)
+```
+
+```{r}
+#| eval: false
+# import land area
+area <- WDI(country = "all",
+  indicator = "AG.LND.TOTL.K2",  # Land Area (sq.km)
+  latest = 1 #returns most recent non-empty value
+)
+```
+
+```{r}
+#| eval: false
+# import gdp per capita
+wealth <- WDI(country = "all",
+  indicator = "NY.GDP.PCAP.PP.CD",  # GDP per cap (ppp)
+  latest = 1 #returns most recent non-empty value
+)
+```
+
+```{r}
+#| eval: false
+# import fertility rate data
+fertility <- WDI(country = "all",
+  indicator = "SP.DYN.TFRT.IN",  # fertility rate, children per family
+  latest = 1 #returns most recent non-empty value
+)
+```
+
+## Cleaning Up the Data
+
+```{r}
+#| eval: false
+# find row index of Afghanistan
+lit_start <- which(lit$country == "Afghanistan")
+health_start <- which(health$country == "Afghanistan")
+area_start <- which(area$country == "Afghanistan")
+wealth_start <- which(wealth$country == "Afghanistan")
+fertility_start <- which(fertility$country == "Afghanistan")
+```
+
+
+```{r}
+#| eval: false
+lit_clean <- lit |>
+  slice(lit_start:n()) |>  # keep countries only (not aggregates)
+  select(country, country_code = iso3c, year_lit = year, lit_rate = SE.ADT.LITR.ZS)
+lit_clean
+```
+
+```{r}
+#| eval: false
+health_clean <- health |>
+  slice(health_start:n()) |>  # keep countries only (not aggregates)
+  select(country, country_code = iso3c, year_health = year, life_exp = SP.DYN.LE00.IN)
+health_clean
+```
+
+```{r}
+#| eval: false
+area_clean <- area |>
+  slice(area_start:n()) |>  # keep countries only (not aggregates)
+  select(country, country_code = iso3c, year_area = year, land_area = AG.LND.TOTL.K2)
+area_clean
+```
+
+```{r}
+#| eval: false
+wealth_clean <- wealth |>
+  slice(wealth_start:n()) |>  # keep countries only (not aggregates)
+  select(country, country_code = iso3c, year_wealth = year, gdp_per_cap = NY.GDP.PCAP.PP.CD)
+wealth_clean
+```
+
+```{r}
+#| eval: false
+fertility_clean <- fertility |>
+  slice(fertility_start:n()) |>  # keep countries only (not aggregates)
+  select(country, country_code = iso3c, year_fertility = year, fertility = SP.DYN.TFRT.IN)
+fertility_clean
+```
+
+
+```{r}
+#| eval: false
+# merge data frames
+country <- merge(lit_clean, merge(health_clean, merge(area_clean, merge(fertility_clean, wealth_clean))))
+head(country)
+```
+
+```{r}
+#| eval: false
+# extract columns of interest
+country <- country |>
+  select(country, life_exp, gdp_per_cap, lit_rate, fertility, land_area)
+head(country)
+```
+
+## Exporting the Data
+
+```{r}
+#| eval: false
+# export to csv file for future use
+write_csv(country, "Data/country.csv")
+```
+
+
