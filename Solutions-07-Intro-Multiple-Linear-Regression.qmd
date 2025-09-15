@@ -42,7 +42,7 @@ library(plotly)  # for interactive 3d plots
 # Loading Country Data
 
 
-[World Development Indicators (WDI)](https://datatopics.worldbank.org/world-development-indicators/) are a comprehensive dataset of globally comparable statistics on poverty and development, maintained by the World Bank, providing data on over 1,400 indicators for 217 economies across various themes like health, education, environment, and economy. 
+[World Development Indicators (WDI)](https://datatopics.worldbank.org/world-development-indicators/) are a comprehensive data set of globally comparable statistics on poverty and development, maintained by the World Bank, providing data on over 1,400 indicators for 217 economies across various themes like health, education, environment, and economy. 
 
 The data frame `country` was created using the `WDI` package to import several World Development Indicators from the World Bank Data Bank website. See the [Appendix](#sec-appendix) for the code used to create this data frame.
 
@@ -82,8 +82,28 @@ The `slice_max()` and `slice_min()` functions from `dplyr` are very useful at an
 
 ### Solution to Question 1
 
+```{r}
+# countries with max values
+slice_max(country, life_exp, n = 5)
+slice_max(country, gdp_per_cap, n = 5)
+slice_max(country, lit_rate, n = 5)
+slice_max(country, fertility, n = 5)
+slice_max(country, land_area, n = 5)
+```
 
 
+```{r}
+# countries with max values
+slice_min(country, life_exp, n = 5)
+slice_min(country, gdp_per_cap, n = 5)
+slice_min(country, lit_rate, n = 5)
+slice_min(country, fertility, n = 5)
+slice_min(country, land_area, n = 5)
+```
+
+```{r}
+slice_max(country, country, n=10)
+```
 <br>  
 <br>  
 
@@ -110,7 +130,7 @@ The $\beta_i$'s are called the [**regression coefficients**]{style="color:blue"}
 
 # Exploring Relations
 
-Supose we want to explore the following question:
+Suppose we want to explore the following question:
 
 > What is the best way to improve the life expectancy of citizens? Education, wealth, having children and/or space to spread out?
 
@@ -160,7 +180,7 @@ cor(country[-1])  # exclude column 1
 
 ## Scatter Plot Matrix
 
-We can look at the relations using a scatter plot matrix since just because the correlation coefficient only tells us the strength of linear relations. Looking at pairwise scatter pltos we may see a strong non-linear relationship and adjust our model accordingly.
+We can look at the relations using a scatter plot matrix since just because the correlation coefficient only tells us the strength of linear relations. Looking at pairwise scatter plots we may see a strong non-linear relationship and adjust our model accordingly.
 
 ```{r}
 pairs(country[-1])
@@ -630,7 +650,7 @@ library(WDI)  # import world development indicators
 # import literacy rate country data
 lit <- WDI(country = "all",
   indicator = "SE.ADT.LITR.ZS",  # Literacy rate  (% of pop above 15)
-  latest = 1 #returns tmost recent non-empty value
+  latest = 1 #returns most recent non-empty value
 )
 ```
 
