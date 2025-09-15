@@ -172,6 +172,8 @@ cor(country[-1])  # exclude column 1
 
 ### Solution to Question 2
 
+- Fertility rate has the strongest (negative) linear association with `life_exp`.
+- Literacy rate has the strongest (positive) linear association with `life_exp`.
 
 
 <br>  
@@ -326,9 +328,19 @@ summary(life_log_lm)
 $$y = 24.3586 + 5.0222 \ln{(x)}$$
 
 
-- For every 1 unit increase in the natural log of GDP per capita, the life expectancy goes up on average by $5.02222$ years.
+- A $1\%$ increase in `gdp_per_cap` is equivalent to multiplying $1.01 \times $ `gdp_per_cap`.
+- Such a change gives 
 
-- For every increase in GDP per capita by a factor of $e$, the life expectancy goes up on average by $5.02222$ years.
+$$5.022 \ln{(1.01 X)} = 5.022 (\ln{1.01} + \ln{X}) = 5.022\ln{1.01} + 5.022\ln{X} $$
+
+- Thus, $y$ will increase by about $5.022\ln{1.01} = 5.022(0.01) = 0.05022$
+- A $1\%$ increase in `gdp_per_cap` leads, on average, to an approximate increase in `life_exp` by $0.0522$ years.
+
+::: {.callout-note}
+In general, we can interpret the slope $\hat{\beta}_1$ in a **linear-log model** of the form $Y = \hat{\beta}_0 + \hat{\beta}_1 \log{X}$ as follows:
+
+- For each $1\%$ increase in $X$, the response $Y$ increases on average by $0.01 \cdot \hat{\beta}_1$.
+:::
 
 
 ```{r}
