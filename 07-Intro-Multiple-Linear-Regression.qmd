@@ -44,7 +44,7 @@ library(plotly)  # for interactive 3d plots
 
 [World Development Indicators (WDI)](https://datatopics.worldbank.org/world-development-indicators/) are a comprehensive dataset of globally comparable statistics on poverty and development, maintained by the World Bank, providing data on over 1,400 indicators for 217 economies across various themes like health, education, environment, and economy. 
 
-The data frame `country` was created using the `WDI` package to import several World Development Indicators from the World Bank Data Bank website. See the [Appendix](#sec-appendix) for the code used to created this data frame.
+The data frame `country` was created using the `WDI` package to import several World Development Indicators from the World Bank Data Bank website. See the [Appendix](#sec-appendix) for the code used to create this data frame.
 
 ```{r}
 #| message: false
