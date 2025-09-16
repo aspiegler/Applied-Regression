@@ -306,8 +306,6 @@ Note this linear model has no $\beta_1 X$ term. Just one intercept parameter, $\
 
 ## Question 3a
 
- -
-
 
 Compute $E(Y_i)$. Your answer may depend on $\beta_0$, $\epsilon_i$, and/or $\sigma^2$.
 
@@ -324,8 +322,6 @@ Compute $E(Y_i)$. Your answer may depend on $\beta_0$, $\epsilon_i$, and/or $\si
 
 ## Question 3b
 
- -
-
 Compute $\text{Var}(Y_i)$.  Your answer may depend on $\beta_0$, $\epsilon_i$, and/or $\sigma^2$.
 
 ### Solution to Question 3b
@@ -341,7 +337,6 @@ Compute $\text{Var}(Y_i)$.  Your answer may depend on $\beta_0$, $\epsilon_i$, a
 
 ## Question 3c
 
- -
 
 Explain how you can determine that $\text{Cov}( Y_i, Y_j) =0$ when $i \ne j$.
 
@@ -358,12 +353,11 @@ Explain how you can determine that $\text{Cov}( Y_i, Y_j) =0$ when $i \ne j$.
 
 ## Question 3d
 
- -
 
 
 Using calculus, find the estimate $\widehat{\beta}_0$ that minimizes the value of the RSS. Hint:  In this context, our objective function is 
 
-$$\text{RSS}(\beta_0)= \sum_{i=1}^n \left( Y_i - \beta_0 \right)^2 .$$
+$$\text{RSS}(\beta_0)= \sum_{i=1}^n \left( y_i - \beta_0 \right)^2 .$$
 
 
 
@@ -381,7 +375,6 @@ $$\text{RSS}(\beta_0)= \sum_{i=1}^n \left( Y_i - \beta_0 \right)^2 .$$
 
 ## Question 3e
 
- -
 
 Find $E \left( \widehat{\beta}_0 \right)$ and determine whether this estimator is biased. 
 
