@@ -1,0 +1,915 @@
+---
+title: "Solutions 8: Estimation with Multiple Linear Regression"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+editor: source
+#execute:
+#  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+
+## Additional Reading
+
+---
+
+- [Chapter 3 Linear Model Estimation](https://jfrench.github.io/LinearRegression/linear-model-estimation.html) from *A Progressive Introduction to Linear Models*
+- Chapter 4 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+- Chapter 3 of *Applied Linear Regression* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+
+
+# Loading Required Packages
+ 
+---
+
+State assumptions (again) and state in terms of matrices after matrix notation introduced. See Chap 3 Applied Linear Regression.
+
+```{r}
+library(faraway)  # to access Galapagos
+library(tidyverse)
+#library(plotly)  # for interactive 3d plots
+```
+
+
+# Multiple Linear Regression Models
+
+
+A [**multiple linear regression**]{style="color:blue"} model is a linear regression model with more than one predictor $X_i$ and a single response variable $Y$. In general, we include an intercept term as a predictor, so if there are $p$ predictor variables, our model has $p+1$ regression coefficients. The most common multiple linear regression model is
+
+$$Y = \beta_0 + \beta_1 X_1  + \beta_2 X_2 + \ldots + \beta_p X_p + \epsilon .$$
+
+The model does not need to be linear in the predictor variables. For example, we can construct a polynomial with one predictor using multiple linear regression:
+
+$$Y = \beta_0 + \beta_1 X  + \beta_2 X^2 + \ldots + \beta_p X^p + \epsilon .$$
+
+We can transform some predictor variables and the response in our model. For example,
+
+$$\log{(Y)} = \beta_0 + \beta_1 X_1  + \beta_2 \log{(X_2)} + \beta_3 X_3^2 + \epsilon .$$
+Combining several predictors into a single term in the model. Products of regressors are called [**interactions**]{style="color:blue"}. They are often included to allow for joint effects of predictors.
+
+$$Y = \beta_0 + \beta_1 X_1  + \beta_2 X_2 + \beta_3 X_1X_2 + \epsilon .$$
+
+## Random Vectors
+
+
+The notation $Y$ and $\epsilon$ represent [**random vectors**]{style="color:blue"}. Suppose we have a sample on $n$ observations. Then for each set of observed values, we have two $n\times1$ vectors of random variables:
+
+$$\mathbf{y} = \left[  \begin{array}{c}  Y_1 \\ Y_2 \\ \vdots \\ Y_n \end{array}  \right] 
+\qquad \text{and} \qquad 
+\boldsymbol{\epsilon} = \left[  \begin{array}{c}  \epsilon_1 \\ \epsilon_2 \\ \vdots \\ \epsilon_n \end{array}  \right]$$
+
+We use lower-case $\mathbf{y}$ since bold lower-case letters are typically used to denote vectors in mathematics while bold upper-case letters typically represent matrices. See [Appendix](#sec-appendix) for information about finding expected value, variance, and covariance of random vectors.
+
+::: {.callout-note}
+We typically will not denote random vectors using bold font and instead will use regular font $Y$ and $\epsilon$ to denote random vectors and $Y_i$ and $\epsilon_i$ to denote the $i^{\text{th}}$ entries in each vector. We also may often express the vectors as the transpose of $1 \times n$ vectors since that saves vertical space on the page.
+
+$$y = \left[   Y_1 , Y_2 ,\ldots , Y_n \right]^T
+\ \ \text{ and }  \ \ 
+\epsilon = \left[  \epsilon_1 \\ \epsilon_2 , \ldots, \epsilon_n \right]^T$$
+:::
+
+
+
+
+
+# The Ingredients of Multiple Linear Regression
+
+We now consider the context where we want to estimate the parameters of a linear model with 1 or more regressors, i.e., when 
+
+$$ Y=\beta_0 + \beta_1 X_1 + \cdots + \beta_{p-1} X_{p-1} + \epsilon.$$
+
+We define the following notation before expressing the model as an equivalent matrix equation.
+
+- $\mathbf{y} = \lbrack Y_1, Y_2, \ldots, Y_n \rbrack^T$ denotes the column vector containing the $n$ response variables.
+  - It is am $n \times 1$ random vector whose entries are each a random variable $Y_i$.
+  - For each observation, we can observe a value for the response variable $y_i$, but it varies.
+  - For each observation, we can compute the fitted value $\hat{y}_i$ to predict the value of $Y_i$.
+  - We denote $\mathbf{\hat{y}}$ the $n \times 1$ vector of fitted values which we can compute and observe.
+
+- $\mathbf{X}$ denotes the matrix containing a column of 1's (for the intercept) followed by columns of values corresponding to each regressor in our model.
+  - The entries in column 2 ($x_{11}, x_{21}, \ldots , x_{n1}$) correspond to the values of regressor variable $X_1$. $x_{i1}$ is the value of $X_1$  for the $i^{\text{th}}$ observation.
+  - $\mathbf{X}$ consists fixed and observable values.
+
+$$ \mathbf{X} = \begin{bmatrix}
+1 & x_{11} & x_{12} & \cdots & x_{1,p-1} \\
+1 & x_{21} & x_{22} & \cdots & x_{2,p-1} \\
+\vdots & \vdots & \vdots & \vdots & \vdots \\
+1 & x_{n1} & x_{n2} & \cdots & x_{n,p-1}
+\end{bmatrix}.$$
+
+
+- $\boldsymbol{\beta} = [\beta_0, \beta_1, \ldots, \beta_{p-1}]^T$ denotes the $p \times 1$ column vector containing the $p$ regression coefficients.
+  - The $\boldsymbol{\beta}$ is parameter whose value is fixed (not random) but unknown (not observable).
+  - We can use different methods to find estimators $\boldsymbol{\hat{\beta}} = [\hat{\beta}_0, \hat{\beta}_1, \ldots, \hat{\beta}_{p-1}]^T$.
+  - We will use OLS estimates computed by minimizing the RSS.
+
+- $\boldsymbol{\epsilon} = [\epsilon_1, \epsilon_2, \ldots, \epsilon_n]^T$ denotes the $n \times 1$ random vector containing random variables corresponding to the $n$ errors.
+  - Recall each $\epsilon_i$ is a random variable.
+  - We can estimate the error using an $n \times 1$ vector of observed residuals, $\boldsymbol{\hat{\epsilon}}$.
+
+
+Then the system of equations defining the linear model can be written as a matrix equation :
+
+$$\large{ \mathbf{y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}. }$$
+
+::: {.callout-note}
+Each $Y_i$ is a random variable since with different samples, we may observe different values of $Y_i$ given the same value(s) for the predictor(s). In general, if the object's value varies due to randomness in sampling, it is a random variable. 
+:::
+
+
+## Question 1
+
+
+Summarize this information in the table below for the objects previously discussed using the various notations introduced. 
+
+### Solution to Question 1
+
+
+| Notation |  Description | Observable | Random |
+|----------|--------------|------------|--------|
+| $Y$ | response variable | Yes | Yes | 
+| $Y_i$ | response value for the $i^{\text{th}}$ observation (we observe one value out of the many possible values) | Yes | Yes | 
+| $\mathbf{y}$ | the $n\times 1$ column vector of response values | Yes | Yes | 
+| $X_j$ | the $j$th predictor variable | Yes | No | 
+| $x_{i,j}$ | the value of the $j$th predictor variable for the $i$th observation | Yes | No | 
+| $\mathbf{X}$ | the $n\times p$ matrix of predictor values | Yes | No | 
+| $\beta_j$ | the regression coefficient associated with the $j$th predictor variable  | No | No | 
+| $\boldsymbol{\beta}$ | the $p\times 1$ column vector of regression coefficients | No | No | 
+| $\boldsymbol{\epsilon}$ | the $n\times 1$ column vector of errors | No | Yes | 
+| $\epsilon_i$ | the error associated with observation $i$ | No | Yes | 
+| $\hat{\beta}_i$ | the estimator for $\beta_i$ | Yes | Yes | 
+| $\boldsymbol{\hat{\beta}}$ | the $p\times 1$ column vector of estimates for the regression coefficients | Yes | Yes | 
+| $\hat{\epsilon}_i$ | the residual associated with the $i^{\text{th}}$ observation| Yes | Yes | 
+
+
+# OLS Estimators
+
+
+The least squares estimator of $\boldsymbol{\beta}$ , denoted $\boldsymbol{\hat{\beta}}$, minimizes 
+
+$$ \text{RSS}(\boldsymbol{\hat{\beta}})= \sum \boldsymbol{\hat{\epsilon}}_i^2 = \sum \boldsymbol{\hat{\epsilon}}_i^T \boldsymbol{\hat{\epsilon}}_i = (\mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}})^T( \mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}}) .$$
+
+[How do we find the value of $\boldsymbol{\hat{\beta}}$ that minimizes RSS?]{style="color:blue"}
+
+- With two predictors, we want to find the plane that minimizes the sum of squared distances (projections) of each point to the plane (regression line).
+- Same idea in higher dimensions with more predictors.
+
+```{r}
+#| eval: true
+#| echo: false
+#| warning: false
+library(plotly)
+library(reshape2) # for acast()
+
+country <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/country.csv")
+
+country <- country |> 
+  mutate(log_gdp = log(gdp_per_cap), .before = gdp_per_cap) |>
+  select(-gdp_per_cap)  # remove gdp_per_cap
+
+model <- lm(life_exp ~ log_gdp + fertility, data = country)  # create model
+x_grid <- seq(min(country$log_gdp), max(country$log_gdp), length.out = 50)  # grid for x
+y_grid <- seq(min(country$fertility), max(country$fertility), length.out = 50)  # grid for y
+regression_grid <- expand.grid(log_gdp = x_grid, fertility = y_grid)  # grid for z
+regression_grid$life_exp_pred <- predict(model, newdata = regression_grid)  # fitted points
+z_matrix <- acast(regression_grid, fertility ~ log_gdp, value.var = "life_exp_pred")  # merge vectors
+
+plot_ly(country, x = ~log_gdp, y = ~fertility, z = ~life_exp,
+        type = "scatter3d", mode = "markers", name = "Data Points") |> 
+  add_surface(x = ~x_grid, y = ~y_grid, z = ~z_matrix,
+              name = "Regression Plane",
+              opacity = 0.5) |>
+  layout(
+    scene = list(
+      xaxis = list(title = "log(GDP)"),
+      yaxis = list(title = "Fertility"),
+      zaxis = list(title = "Life Expectancy")
+    )
+  )
+```
+
+
+
+## Matrix Derivatives 
+
+Now lets look at the derivative of a scalar function with respect to a vector.
+
+
+Let $f(\mathbf{x})$ be a function of a $p\times 1$ column vector $\mathbf{x}=[x_1, x_2, \ldots,  x_p]^T$. The derivative of $f(\mathbf{x})$ with respect to $\mathbf{x}$ is denoted $\frac{\partial f(\mathbf{x})}{\partial \mathbf{x}}$ and 
+
+$$\frac{\partial f(\mathbf{x})}{\partial \mathbf{x}} = \begin{bmatrix}
+\frac{\partial f(\mathbf{x})}{\partial x_1}\\
+\frac{\partial f(\mathbf{x})}{\partial x_2}\\
+\vdots \\
+\frac{\partial f(\mathbf{x})}{\partial x_p}
+\end{bmatrix}.$$
+
+
+Let
+
+$$\mathbf{x} = \begin{bmatrix} x_1 \\ x_2\\  x_3 \end{bmatrix}, \quad
+\mathbf{a} = \begin{bmatrix} a_1 \\ a_2\\  a_3 \end{bmatrix}, \quad \text{and }
+\mathbf{A} = \begin{bmatrix} a_{11} & a_{12} \\
+a_{21} & a_{22} \\
+a_{31} & a_{32} \end{bmatrix},$$
+
+and consider the examples below.
+
+::: {.callout-note title="Example 1" appearance="simple" collapse="true"}
+$f(\mathbf{x}) = \mathbf{x}^T \mathbf{a} = a_1x_1 + a_2x_2 + a_3x_3$ has the following derivative:
+
+$$\frac{d}{d \mathbf{x}} \left( \mathbf{x}^T \mathbf{a} \right) = \begin{bmatrix}
+ \frac{d}{dx_1} (a_1x_1 + a_2x_2 + a_3b_3) \\
+ \frac{d}{dx_2} (a_1x_1 + a_2x_2 + a_3b_3) \\
+ \frac{d}{dx_3} (a_1x_1 + a_2x_2 + a_3b_3) \end{bmatrix} = \begin{bmatrix}
+ a_1 \\ a_2 \\ a_3 
+ \end{bmatrix} = \mathbf{a}
+ $$
+
+More generally (for any dimension) $\frac{d}{d \mathbf{x}} \left( \mathbf{x}^T \mathbf{a} \right) = \mathbf{a}$.
+:::
+
+
+
+::: {.callout-note title="Example 2" appearance="simple" collapse="true"}
+$f(\mathbf{x}) = \mathbf{x}^T \mathbf{x} = x_1^2 + x_2^2 + x_3^2$ has the following derivative:
+
+$$\frac{d}{d \mathbf{x}} \left( \mathbf{x}^T \mathbf{x} \right) = \begin{bmatrix}
+ \frac{d}{dx_1} (x_1^2 + x_2^2 + x_3^2) \\
+ \frac{d}{dx_2} (x_1^2 + x_2^2 + x_3^2) \\
+ \frac{d}{dx_3} (x_1^2 + x_2^2 + x_3^2) \end{bmatrix} = \begin{bmatrix}
+ 2x_1 \\ 2x_2 \\ 2x_3 
+ \end{bmatrix} = 2 \mathbf{x}
+ $$
+
+More generally (for any dimension) $\frac{d}{d \mathbf{x}} \left( \mathbf{x}^T \mathbf{x} \right) = 2\mathbf{x}$.
+:::
+
+
+::: {.callout-note title="Example 3" appearance="simple" collapse="true"}
+Let $\mathbf{a}_1$ and $\mathbf{a}_2$ denote the column vectors of $3 \times 2$ matrix $\mathbf{A}$ defined above. Consider the function
+
+$$f(\mathbf{x}) = \mathbf{x}^T \mathbf{A} = \begin{bmatrix} x_1 & x_2 & x_3 \end{bmatrix} \begin{bmatrix} a_{11} & a_{12} \\
+a_{21} & a_{22} \\
+a_{31} & a_{32} \end{bmatrix} = \begin{bmatrix} \mathbf{x}^T \mathbf{a}_1 & \mathbf{x}^T \mathbf{a}_2 \end{bmatrix} .$$
+
+
+
+$$\begin{align}
+\frac{d}{d \mathbf{x}} \left( \mathbf{x}^T \mathbf{A} \right) &= 
+\frac{d}{d \mathbf{x}} \left( \begin{bmatrix} \mathbf{x}^T \mathbf{a}_1 & \mathbf{x}^T \mathbf{a}_2 \end{bmatrix} \right) \\
+&=\begin{bmatrix} \frac{d}{d \mathbf{x}} \left( \mathbf{x}^T \mathbf{a}_1 \right) & \frac{d}{d \mathbf{x}} \left( \mathbf{x}^T \mathbf{a}_2 \right) \end{bmatrix}  \\
+&= \begin{bmatrix} \mathbf{a}_1 & \mathbf{a}_2 \end{bmatrix} \\
+&= \mathbf{A}
+ \end{align}
+ $$
+
+We can similarly show, for appropriately sized matrix $\mathbf{A}$,
+
+$$\frac{d}{d \mathbf{x}} \left( \mathbf{A} \mathbf{x} \right) = \mathbf{A}$$
+:::
+
+
+
+
+## Question 2
+
+Find a formula for OLS estimator for $\boldsymbol{\epsilon}$ using the following method:
+
+- Expand the product $(\mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}})^T( \mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}})$. 
+- Then take the derivative with respect to $\boldsymbol{\hat{\beta}}$ and set equal to $\mathbf{0}$.
+- Solve for $\boldsymbol{\hat{\beta}}$. 
+
+
+### Solution to Question 2
+
+
+#### Expand the product 
+
+
+$$\begin{align}
+(\mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}})^T( \mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}}) &= 
+\big( \mathbf{y}^T  - (\mathbf{X}\boldsymbol{\hat{\beta}})^T \big) ( \mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}}) \\
+ &= 
+\big( \mathbf{y}^T  - \boldsymbol{\hat{\beta}}^T \mathbf{X}^T \big) ( \mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}}) \\
+&= \mathbf{y}^T \mathbf{y} - \mathbf{y}^T \mathbf{X}\boldsymbol{\hat{\beta}} - \boldsymbol{\hat{\beta}}^T \mathbf{X}^T \mathbf{y}  + \boldsymbol{\hat{\beta}}^T \mathbf{X}^T \mathbf{X}\boldsymbol{\hat{\beta}} \\
+&= \mathbf{y}^T \mathbf{y} - \mathbf{y}^T \mathbf{X}\boldsymbol{\hat{\beta}} - (\mathbf{X} \boldsymbol{\hat{\beta}})^T  \mathbf{y}  + (\mathbf{X}\boldsymbol{\hat{\beta}} )^T (\mathbf{X}\boldsymbol{\hat{\beta}} ) \\
+&= \mathbf{y}^T \mathbf{y} - \mathbf{y}^T \mathbf{X}\boldsymbol{\hat{\beta}} -   \mathbf{y}^T\mathbf{X}\boldsymbol{\hat{\beta}}  +  (\mathbf{X}\boldsymbol{\hat{\beta}} )^T (\mathbf{X}\boldsymbol{\hat{\beta}} )\\
+&= \mathbf{y}^T \mathbf{y} - 2\mathbf{y}^T \mathbf{X}\boldsymbol{\hat{\beta}}  +  (\mathbf{X}\boldsymbol{\hat{\beta}} )^T (\mathbf{X}\boldsymbol{\hat{\beta}} )
+\end{align}$$. 
+
+::: {.callout-caution}
+In the work above (and below), note $(\mathbf{X} \boldsymbol{\hat{\beta}})^T  \mathbf{y}$ results in a scalar. Thus, taking the transpose again would result in the same scalar.
+
+$$(\mathbf{X} \boldsymbol{\hat{\beta}})^T  \mathbf{y}  = \left( (\mathbf{X} \boldsymbol{\hat{\beta}})^T  \mathbf{y} \right)^T = \mathbf{y}^T (\mathbf{X} \boldsymbol{\hat{\beta}})$$
+
+It is generally NOT true that  $\mathbf{A}^T \mathbf{B} = \mathbf{B}^T \mathbf{A}$ when working with appropriately sized matrices.
+:::
+
+
+#### Take the derivative with respect to $\boldsymbol{\hat{\beta}}$
+
+
+$$\begin{align}
+\frac{d}{d \boldsymbol{\hat{\beta}}} \left( \mathbf{y}^T \mathbf{y} - 2\mathbf{y}^T \mathbf{X}\boldsymbol{\hat{\beta}}   + (\mathbf{X}\boldsymbol{\hat{\beta}} )^T (\mathbf{X}\boldsymbol{\hat{\beta}} ) \right) &= 
+\frac{d}{d \boldsymbol{\hat{\beta}}} \left( \mathbf{y}^T \mathbf{y} \right) - 2 \frac{d}{d \boldsymbol{\hat{\beta}}} \left( \mathbf{y}^T \mathbf{X}\boldsymbol{\hat{\beta}} \right) + \frac{d}{d \boldsymbol{\hat{\beta}}} \left( (\mathbf{X}\boldsymbol{\hat{\beta}} )^T (\mathbf{X}\boldsymbol{\hat{\beta}} ) \right) \\
+&= 0 -2 \mathbf{y}^T \mathbf{X} + \frac{d}{d \boldsymbol{\hat{\beta}}} \left[  (\mathbf{X}\boldsymbol{\hat{\beta}} )^T \right] \left( \mathbf{X}\boldsymbol{\hat{\beta}} \right) +  \left( \mathbf{X}\boldsymbol{\hat{\beta}}  \right)^T \frac{d}{d \boldsymbol{\hat{\beta}}} \left[ (\mathbf{X}\boldsymbol{\hat{\beta}} ) \right] \\
+&= -2 \mathbf{y}^T \mathbf{X} + \bigg( \frac{d}{d \boldsymbol{\hat{\beta}}} \left[  \mathbf{X}\boldsymbol{\hat{\beta}}  \right] \bigg)^T \left( \mathbf{X}\boldsymbol{\hat{\beta}} \right) +  \left( \mathbf{X}\boldsymbol{\hat{\beta}}  \right)^T \frac{d}{d \boldsymbol{\hat{\beta}}} \left[ (\mathbf{X}\boldsymbol{\hat{\beta}} ) \right] \\
+&= -2 \mathbf{y}^T \mathbf{X} + (\mathbf{X})^T \left( \mathbf{X}\boldsymbol{\hat{\beta}} \right) +  \left( \mathbf{X}\boldsymbol{\hat{\beta}}  \right)^T  (\mathbf{X}) \\
+&= -2 \mathbf{y}^T \mathbf{X} + 2 \mathbf{X}^T \mathbf{X}\boldsymbol{\hat{\beta}}
+\end{align}$$. 
+
+
+::: {.callout-caution}
+Again we note a similar special case:
+
+- $\mathbf{X}^T\mathbf{X} \boldsymbol{\hat{\beta}}$ results in a column vector with the same dimensions as $\boldsymbol{\hat{\beta}}$.
+- $\boldsymbol{\hat{\beta}}^T \mathbf{X}^T \mathbf{X}$ results in the same vector as the product above, expressed in the form of a row vector.
+- In order to add the vectors, we treat all as column vectors, and thus 
+
+$$\mathbf{X}^T \mathbf{X}\boldsymbol{\hat{\beta}}= \boldsymbol{\hat{\beta}}^T \mathbf{X}^T  \mathbf{X} .$$
+Want to be clear (again) that it is generally NOT true that  $\mathbf{A}^T \mathbf{B} = \mathbf{B}^T \mathbf{A}$ when working with appropriately sized matrices.
+:::
+
+
+#### When is derivative equal to zero?
+
+To find critical points where the RSS is minimized, we set the derivative equal to $\mathbf{0}$ (the $n \times 1$ zero vector) and solve for $\boldsymbol{\hat{\beta}}$.
+ 
+We have
+
+$$-2 \mathbf{y}^T \mathbf{X} + 2 \mathbf{X}^T \mathbf{X}\boldsymbol{\hat{\beta}} = \mathbf{0}$$
+which gives
+
+$$\mathbf{X}^T \mathbf{X}\boldsymbol{\hat{\beta}} =  \mathbf{y}^T \mathbf{X}$$
+
+or 
+
+$$\mathbf{X}^T \mathbf{X}\boldsymbol{\hat{\beta}} =   \mathbf{X}^T \mathbf{y}.$$
+
+::: {.callout-note}
+The resulting system above is called the normal equations.
+:::
+
+
+Multiplying both sides (on the left) by $(X^TX)^{-1}$ (if it exists), gives the OLS estimator
+
+$$\large{ \boldsymbol{\hat{\beta}} = \left( \mathbf{X}^T \mathbf{X} \right)^{-1}  \mathbf{X}^T \mathbf{y} }$$
+where $\mathbf{X}$ is the matrix of observed values of the predictor variables and  $\mathbf{y}$ is the vector of observed values of the response variable. Since we know all of these values, we can compute $\boldsymbol{\hat{\beta}}$.
+
+<br>  
+<br>  
+
+
+## The Hat Matrix
+
+The fitted values $\mathbf{\hat{y}} = [ \hat{y}_1, \hat{y}_2, \ldots , \hat{y}_n ]$ may be expressed as
+
+$$\mathbf{\hat{y}} = \mathbf{X} \boldsymbol{\hat{\beta}} = \mathbf{X} \left( \mathbf{X}^T \mathbf{X} \right)^{-1}  \mathbf{X}^T \mathbf{y}$$
+
+- The matrix $\mathbf{H} =  \mathbf{X} \left( \mathbf{X}^T \mathbf{X} \right)^{-1}  \mathbf{X}^T$ is called the [**hat matrix**]{style="color:blue"} or [**projection matrix**]{style="color:blue"}
+
+- $\mathbf{H} \mathbf{y}$ is the orthogonal projection of each observed point onto the space spanned by $\mathbf{X}$.
+
+- $\mathbf{H} \mathbf{y}$  is a useful theoretical matrix, but it is often not computed since it is an $n \times n$ matrix, and typically our sample size $n$ is very large.
+
+
+
+## Question 3
+
+Show the residual sum of squares, RSS, may be written as
+
+$$\text{RSS} = \sum \hat{\epsilon}_i^2 = \boldsymbol{\hat{\epsilon}}^T \boldsymbol{\hat{\epsilon}} = \mathbf{y}^T (\mathbf{I}_n - \mathbf{H}) \mathbf{y}.$$
+
+
+### Solution to Question 3
+
+
+
+
+
+<br>  
+<br>  
+
+
+# Fitted Values and Residuals
+
+- The [**fitted model**]{style="color:blue"} is given by
+
+$$ \hat{Y} = \widehat{E} ( Y \ | \ X) = \hat{\beta}_0 +  \hat{\beta}_1 X_1 +  \hat{\beta}_2 X_2 + \ldots +  \hat{\beta}_{p-1} X_{p-1} . $$
+
+- The [**$i^{\text{th}}$**]{style="color:blue"} fitted value is therefore given by
+
+$$ \hat{y}_i = \widehat{E} ( Y \ | \ X_1 = x_{i1} , \ldots , X_{p-1} = x_{i, p-1}) = \hat{\beta}_0 +  \hat{\beta}_1 x_{i1} +  \hat{\beta}_2 x_{i2} + \ldots +  \hat{\beta}_{p-1} x_{i, p-1} . $$
+
+- The residuals, $\boldsymbol{\hat{\epsilon}} = (\hat{\epsilon}_1, \hat{\epsilon}_2, \ldots , \hat{\epsilon}_n)^T$ are given by
+
+$$ \boldsymbol{\hat{\epsilon}}= \mathbf{y} - \hat{\mathbf{y}} =  \mathbf{y} - \mathbf{Hy} = (\mathbf{I}_n - \mathbf{H}) \mathbf{y}.$$
+
+- The residual of individual observation $i$ is
+
+$$ \hat{\epsilon}_i = y_i - \hat{y}_i = y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_{i1} + \hat{\beta}_2 x_{i2} + \ldots + \hat{\beta}_{p-1} x_{i, p-1}) .$$   
+
+
+
+## Question 4
+
+Show that $\mathbf{I}_n - \mathbf{H}$ is symmetric and idempotent.
+
+
+::: {.callout-tip}
+A square matrix $\mathbf{A}$ is idempotent if $A^2 = A$. Show
+ $(\mathbf{I}_n - \mathbf{H})^2=\mathbf{I}_n - \mathbf{H}$.
+:::
+
+### Solution to Question 4
+
+
+
+
+<br>  
+<br>  
+
+
+# Properties of the OLS Estimator
+
+
+- The ordinary least squares estimator $\boldsymbol{\hat{\beta}}$ is an [**unbiased estimator**]{style="color:blue"} for $\boldsymbol{\beta}$.  
+
+- The OLS estimator $\boldsymbol{\hat{\beta}}$ is also the [**most efficient**]{style="color:blue"} estimator. It has the minimum variance among all unbiased estimators when $\text{Var} (\boldsymbol{\epsilon}) = \sigma^2 \mathbf{I}_n$.
+
+- The OLS estimator for $\text{Var} (\boldsymbol{\epsilon})$ is given by
+
+$$ \hat{\boldsymbol\sigma}^2 = \frac{ \boldsymbol{\hat{\epsilon}}^T \boldsymbol{\hat{\epsilon}} }{n-p} = \frac{ \text{RSS} }{n-p} .$$
+
+## Question 5
+
+Show that $\boldsymbol{\hat{\beta}}$ is an unbiased estimator for $\boldsymbol{\beta}$. 
+
+
+
+### Solution to Question 5
+
+
+
+
+<br>  
+<br>  
+
+# Revisiting Simple Linear Regression 
+
+
+Suppose we have a simple linear regression model $\hat{Y} = \hat{\beta}_0 + \hat{\beta}_1 X$. We have a data set of $n$ observations giving a system of linear equations given by the matrix equation
+
+$$ \begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix}  = \begin{bmatrix} 1 & x_{11} \\ 1 & x_{12} \\ \vdots & \vdots \\ 1 & x_{1n} \end{bmatrix} \begin{bmatrix} \hat{\beta}_0 \\ \hat{\beta}_1 \\ \vdots \\ \hat{\beta}_n \end{bmatrix}. $$
+
+## Question 6
+
+Using the matrix above, derive OLS estimates for $\hat{\beta}_0$ and  $\hat{\beta}_1$ using the result that $\boldsymbol{\hat{\beta}} = (X^TX)^{-1}(X^T) \mathbf{y}$.
+
+
+### Solution to Question 6
+
+
+
+
+<br>  
+<br>  
+
+
+## Revisiting World Development Indicators
+
+The data set stored in `country.csv` contains information about [World Development Indicators (WDI)](https://datatopics.worldbank.org/world-development-indicators/) for many countries. We explored this data set in the previous model. Run the code cell below to load the data.
+
+
+```{r}
+#| message: false
+country <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/country.csv")
+head(country)
+```
+
+
+- `life_exp`: Life expectancy at birth (in years).
+- `gdp_per_cap`: GDP per capita (in dollars).
+- `lit_rate`: Adult literacy rate (in %) is indicator.
+- `fertility`: Fertility rate (total births per woman) is indicator.
+- `land_area`: Land area (in square km) is indicator. 
+
+### Life Expectancy and Fertility Rate 
+
+In the [previous module](https://aspiegler.github.io/Applied-Regression/07-MLR-Part1.html) we constructed a simple linear regression model for the response variable `life_exp` in terms of the predictor `fertility` based on the data in `country`.
+
+```{r}
+(life_lmod <- lm(life_exp ~ fertility, data = country))
+```
+
+See [Appendix A](#sec-appendixa) for a glossary of useful linear algebra and `lm()` functions in R.
+
+
+```{r}
+# create model matrix X
+x <- model.matrix(~ fertility, data = country)
+head(x)
+```
+
+```{r}
+# vector of observed values of response
+y <- country$life_exp
+```
+
+
+```{r}
+# compute hat matrix, 162 by 162 matrix
+h <- x %*% solve(t(x) %*% x) %*% t(x)
+```
+
+Recall we have OLS estimator
+
+$$\boldsymbol{\hat{\beta}} = \left( \mathbf{X}^T \mathbf{X} \right)^{-1}  \mathbf{X}^T \mathbf{y}$$
+```{r}
+solve(t(x) %*% x) %*% t(x) %*% y
+```
+
+```{r}
+# compute fitted values y_hat
+# and compare with output of lm
+y_fit <- h %*% y
+head(y_fit - fitted(life_lmod))
+```
+
+# Exploring the Galapagos Dataset
+
+
+The package `faraway` contains a data frame `gala` with data about species in the Galapagos.  There are 30 Galapagos islands and 7 variables in the data set. The relationship between the number of plant species and several geographic variables is of interest. Run `?gala` to learn more about the variables in the data.
+
+
+## Loading the Galapagos Data
+
+```{r}
+data(gala, package = "faraway")
+str(gala) # basic structure of gala data
+```
+
+## Question 7
+
+Fit a linear model regressing Species on Area, Elevation, Nearest, Scruz, and Adjacent. Store the output of your model to an object named `lmod`.
+
+
+### Solution to Question 7
+
+
+```{r}
+# Fit linear model using R.
+# Must use data = gala since data vectors are in gala data.frame
+lmod <- lm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, data = gala)
+summary(lmod)
+```
+
+
+<br>  
+<br>  
+
+
+## Question 8 
+
+Run the code cell below to find estimates for the regression coefficients. Interpret the meaning of coefficient associated to the predictor `elevation`.
+
+
+```{r}
+coef(lmod) # pulls off just the values reg coef.
+```
+
+
+### Solution to Question 8
+
+
+
+
+<br>  
+<br>  
+
+## Question 9 
+
+Construct the model matrix of Predictors $\mathbf{X}$ and store the matrix to `x`.
+
+
+### Solution to Question 9 
+
+
+```{r}
+x <- model.matrix( ~ Area + Elevation + Nearest + Scruz + Adjacent, data = gala)
+head(x)
+```
+
+<br>  
+<br>  
+
+
+## Question 10
+
+Estimate the regression coefficients using the formula for the OLS estimator,
+
+$$\hat{\boldsymbol\beta} = (X^TX)^{-1}(X^T)\mathbf{y}$$
+
+
+### Solution to Question 10
+
+
+```{r}
+# Construct Vector of Observed Response Variable
+y <- gala$Species
+solve(t(x) %*% x) %*% t(x) %*% y
+```
+
+Which is equivalent to solving the matrix equation
+$$ (X^TX)\hat{\boldsymbol\beta} = (X^T)\mathbf{y}$$
+
+```{r}
+# solve(a, b) Solves ax = b
+solve(t(x) %*% x, t(x) %*% y)
+```
+
+
+
+## The Matrix Cross product
+
+Given an $n \times m$ matrix $X$ and an $n \times p$ matrix $Y$, we define the [**matrix cross product**]{style="color:blue"} as $X \times Y = X^TY$. Using the matrix cross product, we can express the conditions for the regression coefficients as
+
+$$(X \times X) \hat{\boldsymbol\beta} = X \times \mathbf{y}$$
+
+
+```{r}
+# more concise code
+solve(crossprod(x), crossprod(x, y))
+```
+
+
+
+
+## Question 11
+
+
+The OLS estimator for $\mbox{Var} (\boldsymbol\epsilon)$ is given by
+
+$$\hat{\boldsymbol\sigma}^2 = \frac{ \hat{\boldsymbol\epsilon}^T \hat{\boldsymbol\epsilon} }{n-p} = \frac{ \mbox{RSS} }{n-p} .$$
+Compute the OLS estimator for  $\hat{\boldsymbol\sigma}^2$ using the formula above.
+
+
+### Solution to Question 11
+
+
+
+```{r}
+e <- residuals(lmod) # Vector of residuals
+n <- length(y) # number of observations
+p <- 6 # number of predictors
+
+rss <- crossprod(residuals(lmod))
+rss/(n-p)
+```
+
+
+```{r}
+deviance(lmod) / (n-p)  # deviance gives RSS of model
+```
+
+#### Additional Solutions
+
+
+```{r}
+# quantities we can extract from summary object
+lmodsum <- summary(lmod)
+names(lmodsum)
+```
+
+
+
+```{r}
+# all compute sigma-hat^2
+deviance(lmod)/df.residual(lmod)
+(lmodsum$sigma)^2
+sum(residuals(lmod)^2)/df.residual(lmod)
+sigma(lmod)^2
+```
+
+
+# The QR Decomposition
+
+If $\mathbf{X}$ is an $n \times p$ matrix of full rank (say $n > p$ and the rank $= p$), then $\mathbf{X} = \mathbf{QR}$ where $\mathbf{Q}$ is an $n \times p$ orthonormal matrix and $\mathbf{R}$ is a $p \times p$  upper triangular matrix. Since $\mathbf{Q}$ is orthonormal, $\mathbf{Q}^T \mathbf{Q} = \mathbf{I}_p$, the $p \times p$  identity matrix.
+
+::: {.callout-note title="QR Example" appearance="simple" collapse="true"}
+$$\begin{bmatrix} 1 & 0 & 0 \\ 1 & 1 & 0 \\ 1 & 1 & 1 \\ 1 & 1 & 1 \end{bmatrix} =
+\begin{bmatrix}  1/2 & -3/\sqrt{12} & 0 \\
+1/2 & 1/\sqrt{12} & -2/\sqrt{6} \\
+1/2 & 1/\sqrt{12} & 1/\sqrt{6} \\
+1/2 & 1/\sqrt{12} & 1/\sqrt{6}
+\end{bmatrix}
+\begin{bmatrix} 2 & 3/2 & 1 \\ 0 & 3/\sqrt{12} & 2/\sqrt{12} \\ 0 & 0 & 2/\sqrt{6} \end{bmatrix} $$
+:::
+
+-  [See video for a worked through example.](https://www.youtube.com/watch?v=FEIaeL7iXH8)
+-  We can use the `qr_result()` function in R to do the work for us! 
+
+```{r}
+qr_result <- qr(x)
+q <- qr.Q(qr_result)
+r <- qr.R(qr_result)
+q[1:6, ]
+r
+```
+
+Beginning with the normal equations, see how the QR decomposition simplifies them.
+
+$$\begin{align}
+& \mathbf{X}^T \mathbf{X} \boldsymbol{\hat{\beta}} = \mathbf{X}^T \mathbf{y} \\
+& (\mathbf{QR})^T (\mathbf{QR}) \boldsymbol{\hat{\beta}} = (\mathbf{QR})^T \mathbf{y} \\
+& \mathbf{R}^T (\mathbf{Q}^T \mathbf{Q}) \mathbf{R} \boldsymbol{\hat{\beta}} = \mathbf{R}^T \mathbf{Q}^T \mathbf{y} \\
+& \mathbf{R}^T \mathbf{R} \boldsymbol{\hat{\beta}} = \mathbf{R}^T \mathbf{Q}^T \mathbf{y} \\
+& (\mathbf{R}^T)^{-1} \mathbf{R}^T \mathbf{R} \boldsymbol{\hat{\beta}} = (\mathbf{R}^T)^{-1} \mathbf{R}^T \mathbf{Q}^T \mathbf{y}\\
+& \mathbf{R} \boldsymbol{\hat{\beta}} = \mathbf{Q}^T \mathbf{y}
+\end{align}$$
+
+
+This is simply an upper triangular system of equations which may be quickly solved by back substitution.
+
+```{r}
+t(q) %*% y
+```
+
+
+```{r}
+r
+```
+
+$$-3444.8893 \ \hat{\beta}_6 = 257.694369 \qquad \text{ or } \qquad \hat{\beta}_6 = \frac{257.694369}{-3444.8893} = -0.07480483 .$$
+Then we have
+
+$$288.38347 \ \hat{\beta}_5 + 670.2124 \ \hat{\beta}_6 = 288.38347 \ \hat{\beta}_5 + 670.2124 \ (-0.07480483) = -119.498340,$$
+which gives the next estimate
+
+$$\hat{\beta}_5 = \frac{-119.498340 + 670.2124 (0.07480483)}{288.38347} = -0.2405242 .$$
+
+And we continue working through back substitution to find the other regression coefficients.
+
+
+
+```{r}
+# solves formula R beta = Q^T y
+qr.solve(r, t(q) %*% y)
+```
+
+```{r}
+# solves formula R beta = Q^T y
+qr.coef(qr_result, y)
+```
+
+
+```{r}
+# we can use the qr function with output stored in lmod
+qr_result2 <- qr(lmod)
+qr.Q(qr_result2)
+qr.R(qr_result2)
+```
+
+
+# Singular Value Decomposition
+
+[**SVD**]{style="color:blue"} (singular value decomposition) decomposes the model matrix $\mathbf{X}$ into three matrices: $\mathbf{X} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^{T}$.
+
+::: {.callout-note}
+The [**singular values**]{style="color:blue"} of matrix $A$ are the square roots of the eigenvalues of $A^TA$.
+:::
+
+- $\mathbf{U}$ is an orthogonal matrix whose columns form an orthonormal basis for the column space of $X$.
+
+- $\mathbf{\Sigma}$ is a diagonal matrix containing the singular values of $\mathbf{X}$ along its diagonal.
+
+- $\mathbf{V}$ is an orthogonal matrix whose columns form an orthonormal basis for the row space of $\mathbf{X}$ .
+
+::: {.callout-note title="SVD Example" appearance="simple" collapse="true"}
+
+$$ \begin{bmatrix} 1 & 1 \\ 1 & 0 \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} \sqrt{2/3}  &  0 &  -1/\sqrt{3}\\ 1/\sqrt{6} & -1/\sqrt{2} &  1/\sqrt{3}\\  1/\sqrt{6} & 1/\sqrt{2} &  1/\sqrt{3}\end{bmatrix} 
+\begin{bmatrix} \sqrt{3} & 0 \\ 0 & 1 \\ 0 & 0 \end{bmatrix}
+\begin{bmatrix} 1/\sqrt{2} & 1/\sqrt{2} \\  -1/\sqrt{2} & 1/\sqrt{2} \end{bmatrix}$$
+
+:::
+
+-  [See introduction video](https://youtu.be/h2UfynVd64k?si=0SjkUyh2Nybxt8Yy)
+-  [See video for a worked through example.](https://youtu.be/vbGw7BTWYS4?si=uHFAe8XoFwa38P1V)
+- We can use the `svd()` function in R to do the work for us!
+
+Using this decomposition, the least squares solution can be expressed as
+
+$$\boldsymbol{\hat{\beta}} = \mathbf{V} \mathbf{\Sigma}^{-1} \mathbf{U}^T \mathbf{y} .$$
+
+This formulation avoids the need to compute the numerically unstable inverse of $\mathbf{X}^{T} \mathbf{X}$.
+
+
+```{r}
+# svd decomposition of model matrix
+svd_result <- svd(x)
+v <- svd_result$v
+sigma <- diag(svd_result$d)  # makes diagonal from singular values
+u <- svd_result$u
+```
+
+
+```{r}
+# solving normal equations using SVD
+v %*% solve(sigma) %*% t(u) %*% y
+```
+
+# Appendix A: A Glossary of Useful Functions
+
+
+## Basics of Linear Algebra in R
+
+Some useful commands when working with matrices in R:
+
+- `a %*% b` computes matrix product  where $a$ and $b$ denote matrices.
+- `t(a)` gives the transpose of matrix $a$.
+- `solve(a)` finds the inverse of matrix $a$.
+- `solve(a,b)` solves the equation $ax=b$.
+- `det(a)` computes determinant of square matrix $a$.
+- `crossprod(x,y)` Computes the matrix cross product $x \times y = x^Ty$.
+- `matrix()` can be used to define a matrix from scratch.
+- `diag(n)` creates $\mathbf{I}_n$, the $n \times n$ identify matrix.
+
+
+## Refresher for `lm()`
+
+Some useful commands working with `lm`:
+
+- `coef(lmod)` Returns only the values of the regression coefficients, $\boldsymbol{\hat{\beta}}$.
+- `x <- model.matrix( ~ x1 + x2 + x3 + x4, data = data.frame)` creates matrix $X$.
+- `y <- data.frame$response_var` creates vector of observed values of $\mathbf{y}$.
+- `names(lmod)` Lists the quantities we can extract from the `lmod`.
+- `e <- residuals(lmod)` creates the vector of residuals $\hat{\boldsymbol\epsilon}$.
+- `deviance(lmod)` computes the RSS of the linear model.
+- `df.residual(lmod)` computes the degrees of freedom $n-p$.
+- `sigma(lmod)` computes the estimate for the standard error $\hat{\sigma}$.
+- `vcov(lmod)` gives the estimated covariance matrix of the regression coefficients.
+
+
+
+# Appendix B: Random Vectors {#sec-appendixb}
+
+Let $\mathbf{y}=(Y_1,Y_2,\dots,Y_n )^T$ is a random vector if it is an $n\times1$ vector of random variables. 
+
+
+## Mean, Variance, and Covariance
+
+The mean of a random vector is
+
+$$E(\mathbf{y})=\begin{pmatrix}E(Y_1)\\E(Y_2)\\\vdots\\E(Y_n)\end{pmatrix}.$$
+
+The variance (covariance) of a random vector is
+
+$$\begin{align}
+\mathrm{Var}(\mathbf{y}) &= E(\mathbf{y}\mathbf{y}^T )-E(\mathbf{y})E(\mathbf{y})^T\\
+\\
+&= \begin{pmatrix}\mathrm{Var}(Y_1) & \mathrm{Cov}(Y_1,Y_2) &\dots &\mathrm{Cov}(Y_1,Y_n)\\\mathrm{Cov}(Y_2,Y_1 )&\mathrm{Var}(Y_2)&\dots&\mathrm{Cov}(Y_2,Y_n)\\\vdots&\vdots&\vdots&\vdots\\
+\mathrm{Cov}(Y_n,Y_1)&\mathrm{Cov}(Y_n,Y_2)&\dots&\mathrm{Var}(Y_n)\end{pmatrix}\end{align}.$$
+
+Let $\mathbf{x} = (X_1, X_2, \ldots, X_n)^T$ and $\mathbf{y} = (Y_1, Y_2, \ldots, Y_n)^T$ be $n\times 1$ random vectors.
+
+The covariance between two random vectors is 
+$$\mathrm{Cov}(\mathbf{x}, \mathbf{y}) = E(\mathbf{x} \mathbf{y}^T) - E(\mathbf{x}) E(\mathbf{y})^T.$$
+
+## Properties of Transformations of Random Vectors
+
+Define:
+
+- $\mathbf{a}$ to be  an $n\times 1$ vector of constants
+- $A$ to be an $m\times n$ matrix of constants
+- $\mathbf{x}=(X_1,X_2,\ldots,X_n)^T$ to be an $n\times 1$ random vector
+- $\mathbf{y}=(Y_1,Y_2,\ldots,Y_n)^T$ to be an $n\times 1$ random vector
+-	$\mathbf{z}=(Z_1,Z_2,\ldots,Z_n)^T$ to be an $n\times 1$ random vector
+- $0_{n\times n}$ to be an $n\times n$ matrix of zeros.
+
+Then:
+
+-	$E(A\mathbf{y})=AE(\mathbf{y}), E(\mathbf{y}A^T )=E(\mathbf{y}) A^T.$
+-	$E(\mathbf{x}+\mathbf{y})=E(\mathbf{x})+E(\mathbf{y})$
+-	$\mathrm{Var}(A\mathbf{y})=A \ \mathrm{Var}(\mathbf{y}) A^T$
+-	$\mathrm{Cov}(\mathbf{x}+\mathbf{y},\mathbf{z})=\mathrm{Cov}(\mathbf{x},\mathbf{z})+\mathrm{Cov}(\mathbf{y},\mathbf{z})$
+-	$\mathrm{Cov}(\mathbf{x},\mathbf{y}+\mathbf{z})=\mathrm{Cov}(\mathbf{x},\mathbf{y})+\mathrm{Cov}(\mathbf{x},\mathbf{z})$
+-	$\mathrm{Cov}(A\mathbf{x},\mathbf{y})=A\ \mathrm{Cov}(\mathbf{x},\mathbf{y})$
+- $\mathrm{Cov}(\mathbf{x},A\mathbf{y})=\mathrm{Cov}(\mathbf{x},\mathbf{y}) A^T$
+- $\mathrm{Var}(a)= 0_{n\times n}$
+- $\mathrm{Cov}(\mathbf{a},\mathbf{y})=0_{n\times n}$
+- $\mathrm{Var}(\mathbf{a}+\mathbf{y})= \mathrm{Var}(\mathbf{y})$
+
+
+
+
