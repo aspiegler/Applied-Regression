@@ -320,9 +320,9 @@ Determine whether each of the models below is a linear model. For the model(s) t
 
 a. $\displaystyle Y = \beta_0 + \beta_1 \left( X_1X_2X_3 \right) + \beta_2 e^{X_1^2+X_2^2+X_3^2} + \beta_3 \ln{(X_3)} + \epsilon$ 
 
-b. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}+ X_2^{\beta_2} + X_3^{\beta_2} \right) + \epsilon$ 
+b. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}+ X_2^{\beta_2} + X_3^{\beta_3} \right) + \epsilon$ 
 
-c. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}X_2^{\beta_2} X_3^{\beta_2} \right) \epsilon$ 
+c. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}X_2^{\beta_2} X_3^{\beta_3} \right) \epsilon$ 
 
 ### Solution to Question 7
 

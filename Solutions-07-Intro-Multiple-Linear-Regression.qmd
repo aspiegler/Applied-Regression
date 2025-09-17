@@ -207,7 +207,9 @@ summary(life_lm)
 
 $$y = 67.64 + 0.0001892$$
 
-- For every additional child, life expectancy increases by $0.0001892$ years (or $1.657$ hours).
+- The intercept tells us if a country has $\$0$ gdp per capita, the predicted life expectancy of people in the country is $67.64$ years. This is not particularly useful since there are no such countries.
+- For every additional $\$1$ of gdp per capita, life expectancy increases on average by $0.0001892$ years (or $1.657$ hours).
+- That sounds a little weird. So we could also say for every additional $\$10,000$ of gdp per capita a country has, life expectancy is increase on average by about $1.892$ years.
 
 ```{r}
 hours <- 24 * 365
@@ -264,7 +266,20 @@ plot(life_lm, which = 1)
 ### Solution to Question 4
 
 
+- The errors have mean zero assumption is not satisfied. 
+  - We can tell this by looking at the relation of the red line and the dashed horizontal line.
+- The variance of the errors is not constant. The homoscedasticity assumption is not satisfied.
+  - The residuals do not appear as a horizontal band with equidistant above and below the dashed horizontal line through 0,
+- The assumption about a the model being linear relation does not seem valid since there is an observable pattern in the residuals.
+  - For smaller fitted values on the left, the residuals are mostly negative.
+  - For larger fitted values on the right, the residuals are mostly negative.
+  - For fitted values in between, the residuals are mostly positive.
+  - This would not be the case if the relation is linear.
+- The assumption about interdependence of residuals does not seem to be satisfied due to the pattern of the residuals noted above.
+- The normality assumption we cannot judge from this plot, but a qq-plot would help.
+
 ```{r}
+# countries the model provides the worst predictions
 country[c(30, 105, 130),]
 ```
 
@@ -316,6 +331,7 @@ Create a linear model named `life_log_lm` with `life_exp` as the response and `l
 
 ::: {.callout-warning}
 Be sure to store your linear model to an object called `life_log_lm` to be consistent with work to follow.
+:::
 
 ### Solution to Question 5
 
@@ -328,6 +344,8 @@ summary(life_log_lm)
 $$y = 24.3586 + 5.0222 \ln{(x)}$$
 
 
+
+- The intercept tells us if a country has $\$1$ (where $\ln{(\text{gdp\_per\_cap})}$) gdp per capita, the predicted life expectancy of people in the country is $24.36$ years. This is not particularly useful since there are no such countries.
 - A $1\%$ increase in `gdp_per_cap` is equivalent to multiplying $1.01 \times $ `gdp_per_cap`.
 - Such a change gives 
 
@@ -375,7 +393,16 @@ plot(life_log_lm, which = 1)
 
 ### Solution to Question 6
 
+- The errors have mean zero assumption is satisfied. 
+  - We can tell this by seeing the red line is pretty closely lined up with  the dashed horizontal line. 
+- The variance of the errors is for the most part constant. The homoscedasticity assumption is satisfied.
+  - The residuals do appear as a horizontal band with equidistant above and below the dashed horizontal line through 0.
+  - There are a few observations that bucked this trend listed in the code cell below that we could investigate further.
+- The assumption about interdependence of residuals does seem to be satisfied since there is no observable pattern in the residuals.
+- The normality assumption we cannot judge from this plot, but a qq-plot would help.
+
 ```{r}
+# countries with the least accurate predictions
 country[c(45, 59, 105), ]
 ```
 
@@ -393,15 +420,24 @@ Determine whether each of the models below is a linear model. For the model(s) t
 
 a. $\displaystyle Y = \beta_0 + \beta_1 \left( X_1X_2X_3 \right) + \beta_2 e^{X_1^2+X_2^2+X_3^2} + \beta_3 \ln{(X_3)} + \epsilon$ 
 
-b. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}+ X_2^{\beta_2} + X_3^{\beta_2} \right) + \epsilon$ 
+b. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}+ X_2^{\beta_2} + X_3^{\beta_3} \right) + \epsilon$ 
 
-c. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}X_2^{\beta_2} X_3^{\beta_2} \right) \epsilon$ 
+c. $\displaystyle Y = \beta_0 \left(X_1^{\beta_1}X_2^{\beta_2} X_3^{\beta_3} \right) \epsilon$ 
 
 ### Solution to Question 7
 
 ---
 
+a. Yes, linear in regression coefficients.
 
+b. No, the regression coefficients are in power of exponents. We cannot transform this into a linear model since the addition of $\epsilon$ does not work well with properties of log's.
+
+c. No, the regression coefficients are in power of exponents, but we can transform the model into a linear model by applying a log (natural log) transformation to the response $Y$. In the work below we type $\log{}$ which actually means $\ln{}$.
+
+$$\begin{align}
+\log{(Y)} &= \log{ \bigg( \beta_0 \left(X_1^{\beta_1}X_2^{\beta_2} X_3^{\beta_3} \right) \epsilon \bigg)}\\
+&= \log{ ( \beta_0 )} + \beta_1 \log{(X_1)} + \beta_1 \log{(X_1)} + \beta_3 \log{(X_3)} + \log{(\epsilon)}
+\end{align}$$ 
 
 <br>  
 <br>  
@@ -499,6 +535,9 @@ summary(life_fert_lm)
 
 $$\text{life_exp} = 83.6811 - 4.4283 \cdot (\text{fertility})$$
 
+- The intercept tells us if a country has a fertility rate of 0 births per family, the predicted life expectancy of people in the country is $83.68$ years. This is not particularly useful since there are no such countries.
+- For every additional 1 child born per family, life expectancy decreases on average by $4.43$ years.
+
 ## Comparing Simple Models with Multiple Regression Model
 
 ```{r}
@@ -536,12 +575,19 @@ summary(multi_lm)
 
 
 $$y = 50.1294 + 2.9361 x_1 - 2.2730 x_2 .$$
+- The intercept tells us if a country has $\$0$ gdp per capita and a fertility rate of 0 births per family, then the predicted life expectancy of people in the country is $50.13$ years. This is not particularly useful since there are no such countries.
+- **If we hold all other variables constant**, a $1\%$ increase in `gdp_per_cap` leads, on average, to an approximate increase in `life_exp` by $0.0294$ years.
+- **If we hold all other variables constant**, for every additional 1 child born per family, life expectancy decreases on average by $2.27$ years.
+
 
 ## Question 10
 
 Are the coefficients in the multiple regression model the same or different from the coefficients in each of the simple linear regression models `life_log_lm` and `life_fert_lm`. Explain why the either remain approximately the same or whether the values have changed more substantially.
 
 ### Solution to Question 10
+
+The regression coefficients have changed since the predictor variables are not completely independent from each other. 
+
 
 ```{r}
 head(country)
