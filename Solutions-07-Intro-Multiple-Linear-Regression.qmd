@@ -533,7 +533,7 @@ summary(life_fert_lm)
 ```
 
 
-$$\text{life_exp} = 83.6811 - 4.4283 \cdot (\text{fertility})$$
+$$\text{life\_exp} = 83.6811 - 4.4283 \cdot (\text{fertility})$$
 
 - The intercept tells us if a country has a fertility rate of 0 births per family, the predicted life expectancy of people in the country is $83.68$ years. This is not particularly useful since there are no such countries.
 - For every additional 1 child born per family, life expectancy decreases on average by $4.43$ years.
@@ -652,6 +652,27 @@ The slopes for the coefficient for `fertility` in the multiple linear regression
 :::
 
 ```{r}
+par(mfrow = c(1, 2))
+
+plot(life_exp ~ log_gdp, country,
+     pch = 20,  # solid points
+     main = "Current Model",
+     xlab = "Log of GDP per Capita",
+     ylab = "Life Expectancy")
+abline(life_log_lm, col = "blue", lwd = 2)
+
+
+plot(fertility ~ log_gdp, country,
+     pch = 20,  # solid points
+     main = "Comparing Predictors",
+     xlab = "Log of GDP per Capita",
+     ylab = "Fertility Rate")
+abline(fert_gdp_lm, col = "blue", lwd = 2)
+```
+
+
+
+```{r}
 # model for fertility on the first regressor log_gdp.
 fert_gdp_lm <- lm(fertility ~ log_gdp, data = country)
 
@@ -662,6 +683,7 @@ resid2 <- residuals(fert_gdp_lm)  # residuals from marginal model
 added_val <- data.frame(a = resid1, b = resid2)  
 added_val_lm <- lm(resid1 ~ resid2, data = added_val)  # model of residuals
 #summary(added_val_lm)
+
 
 
 plot(resid1 ~ resid2, data = added_val,
@@ -678,6 +700,7 @@ plot(life_exp ~ fertility, country,
      xlab = "Fertility Rate",
      ylab = "Life Expectancy (in years")
 abline(life_fert_lm, col = "blue", lwd = 2)
+
 ```
 
 
