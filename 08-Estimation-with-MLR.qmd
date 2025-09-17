@@ -136,7 +136,7 @@ Summarize this information in the table below for the objects previously discuss
 | $\boldsymbol{\beta}$ | the $p\times 1$ column vector of regression coefficients |  |  | 
 | $\boldsymbol{\epsilon}$ | the $n\times 1$ column vector of errors | |  | 
 | $\epsilon_i$ | the error associated with observation $i$ |  |  | 
-| $\hat{\beta}_i$ | the estimator for $\beta_i$ |  |  | 
+| $\hat{\beta}_j$ | the estimator for $\beta_j$ |  |  | 
 | $\boldsymbol{\hat{\beta}}$ | the $p\times 1$ column vector of estimates for the regression coefficients |  |  | 
 | $\hat{\epsilon}_i$ | the residual associated with the $i^{\text{th}}$ observation|  |  | 
 
@@ -307,6 +307,9 @@ Show the residual sum of squares, RSS, may be written as
 
 $$\text{RSS} = \sum \hat{\epsilon}_i^2 = \boldsymbol{\hat{\epsilon}}^T \boldsymbol{\hat{\epsilon}} = \mathbf{y}^T (\mathbf{I}_n - \mathbf{H}) \mathbf{y}.$$
 
+::: {.callout-note}
+I should have asked [Question 4](#sec-q4) before asking Question 3. You can skip down to Question 4 and then come back here!
+:::
 
 ### Solution to Question 3
 
@@ -338,7 +341,7 @@ $$ \hat{\epsilon}_i = y_i - \hat{y}_i = y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_{
 
 
 
-## Question 4
+## Question 4 {#sec-q4}
 
 Show that $\mathbf{I}_n - \mathbf{H}$ is symmetric and idempotent.
 

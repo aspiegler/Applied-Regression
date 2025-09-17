@@ -147,7 +147,7 @@ Summarize this information in the table below for the objects previously discuss
 | $\boldsymbol{\beta}$ | the $p\times 1$ column vector of regression coefficients | No | No | 
 | $\boldsymbol{\epsilon}$ | the $n\times 1$ column vector of errors | No | Yes | 
 | $\epsilon_i$ | the error associated with observation $i$ | No | Yes | 
-| $\hat{\beta}_i$ | the estimator for $\beta_i$ | Yes | Yes | 
+| $\hat{\beta}_j$ | the estimator for $\beta_j$ | Yes | Yes | 
 | $\boldsymbol{\hat{\beta}}$ | the $p\times 1$ column vector of estimates for the regression coefficients | Yes | Yes | 
 | $\hat{\epsilon}_i$ | the residual associated with the $i^{\text{th}}$ observation| Yes | Yes | 
 
@@ -391,12 +391,35 @@ Show the residual sum of squares, RSS, may be written as
 
 $$\text{RSS} = \sum \hat{\epsilon}_i^2 = \boldsymbol{\hat{\epsilon}}^T \boldsymbol{\hat{\epsilon}} = \mathbf{y}^T (\mathbf{I}_n - \mathbf{H}) \mathbf{y}.$$
 
+::: {.callout-note}
+I should have asked [Question 4](#sec-q4) before asking Question 3. You can skip down to Question 4 and then come back here!
+:::
 
 ### Solution to Question 3
 
+We have 
+
+$$\mathbf{\hat{y}} = \mathbf{X} \boldsymbol{\hat{\beta}} = \mathbf{X}(\mathbf{X}^T\mathbf{X})\mathbf{X}^T \mathbf{y} = \mathbf{H} \mathbf{y}$$
 
 
+$$\begin{align}
+(\mathbf{y}  - \mathbf{\hat{y}})^T( \mathbf{y}  -\mathbf{\hat{y}}) &= (\mathbf{y} - \mathbf{H} \mathbf{y})^T(\mathbf{y} - \mathbf{H} \mathbf{y})\\
+&=  \big( (\mathbf{I}_n - \mathbf{H}) \mathbf{y} \big)^T \big( (\mathbf{I}_n - \mathbf{H}) \mathbf{y} \big)\\
+&= \big( \mathbf{y}^T(\mathbf{I}_n - \mathbf{H})^T  \big) \big( (\mathbf{I}_n - \mathbf{H}) \mathbf{y} \big)\\
+&=\mathbf{y}^T (\mathbf{I}_n - \mathbf{H})^T (\mathbf{I}_n - \mathbf{H}) \mathbf{y} 
+\end{align}$$
 
+See [Question 4](#sec-q4) below to use the fact that $(\mathbf{I}_n - \mathbf{H})$ is symmetric and idempotent, which means
+
+$$(\mathbf{I}_n - \mathbf{H})^T(\mathbf{I}_n - \mathbf{H}) = (\mathbf{I}_n - \mathbf{H})^2 = (\mathbf{I}_n - \mathbf{H}).$$
+
+By result in [Question 4](#sec-q4), we therefore have
+
+$$\begin{align}
+\boldsymbol{\hat{\epsilon}}^T \boldsymbol{\hat{\epsilon}} &= (\mathbf{y}  - \mathbf{\hat{y}})^T( \mathbf{y}  -\mathbf{\hat{y}})\\
+&= \mathbf{y}^T (\mathbf{I}_n - \mathbf{H})^T (\mathbf{I}_n - \mathbf{H}) \mathbf{y} \\
+&= \mathbf{y}^T (\mathbf{I}_n - \mathbf{H}) \mathbf{y}
+\end{align}$$
 
 <br>  
 <br>  
@@ -422,7 +445,7 @@ $$ \hat{\epsilon}_i = y_i - \hat{y}_i = y_i - (\hat{\beta}_0 + \hat{\beta}_1 x_{
 
 
 
-## Question 4
+## Question 4 {#sec-q4}
 
 Show that $\mathbf{I}_n - \mathbf{H}$ is symmetric and idempotent.
 
@@ -434,8 +457,39 @@ A square matrix $\mathbf{A}$ is idempotent if $A^2 = A$. Show
 
 ### Solution to Question 4
 
+#### Claim 1: $\mathbf{H}$ is Symmetric
+
+$$\begin{align}
+\mathbf{H}^T &= \bigg( \mathbf{X} (\mathbf{X}^T \mathbf{X})^{-1}\mathbf{X}^T \bigg)^T\\ 
+&= \left( \mathbf{X}^T \right)^T \bigg( (\mathbf{X}^T \mathbf{X})^{-1} \bigg)^T \mathbf{X}^T\\
+&= \mathbf{X} \bigg( (\mathbf{X}^T \mathbf{X})^{-1} \bigg)^T \mathbf{X}^T\\
+&= \mathbf{X} \bigg( (\mathbf{X}^T \mathbf{X})^T \bigg)^{-1} \mathbf{X}^T \\
+&= \mathbf{X} \bigg( \mathbf{X}^T \mathbf{X} \bigg)^{-1} \mathbf{X}^T \\
+&= \mathbf{H}
+\end{align}$$
 
 
+#### Claim 2:  $\mathbf{I}_n - \mathbf{H}$ is Symmetric
+
+$$(\mathbf{I}_n - \mathbf{H})^T = \mathbf{I}_n^T - \mathbf{H}^T = \mathbf{I}_n - \mathbf{H}.$$
+
+#### Claim 3:  $\mathbf{H}$ is Idempotent
+
+You'll prove that!
+
+#### Claim 4:  $\mathbf{I}_n - \mathbf{H}$ is Idempotent
+
+
+$$\begin{align}
+(\mathbf{I}_n - \mathbf{H})^2 &= (\mathbf{I}_n - \mathbf{H})^T (\mathbf{I}_n - \mathbf{H})\\
+&=(\mathbf{I}_n - \mathbf{H}^T) (\mathbf{I}_n - \mathbf{H}) \\
+&=\mathbf{I}_n - \mathbf{H} - \mathbf{H}^T + \mathbf{H}^T \mathbf{H}\\
+&= \mathbf{I}_n - \mathbf{H} - \mathbf{H} + \mathbf{H}^2  \qquad \text{by claim 1}\\
+&= \mathbf{I}_n - \mathbf{H} - \mathbf{H} + \mathbf{H} \qquad \text{by claim 3}\\
+&= \mathbf{I}_n - \mathbf{H}
+\end{align}$$
+
+Since $(\mathbf{I}_n - \mathbf{H})^2 = (\mathbf{I}_n - \mathbf{H})$, we have proven $\mathbf{I}_n - \mathbf{H}$ is idempotent.
 
 <br>  
 <br>  
@@ -461,7 +515,19 @@ Show that $\boldsymbol{\hat{\beta}}$ is an unbiased estimator for $\boldsymbol{\
 ### Solution to Question 5
 
 
+We want to show $E( \boldsymbol{\hat{\beta}}) = \boldsymbol{\beta}$. We have
 
+$$\begin{align}
+E( \boldsymbol{\hat{\beta}}) &= E \left( (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y} \right)\\
+&= (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \ E( \mathbf{y}) \\
+&=  (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T E \left( \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\epsilon} \right) \\
+&= (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \left( \mathbf{X} \boldsymbol{\beta} + E (\boldsymbol{\epsilon}) \right) \\
+&= (\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{X} \boldsymbol{\beta}  \\
+&= \boldsymbol{\beta}
+\end{align}$$
+
+
+Yay! $\boldsymbol{\hat{\beta}}$ is an unbiased estimator for $\boldsymbol{\beta}$.
 
 <br>  
 <br>  
@@ -480,8 +546,41 @@ Using the matrix above, derive OLS estimates for $\hat{\beta}_0$ and  $\hat{\bet
 
 ### Solution to Question 6
 
+::: {.callout-note title="A messy solution" appearance="simple" collapse="true"}
+$$\mathbf{X}^T \mathbf{X} = \begin{bmatrix} 1 & 1 & \ldots & 1 \\
+x_{11} & x_{12} & \ldots & x_{1n}\\ \end{bmatrix}
+\begin{bmatrix} y_1 \\ y_2 \\ \vdots \\ y_n \end{bmatrix}  =
+\begin{bmatrix} n & \sum_{i=1}^n x_{i1} \\
+\sum_{i=1}^n x_{i1} & \sum_{i=1}^n x_{i1}^2\end{bmatrix}$$
 
+To find $(\mathbf{X}^T \mathbf{X})^{-1}$ we use the fact that $\text{det} (\mathbf{X}^T \mathbf{X}) = n \sum_{i=1}^n x_{i1}^2 - \left( \sum_{i=1}^n x_{i1} \right)^2$. Thus,
 
+$$(\mathbf{X}^T \mathbf{X})^{-1} = \frac{1}{ n \sum_{i=1}^n x_{i1}^2 - \left( \sum_{i=1}^n x_{i1} \right)^2} \begin{bmatrix} \sum_{i=1}^n x_{i1}^2 & -\sum_{i=1}^n x_{i1} \\
+-\sum_{i=1}^n x_{i1} & n \end{bmatrix}$$
+
+We also have
+
+$$\mathbf{X}^T \mathbf{y} = \begin{bmatrix} 1 & 1 & \ldots & 1 \\
+x_{11} & x_{12} & \ldots & x_{1n} \end{bmatrix} \begin{bmatrix} y_1 \\ y_2 \\ \vdots y_n \end{bmatrix} = \begin{bmatrix} \sum_{i=1}^n y_i \\ \sum_{i=1}^n (x_{i1} y_i) \end{bmatrix}.$$
+
+Finally, we have
+
+$$
+\begin{align}
+\begin{bmatrix} \hat{\beta}_0 \\ \hat{\beta}_1 \end{bmatrix} &=
+(\mathbf{X}^T \mathbf{X})^{-1} \mathbf{X}^T \mathbf{y} \\
+&= \frac{1}{ n \sum_{i=1}^n x_{i1}^2 - \left( \sum_{i=1}^n x_{i1} \right)^2} \begin{bmatrix} \sum_{i=1}^n x_{i1}^2 & -\sum_{i=1}^n x_{i1} \\
+-\sum_{i=1}^n x_{i1} & n \end{bmatrix}
+\begin{bmatrix} \sum_{i=1}^n y_i \\ \sum_{i=1}^n (x_{i1} y_i) \end{bmatrix} \\
+\\
+&= \frac{1}{ n \sum x_{i1}^2 - \left( \sum x_{i1} \right)^2} 
+\begin{bmatrix} \sum x_{i1}^2 \sum y_i  -\bigg( \sum x_{i1} \bigg) \bigg( \sum (x_{i1} y_i) \bigg) \\
+- \bigg( \sum x_{i1} \bigg) \bigg(\sum y_i \bigg) + 
+n \sum \big( x_{i1} y_i \big)\end{bmatrix}
+\end{align}
+$$ 
+
+:::
 
 <br>  
 <br>  
@@ -593,7 +692,9 @@ coef(lmod) # pulls off just the values reg coef.
 ### Solution to Question 8
 
 
+When we hold all other variables constant, for every $1$ meter increase in elevation, the number of plant species on the island increases on average by about $0.3195$ species. We can't have fractional species, but that's fine.  
 
+If fractional species bothers you, could also say (holding all other variables constant) for every $10$ meter increase in elevation, the number of plant species on the island increases on average by about $3$ species.
 
 <br>  
 <br>  
@@ -909,7 +1010,4 @@ Then:
 - $\mathrm{Var}(a)= 0_{n\times n}$
 - $\mathrm{Cov}(\mathbf{a},\mathbf{y})=0_{n\times n}$
 - $\mathrm{Var}(\mathbf{a}+\mathbf{y})= \mathrm{Var}(\mathbf{y})$
-
-
-
 
