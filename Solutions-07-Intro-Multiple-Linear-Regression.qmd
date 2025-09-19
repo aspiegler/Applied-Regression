@@ -575,6 +575,7 @@ summary(multi_lm)
 
 
 $$y = 50.1294 + 2.9361 x_1 - 2.2730 x_2 .$$
+
 - The intercept tells us if a country has $\$0$ gdp per capita and a fertility rate of 0 births per family, then the predicted life expectancy of people in the country is $50.13$ years. This is not particularly useful since there are no such countries.
 - **If we hold all other variables constant**, a $1\%$ increase in `gdp_per_cap` leads, on average, to an approximate increase in `life_exp` by $0.0294$ years.
 - **If we hold all other variables constant**, for every additional 1 child born per family, life expectancy decreases on average by $2.27$ years.
@@ -652,7 +653,7 @@ The slopes for the coefficient for `fertility` in the multiple linear regression
 :::
 
 ```{r}
-par(mfrow = c(1, 2))
+par(mfrow = c(1, 3))
 
 plot(life_exp ~ log_gdp, country,
      pch = 20,  # solid points
@@ -661,6 +662,12 @@ plot(life_exp ~ log_gdp, country,
      ylab = "Life Expectancy")
 abline(life_log_lm, col = "blue", lwd = 2)
 
+plot(life_exp ~ fertility, country,
+     pch = 20,  # solid points
+     main = "Marginal Plot",
+     xlab = "Fertility Rate",
+     ylab = "Life Expectancy (in years")
+abline(life_fert_lm, col = "blue", lwd = 2)
 
 plot(fertility ~ log_gdp, country,
      pch = 20,  # solid points

@@ -157,7 +157,7 @@ Summarize this information in the table below for the objects previously discuss
 
 The least squares estimator of $\boldsymbol{\beta}$ , denoted $\boldsymbol{\hat{\beta}}$, minimizes 
 
-$$ \text{RSS}(\boldsymbol{\hat{\beta}})= \sum \boldsymbol{\hat{\epsilon}}_i^2 = \sum \boldsymbol{\hat{\epsilon}}_i^T \boldsymbol{\hat{\epsilon}}_i = (\mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}})^T( \mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}}) .$$
+$$ \text{RSS}(\boldsymbol{\hat{\beta}})= \sum \hat{\epsilon}_i^2 = \boldsymbol{\hat{\epsilon}}^T \boldsymbol{\hat{\epsilon}} = (\mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}})^T( \mathbf{y}  -\mathbf{X}\boldsymbol{\hat{\beta}}) .$$
 
 [How do we find the value of $\boldsymbol{\hat{\beta}}$ that minimizes RSS?]{style="color:blue"}
 
