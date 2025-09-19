@@ -1,0 +1,477 @@
+---
+title: "Homework 4"
+author: 
+  - name: "Enter your name"
+    affiliation: "University of Colorado Denver"
+format: 
+  html:
+    embed-resources: true    
+editor: source
+warning: false
+---
+
+# Solutions HW 4: Due Wed, Oct 1 at 2:00 PM
+
+## Instructions:
+
+
+1.  <span style="color:red">Be sure to download and save the file so you are working with your own private copy of the file.</span>
+
+2.  <span style="color:green">After you have copied the Quarto file onto your computer, you can begin editing and saving your work.</span>
+
+**Submit your work electronically as two separate files:**
+
+-   A Quarto markdown file with file extension `.qmd` with all code cells run and relevant output displayed in the document.
+-   After you have completed all questions, render your completed work to an html file.
+-   Submit the html file that is created with file extension `.html`.
+
+Upload both files into the Homework 4 assignment in Canvas before <span style="color:blue">**2 PM on Wed, Oct 1.**</span>
+
+**You must provide supporting work for your all of your answers.**
+
+-   <span style="color:blue">That work will include using R code cells.</span>
+    -   Feel free to insert as much R code as you like.
+    -   When asked, you must explain how the output of a code cell is used to solve the question.
+    -   Code with incomplete interpretation of the output  may not receive full credit.
+    -   Code that involves methods we have not discussed this semester may not receive full credit.
+-   <span style="color:blue">Your work may also involve typing explanations and justifications in text cells.</span>
+    -   Be sure to type up your work/explanation so I can see how you arrived at your answer.
+    -   <span style="color:blue">**When you need to type math expressions, use LaTeX.**</span>
+
+## Important Academic Policies:
+
+
+-   **Be your own work.** Though you may collaborate with others, everyone is responsible for writing up the work in their own way using their own methods. Plagiarism of any form is not tolerated.
+-   **Be complete.** You must provide all work and/or explanations needed to find the solution. Answers with insufficient or incomplete supporting work may lose credit.
+-   **Adhere to the Code of Academic Honesty.**
+-   **Be clearly typed.** Your solution to a question must be clear and typed in complete sentences. 
+
+### <span style="color:blue">Let me know if you need help, and GOOD LUCK!!!</span>
+
+
+
+
+# Be Sure to Do the Following Once Completed
+
+---
+
+-   Be sure you have run ALL code cells before saving your work.
+-   Be sure all relevant code output is displayed in Quarto document.
+-   If you used LaTeX, make sure all of the formulas look good when rendering to html.
+-   Then be sure to save the your work as a Quarto document.
+-   Finally, be sure you render your final work to a static `html` that you submit along with your Quarto file in Canvas.
+-   If you preferred to write work on questions 3-6, be sure to submit either a paper copy to me or upload a pdf version of your written work into Canvas along with your other documents.
+
+
+# Question 1
+
+The linear regression model can be written in matrix notation as $\mathbf{y}= \mathbf{X} \boldsymbol\beta + \boldsymbol\epsilon$.  Complete the table shown below:
+
+
+- What is the expected value of the term?
+  - You may refer to previous results we've proven in class without reproving them.
+  - No need to show any support work, just state $E(\text{term}) = \text{blah}$.
+- Specify the dimension of each term (size) (for example $n \times 1$ column vector or scalar or $n \times p$ matrix). 
+- Indicate whether we model the term as random or non-random.
+- Indicate whether the term is observable or unobservable. 
+
+## Solution to Question 1
+
+
+No need to provide any support work or explanations. Just fill in the table with appropriate responses.
+
+::: {.callout-caution}
+Be careful with editing tables in Markdown. 
+
+- Vertical bars `|` are used to separate adjacent cells in the table.
+- Each row should begin and end with a vertical bar `|`.
+- Do not edit the line with vertical bars and hyphens that separates the headers from the rest of the table.
+
+Be sure to check the table is properly rendering to html before moving on to other questions. If the table is rendering oddly:
+
+- You may have an extra `|` in a row.
+- You may be missing `|` in a row.
+- You may have an extra `$` or maybe missing a `$` in your LaTeX.
+- You may have a LaTeX error.
+
+I left this message for you. You do not need to caution me back. You may delete this warning callout from your final submission if you like. 
+:::
+
+
+| Term | Size | Expected Value of Term | Random | Observable |
+|------|------|------------------------|--------|------------|
+| $\mathbf{y}$ |   | $E(\mathbf{y}) =$  |  |   |  
+| $\mathbf{X}$ |  |  $E(\mathbf{X}) =$ |  |  | 
+| $\boldsymbol{\beta}$ |  | $E(\boldsymbol{\beta}) =$ |  |  | 
+| $\boldsymbol{\epsilon}$ |  | $E(\boldsymbol{\epsilon}) =$ |  |  | 
+| $\mathbf{\hat{y}}$ |   | $E(\mathbf{\hat{y}}) =$  |  |   |  
+| $\boldsymbol{\hat{\beta}}$ |  | $E(\boldsymbol{\hat{\beta}}) =$ |  |  | 
+| $\boldsymbol{\hat{\epsilon}}$ |  | $E(\boldsymbol{\hat{\epsilon}}) =$ |  |  | 
+
+
+<br>  
+
+# Loading  `births` Data
+
+The data set `Births_County.csv` consists of data from almost $3,\!000$ counties in the U.S. Each observation corresponds to data from a county in the U.S.  The variables in the data set include
+
+- `state`: State name
+- `county`: County name
+- `teen_birth_rate`: percentage of births that are by teenagers
+- `per_uninsured`: percentage of residents with no health insurance
+- `per_hsgrads`: percentage of adults that graduated high school
+- `per_child_poverty`: percentage of children living in poverty
+- `per_singleparent`: percentage of children living in single parent household
+
+Run the code cell below to store the data to a data frame named `births` that you will use in the questions that follow. Be sure to reload this data each time you start a new R session.
+
+```{r}
+births <- read.csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/Births_County.csv")
+```
+
+
+# Question 2
+
+Create a correlation matrix between the 5 numeric variables in `births` (excluding `state` and `county`). Display the results rounded to 4 decimal places (using the `round()` function for example). 
+
+Then answer the following question based on the output:
+
+> Which other variable is the strongest (positive or negative) predictor for the percentage of births by teenagers (`teen_birth_rate`).
+
+
+### Solution to Question 2
+
+
+
+Based on the output of my code above, the strongest predictor is ??.
+
+
+<br>  
+
+
+# Question 3 {#sec-q3}
+
+Answer the questions below to estimate a simple linear regression model for the response variable, `teen_birth_rate`, and interpret the model.
+
+
+## Question 3a
+
+Create a simple linear regression model with the percentage of births to teenagers as the response variable and percent of children living in poverty as the predictor variable. Store the output of the model and display a summary of the model on screen using the `summary()` function. 
+
+
+### Solution to Question 3a
+
+
+
+
+<br>  
+
+
+## Question 3b
+
+Type the equation for the fitted model in the space below. You may denote the predicted `teen_birth_rate` as $\hat{y}$ and `per_child_poverty` as $x$.
+
+### Solution to Question 3b
+
+
+
+
+<br>
+
+
+## Question 3c
+
+If possible, interpret the practical meaning of each coefficient in the model. If a coefficient does not have any practical meaning, explain why not.
+
+
+### Solution to Question 3c
+
+
+
+
+<br>  
+
+
+## Question 3d
+
+Create a scatter plot with the response variable `teen_birth_rate` on the vertical axis and the predictor `per_child_poverty` on the horizontal axis. Add a graph of the regression line to the scatter plot.
+
+### Solution to Question 3d
+
+
+
+<br>  
+
+## Question 3e
+
+Create a fitted vs residual plot and comment on whether or not the error assumptions seem to be satisfied. If it is not possible to determine from the plot below, you can say "cannot be determined".
+
+
+::: {.callout-note}
+Comment on the error assumptions based only the fitted vs residual plot you create. Do not create any additional plots that would also be helpful. Just assess the assumptions using only the fitted vs residual plot.
+:::
+
+### Solution to Question 3e
+
+
+
+
+<br>  
+
+
+# Question 4 {#sec-q4}
+
+Answer the questions below in order to assess whether adding `per_singleparent` or `per_uninsured` improves the model for `teen_birth_rate`.
+
+- Math 4387 students: Complete parts (a) and (b) only, and then continue on to [Question 5](#sec-q5).
+- Math 5387 students: Complete all parts.
+
+
+## Question 4a
+
+Create and store a linear model with the response `teen_birth_rate` and the predictor `per_uninsured`. You do not need to display the summary output, but you should store the output.
+
+Then, using the linear model you just stored, create a scatter plot with `teen_birth_rate` on the $y$-axis and `per_uninsured` on the $x$-axis. Add the regression line to your plot.
+
+Finally, in the space below the scatter plot, explain how we can use the plot to help determine whether or not adding `per_uninsured` as a new predictor (along with `per_child_poverty`) for `teen_birth_rate` is reasonable. Explain in one or two sentences.
+
+
+### Solution to Question 4a
+
+
+
+<br>  
+
+
+## Question 4b
+
+Create and store a linear model with the response `per_uninsured` and the predictor `per_child_poverty`. You do not need to display the summary output, but you should store the output.
+
+
+Then, using the linear model you just stored, create a scatter plot with `per_uninsured` on the $y$-axis and `per_child_poverty` on the $x$-axis. Add the regression line to your plot.
+
+Finally, in the space below the scatter plot, explain how we can use the plot to help determine whether or not adding `per_uninsured` as a new predictor (along with `per_child_poverty`) for `teen_birth_rate` is reasonable. Explain in one or two sentences.
+
+
+### Solution to Question 4b
+
+
+
+
+<br>  
+
+
+## Math 4387 Go To Question 5
+
+
+## Question 4c (Math 5387 Students Only)
+
+
+Create an Added-Variable plot to assess whether adding `per_uninsured` as a new predictor to the current model that has `per_child_poverty` as the a single predictor for the response `teen_birth_rate`. Add an appropriate regression line to the plot.
+
+Finally, in the space below the scatter plot, explain how we can use the plot to help determine whether or not adding `per_uninsured` as a predictor (along with `per_child_poverty`) for `teen_birth_rate` is reasonable. Explain in one or two sentences.
+
+
+::: {.callout-tip}
+You will need to create another linear model comparing residuals from appropriately selected linear models you have previously created in [Question 3](#sec-q3) and/or [Question 4](#sec-q4). Then create a scatter plot comparing residuals from two models you have previously stored.
+:::
+
+
+### Solution to Question 4c
+
+
+
+
+<br>  
+
+
+## Question 5 {#sec-q5}
+
+Answer the questions below to estimate a multiple linear regression model for the response variable, `teen_birth_rate`, against multiple predictors and interpret the model.
+
+
+## Question 5a
+
+Create a multiple linear regression model with the percentage of births to teenagers as the response variable and percent of children living in poverty and percentage of adults that are uninsured as the two predictor variables. Store the output of the model and display a summary of the model on screen using the `summary()` function. 
+
+
+### Solution to Question 5a
+
+
+
+
+<br>  
+
+
+## Question 5b
+
+Type the equation for the fitted model in the space below. You may denote the predicted `teen_birth_rate` as $\hat{y}$, `per_child_poverty` as $x_1$, and `per_uninsured` as $x_2$.
+
+### Solution to Question 5b
+
+
+
+
+<br>
+
+
+## Question 5c
+
+If possible, interpret the practical meaning of each coefficient in the multiple linear regression model. If a coefficient does not have any practical meaning, explain why not.
+
+
+### Solution to Question 5c
+
+
+
+
+<br>  
+
+
+## Question 5d {#sec-q5d}
+
+Create a multiple linear regression model with the percentage of births to teenagers as the response variable and three predictors: 
+
+1. percent of children living in poverty
+2. percentage of adults that are uninsured
+3. percentage of children in single parent households
+
+Store the output of the model and display a summary of the model on screen using the `summary()` function. 
+
+
+### Solution to Question 5d
+
+
+
+
+
+<br>  
+
+
+
+# Question 6
+
+This question will focus on applications of linear algebra to linear regression. Before answering the questions below, be sure your linear model form [Question 5d](#sec-q5d) has been constructed and stored. 
+
+- Math 4387 students: Complete parts (a) and (b) only, and then go to [Question 7](#sec-q7).
+- Math 5387 students: Complete all parts.
+
+
+::: {.callout-caution}
+This applies to all questions, but in particular these questions where it is easy to have long unhelpful output displayed. Please do NOT print entire matrices to the screen.
+
+- While you may want to display some output while working on the assignment to check your code.
+- It is preferred you do not display unneeded output in your final submitted work.
+:::
+
+## Question 6a {#sec-q6a}
+
+Extract and store the model matrix $\mathbf{X}$ for the multiple linear regression model of `teen_birth_rate` in terms of the three predictors: `per_child_poverty`, `per_uninsured`, and `per_singleparent`. Include the column of 1's for the intercept coefficient in the model.
+
+
+### Solution to Question 6a
+
+
+
+
+<br>  
+
+
+## Question 6b {#sec-q6b}
+
+Use the model matrix you created in [Question 6a](#sec-q6a) to compute the OLS estimates for the regression coefficients for the multiple linear regression model of `teen_birth_rate` in terms of the three predictors: `per_child_poverty`, `per_uninsured`, and `per_singleparent`. 
+
+- Be sure to display the result on the screen.
+- You do not need to store the result.
+- You must use matrix arithmetic with the model matrix.
+- You may not use `lm()`. You already did in [Question 5d](#sec-q5d).
+- It should be consistent with the output of [Question 5d](#sec-q5d).
+
+
+### Solution to Question 6b
+
+
+
+
+<br>  
+
+
+## Math 4387 Students Skip to Question 7
+
+## Question 6c (Math 5387 Students Only) {#sec-q6c}
+
+Use R (do not do this by hand!) to find the $QR$ decomposition of the model matrix from [Question 6a](#sec-q6a).
+
+- Store the matrices $\mathbf{Q}$ and $\mathbf{R}$ to separate objects named `q` and `r`, respectively.
+
+
+### Solution to Question 6c
+
+
+
+
+<br> 
+
+
+## Question 6d (Math 5387 Students Only) {#sec-q6d}
+
+Use the matrices $\mathbf{Q}$ and $\mathbf{R}$ you created in [Question 6c](#sec-q6c) to compute the OLS estimates for the regression coefficients for the multiple linear regression model of `teen_birth_rate` in terms of the three predictors: `per_child_poverty`, `per_uninsured`, and `per_singleparent`. 
+
+- Be sure to display the result on the screen.
+- You do not need to store the result.
+- You must use matrix arithmetic with the $QR$-decomposition.
+- It should be consistent with the output of [Question 5d](#sec-q5d) and [Question 6b](#sec-q6b).
+
+
+### Solution to Question 6d
+
+
+
+<br>  
+
+
+# Question 7 (Assigned to All Students) {#sec-q7}
+
+Show the **hat matrix** $\mathbf{H} =  \mathbf{X} \left( \mathbf{X}^T \mathbf{X} \right)^{-1}  \mathbf{X}^T$ is idempotent.
+
+::: {.callout-tip}
+A square matrix $\mathbf{A}$ is idempotent if and only if $\mathbf{A}^2 = \mathbf{A}$.
+:::
+
+
+## Solution to Question 7
+
+
+
+
+<br>  
+
+
+
+# MATH 4387 students, you are done! 
+
+# Question 8: Math 5387 Student Only
+
+Consider the multiple linear regression model $\mathbf{y} = \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\epsilon}$.
+
+Let $\mathbf{X} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^{T}$ denote the singular value decomposition of the associated model matrix, where
+
+- $\mathbf{U}$ is an **orthogonal matrix** whose columns form an orthonormal basis for the column space of $\mathbf{X}$.
+- $\mathbf{\Sigma}$ is a **diagonal matrix** containing the singular values of $\mathbf{X}$ along its diagonal.
+- $\mathbf{V}$ is an **orthogonal matrix** whose columns form an orthonormal basis for the row space of $\mathbf{X}$ .
+
+::: {.callout-tip}
+If $\mathbf{Q}$ is an orthogonal matrix, then $\mathbf{Q}^{T} = \mathbf{Q}^{-1}$.
+:::
+
+Using this decomposition, show the least squares solution can be expressed as
+
+$$\boldsymbol{\hat{\beta}} = \mathbf{V} \mathbf{\Sigma}^{-1} \mathbf{U}^T \mathbf{y} .$$
+
+## Solution to Question 8
+
+
+
+
+<br>  
+
