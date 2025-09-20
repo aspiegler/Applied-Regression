@@ -32,7 +32,7 @@ license: "CC BY-NC-SA"
  
 ---
 
-State assumptions (again) and state in terms of matrices after matrix notation introduced. See Chap 3 Applied Linear Regression.
+
 
 ```{r}
 library(faraway)  # to access Galapagos
@@ -863,16 +863,35 @@ $$\hat{\beta}_5 = \frac{-119.498340 + 670.2124 (0.07480483)}{288.38347} = -0.240
 And we continue working through back substitution to find the other regression coefficients.
 
 
-
 ```{r}
 # solves formula R beta = Q^T y
 solve(r, crossprod(q, y))
 ```
 
 ```{r}
+# backsolve solves upper or lower triangular systems
+backsolve(r, t(q) %*% y)
+```
+
+```{r}
+# function that works with qr() output
 # solves formula R beta = Q^T y
 qr.coef(qr_result, y)
 ```
+
+
+```{r}
+# compare efficiency of methods
+#library(microbenchmark)
+microbenchmark(
+  {solve(r, crossprod(q, y))},
+  {backsolve(r, t(q) %*% y)},
+  {qr.coef(qr_result, y)},
+  times = 100
+)
+```
+
+
 
 
 ```{r}
@@ -938,6 +957,21 @@ solve(crossprod(sigma, t(v)), crossprod(u, y))
 crossprod(solve(sigma) %*% t(v), t(u) %*% y)
 ```
 
+```{r}
+crossprod(crossprod(solve(sigma), t(v)), crossprod(u, y))
+```
+
+
+```{r}
+# compare efficiency of methods
+#library(microbenchmark)
+microbenchmark(
+  {v %*% solve(sigma) %*% t(u) %*% y},
+  {solve(crossprod(sigma, t(v)), crossprod(u, y))},
+  {crossprod(solve(sigma) %*% t(v), t(u) %*% y)},
+  times = 100
+)
+```
 
 ## Comparing Computation Times
 
@@ -994,7 +1028,6 @@ mean_timings2 <- microbenchmark(
 
 plot(mean_timings2)
 #     ylim=c(2000, 250000))
-```
 ```
 
 # Appendix A: A Glossary of Useful Functions

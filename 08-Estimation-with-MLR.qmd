@@ -32,7 +32,6 @@ license: "CC BY-NC-SA"
  
 ---
 
-State assumptions (again) and state in terms of matrices after matrix notation introduced. See Chap 3 Applied Linear Regression.
 
 ```{r}
 library(faraway)  # to access Galapagos
