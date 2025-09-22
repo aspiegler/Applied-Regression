@@ -1,0 +1,638 @@
+---
+title: "Solutions 9: Goodness of Fit"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+editor: source
+#execute:
+#  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+
+## Additional Reading
+
+---
+
+- [Section 3.10 Evaluating model fit](https://jfrench.github.io/LinearRegression/linear-model-estimation.html) from *A Progressive Introduction to Linear Models*
+- Chapter 5 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+- Sections 3.4.6 and 4.5 of *Applied Linear Regression* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+
+
+# Loading Required Packages
+ 
+---
+
+
+
+```{r}
+library(tidyverse)
+library(wooldridge)  # to access hprice2 data
+```
+
+
+# A Review of Multiple Linear Regression Models
+
+
+## The Model
+
+A [**multiple linear regression**]{style="color:blue"} model is a linear regression model with more than one predictor $X_i$ and a single response variable $Y$. In general, we include an intercept term as a predictor, so if there are $p-1$ predictor variables, our model has $p$ regression coefficients. The most common multiple linear regression model is
+
+$$Y = \beta_0 + \beta_1 X_1  + \beta_2 X_2 + \ldots + \beta_{p-1} X_{p-1} + \epsilon .$$
+
+## Error Assumptions
+
+1. The errors $\epsilon_i$ have [**mean zero, $E(\epsilon_i) = 0$**]{style="color:blue"} for all $i$. On average, predictions are accurate.
+2. The errors are [**normally distributed**]{style="color:blue"}. Most of the time the observed values are close to the predicted. Observed values are less likely farther away from the line.
+3. The errors all have the same, [**constant variance (homoscedascity)**]{style="color:blue"}. Predictions are equally accurate everywhere.
+4. The [**errors are uncorrelated**]{style="color:blue"}. The amount of error in a prediction is independent of the errors of any other predictions.
+5. [**Collinearity**]{style="color:blue"}: No combination of predictors has a perfect association. For example, one predictor is not a scalar multiple of another.
+
+We can restate error assumptions (1)-(4) as:
+
+$$\large \epsilon_i \sim N(0, \sigma^2) \qquad \text{and} \qquad \text{Cov}(\epsilon_i, \epsilon_j) = 0 \ \ \text{ if } i \ne j.$$
+
+
+In addition to the error assumptions, we also assume the mean value of each $Y_i$ is a linear function of the predictors.
+
+  
+$$\bar{Y}_i = E(Y_i | X) =  E(\beta_0 + \beta_1 x_1 + \ldots \beta_{p-1} x_p + \epsilon_i) = \beta_0 + \beta_1 x_1 + \ldots \beta_{p-1} x_p$$
+
+### Estimating the Variance of the Errors
+
+The errors $\boldsymbol{\epsilon}$ are unknown random variables, but we assume the are i.i.d. (identically and independently distribution). We can estimate the distribution $\epsilon_i$ with distribution of all observed residuals, $\hat{\epsilon}_i = y_i - \hat{y}_i$.
+
+
+The OLS estimator for $\text{Var} (\boldsymbol{\epsilon})$ is given by
+
+$$ \hat{\boldsymbol\sigma}^2 = \frac{ \boldsymbol{\hat{\epsilon}}^T \boldsymbol{\hat{\epsilon}} }{n-p} = \frac{ \text{RSS} }{n-p} .$$
+
+## Properties of OLS Estimator: The Gauss-Markov Theorem
+
+If $\mathbf{X}$ and $\mathbf{y}$ denote the model matrix and observed values of the response. The OLS estimator for the regression coefficients is
+
+$$\boldsymbol{\hat{\beta}} = \left( \mathbf{X}^T \mathbf{X} \right)^{-1}  \mathbf{X}^T \mathbf{y}$$
+We can express solution to OLS equivalently as the solution to a matrix equation
+
+$$\mathbf{X} \boldsymbol{\hat{\beta}} = \mathbf{H} \mathbf{y} , \qquad \mathbf{R} \boldsymbol{\hat{\beta}} = \mathbf{Q}^T \mathbf{y} , \quad \text{or} \quad  \boldsymbol{\hat{\beta}} =  \mathbf{V} \mathbf{\Sigma}^{-1} \mathbf{U}^T \mathbf{y} .$$
+
+
+There are three key reasons why the OLS estimator for $\boldsymbol{\beta}$ is most commonly used:
+
+1. They make sense geometrically. It results in the orthogonal projection onto the model space (spanned by the column space of $\mathbf{X}$). The [**hat matrix**]{style="color:blue"} $\mathbf{H} = \mathbf{X} \left( \mathbf{X}^T \mathbf{X} \right)^{-1}  \mathbf{X}^T$ projects $\mathbf{y}$ into the plane the minimizes the RSS.
+
+2. If the error assumptions are satisfied, then the OLS estimator is equal to the Maximum Likelihood Estimator (MLE). 
+
+3. The OLS estimator is the [**Best Linear Unbiased Estimator (BLUE)**]{style="color:blue"} of $\boldsymbol{\beta}$. The ordinary least squares estimator $\boldsymbol{\hat{\beta}}$ is an [**unbiased estimator**]{style="color:blue"} and  [**most efficient**]{style="color:blue"} estimator for $\boldsymbol{\beta}$.
+
+
+## Other Estimators for $\boldsymbol{\beta}$.
+
+We are going to use the OLS estimator when constructing linear regression models due to the properties above. There are other methods that may be preferred under special circumstances.
+
+- [**Generalized least squares (GLS)**]{style="color:blue"} regression is used when the errors are correlated.
+- [**Ridge**]{style="color:blue"} and [**Lasso**]{style="color:blue"} regression may be preferred with regressors that are highly correlated or when the data has many features.
+  - A regularization term is added to the standard loss function to prevent overfitting and multicollinearity.
+  - Regressors with coefficients close to 0 are eliminated.
+  - Preference for including less regressors in the model.
+  - They result in simpler, more interpretable models
+- We can use [**resampling methods**]{style="color:blue"} when the normality assumption for the errors is not satisfied.
+
+# Measurements of Association
+
+[**Covariance**]{style="color:blue"} measures how strong is the dependence between two variables
+
+$$\mbox{Cov}(X,Y) = E\bigg( (X-\mu_X)(Y-\mu_Y) \bigg) . $$ 
+
+- If  $\mbox{Cov}(X,Y) > 0$ increasing $X$ leads to larger values of $Y$.
+- If  $\mbox{Cov}(X,Y) < 0$ increasing $X$ leads to smaller values of $Y$.
+
+The defect of covariance is that its computed value depends critically on the units of measurement. Ideally, the choice of units should have no effect on a measure of strength of relationship. This is achieved by scaling the covariance.
+
+
+The [**correlation coefficient**]{style="color:blue"} of $X$ and $Y$ denoted by $\mbox{Cor}(X,Y)$ or $\rho_{X,Y}$ (often just $\rho$) is defined by
+
+$$\rho_{X,Y} = \frac{\mbox{Cov}(X,Y)}{\sigma_X \cdot \sigma_Y} .$$
+
+The correlation coefficient satisfies the following properties:
+
+
+- If $X$ and $Y$ are independent, then $\rho = 0$. However,  if $\rho =0$ then it does not follow that $X$ and $Y$ must be independent.
+- If $\rho =1$ or $\rho = -1$, then $Y=\beta_0 + \beta_1X$ is perfectly linear.
+
+
+## Question 1 {#sec-q2}
+
+Suppose we want to approximate the average wind speed of a storm in the North Atlantic. We have gathered a data set `storms` that includes about 20,000 observations of storms in the North Atlantic from 1975-2022.
+
+```{r}
+data(storms)  # loads storms
+summary(storms$wind)
+```
+
+### Question 1a
+
+If we do not know any additional information about any features of a storm in the North Atlantic, what would be a reasonable estimate for its wind speed?
+
+
+#### Solution to Question 1a
+
+Without knowing any additional information, the best guess is that it is most like equal to the mean of the observed response variable. 
+
+> The wind speed will be about $\bar{Y} = 50 knots.
+
+<br>  
+
+### Question 1b
+
+Suppose you have observed the `pressure` of a North Atlantic storm is 950 millibars. Use the simple linear regression model constructed below to give an estimate for the wind speed of the storm.
+
+
+#### Solution to Question 1b
+
+
+```{r}
+wind_lmod <- lm(wind ~ pressure, data = storms)
+summary(wind_lmod)
+```
+
+```{r}
+a <- as.vector(wind_lmod$coef)[1]
+b <- as.vector(wind_lmod$coef)[2]
+a + b * 950
+```
+
+The storm's wind speed will be about $104.8$ knots
+
+<br>  
+
+### Question 1c
+
+Which estimate do you believe is more accurate? Why?
+
+#### Solution to Question 1c
+
+The second estimate that uses information about the pressure to make a prediction is more accurate. 
+
+> There is less variability in the wind speed values when we know additional information such as the pressure of the storm.
+
+<br>  
+
+# The Coefficient of Determination, $R^2$
+
+A common measure of goodness of fit is [**$R^2$, the coefficient of determination**]{style="color:blue"} (or percentage of variance explained), given by 
+
+$$R^2=1- \frac{\sum (\widehat{Y}_i - Y_i)^2}{\sum (Y_i - \overline{Y})^2} =1- \frac{\mbox{RSS}}{\mbox{TSS}}= \frac{\mbox{SS}_{\rm reg}} {\mbox{TSS}} = \mbox{Cor}^2(\mathbf{y}, \hat{\mathbf{y}}) .$$
+
+Where we have:
+
+
+$\mbox{RSS} = \sum (Y_i - \overline{Y})^2$ is the [**Residual Sum of Squares (RSS)**]{style="color:blue"}.
+
+- RSS measures the variability in our response that **is NOT explained by our model**.
+
+$\mbox{TSS} = \sum (Y_i - \overline{Y})^2$ is the [**Total Sum of Squares correct for the mean (TSS)**]{style="color:blue"}.
+
+- TSS measures the **total variability in the response**. 
+- It is RSS from the constant mean model $Y = \beta_0 + \epsilon$.
+
+$\mbox{SS}_{\rm reg} = \sum (\widehat{Y}_i - \overline{Y})^2 = \mbox{TSS} - \mbox{RSS}$ is the [**regression sum of squares**]{style="color:blue"}.
+
+-  $\mbox{SS}_{\rm reg}$ is the part of the total variation in the response that **is explained by our model**.
+
+Three quantities are related with the equation
+
+$$\mbox{TSS} =  \mbox{RSS} + \mbox{SS}_{\rm reg} .$$
+
+::: {.callout-warning}
+The notation for these terms is not consistent (sorry). For example, 
+
+- We use RSS for the residual sum of squares.
+  - This is consistent with books by French and Weisberg.
+  - Hoffman uses the notation SSE instead (sum of squared errors).
+
+- We use $\mbox{SS}_{\rm reg}$ to denote the regression sum of squares.
+  - This is consistent with books by French and Weisberg. 
+  - Hoffman's book uses  for the regression sum of squares which is easily confused with how we use RSS for residual sum of squares.
+  - Hoffman's use of the notation RSS for $\mbox{SS}_{\rm reg}$ is not standard and can be confusing.
+
+- At least TSS is used by all to represent the total sum of squares!
+:::
+
+
+## Question 2 {#sec-q2}
+
+We explore $R^2$ using the `wooldridge` package that contains a data frame named `hprice2` with 506 observations from small geographic areas in the U.S. We include the following variables in our analysis (and excluded others) that we store to a data frame named `house`:
+
+- `price`: median housing price, $
+- `crime`: crimes committed per capita
+- `rooms`: avg number of rooms
+- `stratio`: average student-teacher ratio
+- `lowstat`: percentage of classified as lower economic status
+
+Run the code cell below to store the data to the `house` and display a correlation matrix for the data frame.
+
+
+```{r}
+#library(wooldridge)
+house <- select(hprice2, c(price, crime, rooms, stratio, lowstat))
+round(cor(house), 4)
+```
+
+::: {.callout-warning}
+If you have not installed the `wooldridge` package, be sure to run the command `install.packages("wooldridge")` in the console. You may also need to run `library(wooldridge)` if you have not run the first code cell in this document.
+:::
+
+### Question 2a {#sec-q2a}
+
+Construct a linear model using the sample data now stored in `house` with `price` as the response and `rooms` as the predictor. Store the output to `price_lmod` and display just the $R^2$ value of the model on screen.
+
+#### Solution to Question 2a
+
+```{r}
+price_lmod <- lm(price ~ rooms, house)
+summary(price_lmod)$r.squared
+```
+
+
+<br>  
+
+
+### Question 2b
+
+What is the value of the RSS of the model? Display the value on screen and store it.
+
+
+#### Solution to Question 2b
+
+
+```{r}
+# different ways to store RSS
+price_rss <- crossprod(residuals(price_lmod))  # compute e_hat^T e_hat
+
+#price_rss <- deviance(price_lmod)  # RSS is stored in lm object
+
+price_rss
+```
+
+
+<br>  
+
+
+### Question 2c
+
+What is the value of the TSS of the model? Display the value on screen and store it.
+
+
+#### Solution to Question 2c
+
+
+```{r}
+# compute TSS
+price_mean <- mean(house$price)
+price_tss <- sum((house$price - price_mean)^2)
+price_tss
+```
+
+```{r}
+# compute TSS by multiplying sample variance by n-1
+n_price <- length(house$price)
+var(house$price) * (n_price - 1)
+```
+
+### Question 2d
+
+What is the value of the $\text{SS}_{\rm{reg}}$? Display the value on screen and store it.
+
+
+#### Solution to Question 2d
+
+
+```{r}
+# compute SS_reg
+price_ssreg <- sum((fitted(price_lmod) - price_mean)^2)
+price_ssreg
+```
+
+
+<br>  
+
+
+### Question 2e
+
+Use the values you have previously stored to confirm $\mbox{TSS} =  \mbox{RSS} + \mbox{SS}_{\rm reg}$ for this model.
+
+
+#### Solution to Question 2e
+
+
+```{r}
+# both are equal
+price_tss
+price_rss + price_ssreg
+```
+
+
+<br>  
+
+
+### Question 2f
+
+Use the values you have previously stored to confirm the $R^2$ value you found in [part (a)](#sec-q2a).
+
+#### Solution to Question 2f
+
+
+```{r}
+# equivalent formulas for tss
+1 - price_rss / price_tss
+price_ssreg / price_tss
+```
+
+
+<br>  
+
+
+# Interpreting the $R^2$ Value
+
+Some comments about the coefficient of determination:
+
+$$R^2 = 1- \frac{\mbox{RSS}}{\mbox{TSS}}= \frac{\mbox{SS}_{\rm reg}} {\mbox{TSS}} = \mbox{Cor}^2(\mathbf{y}, \hat{\mathbf{y}}) .$$
+
+- $R^2$ is the proportion of the total variability in the response that is explained by our model.
+- $0 \leq R^2 \leq 1$
+- $R^2 = 1$ for a linear model that perfectly fits the data.
+- Generally, larger values of $R^2$ suggest the model explains more of the variability in the response.
+- The multiple $R^2$ value is displayed in the `summary()` of a `lm` object.
+- `summary(lmod)$r.squared` will extract the $R^2$ value of an `lm` object
+
+
+::: {.callout-note}
+The adjusted $R^2$ value that also appears in the `summary()` output of an `lm` object is a penalty for adding unnecessary variables. We will discuss this adjustment later.
+:::
+
+
+## A Graphical Interpretation of $R^2$
+
+Suppose we want to predict the value of the response $Y$:
+
+- If we do not know values for the predictor(s), the best approximation is $\bar{Y}$.
+  - The variability of this prediction is high since the variability of $Y$ is high.
+  - This is represented with the long solid arrow
+
+- If we do know value(s) for the predictor(s), the prediction is given by the regression line.
+  - The prediction is less variable assuming there is some linear association between $Y$ and $X$.
+  - This variability is represented by the shorter, dashed arrow.
+
+
+![Graphical Interpretation of R-squared](https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Images/09-fig-errors.png)
+
+## Question 3 {#sec-q3}
+
+Rank the plots below from greatest to smallest $R^2$ value. What do you think the approximate $R^2$ values are for each plot?
+
+
+```{r}
+#| echo: false
+#| eval: true
+#| output: true
+par(mfrow = c(2, 2))
+set.seed(27)
+x1 <- runif(25, 0, 10)
+y1 <- 2 + 3 * x1
+fit1 <- lm(y1 ~ x1)
+plot(x1, 2 + 3 * x1, xlab = "X", ylab = "Y", main = "Plot A")
+abline(fit1)
+#title(expression(R^2==1))
+x2 <- runif(25, 0, 10)
+y2 <- rnorm(length(x2))
+fit2 <- lm(y2 ~ x2)
+r2b <- round(summary(fit2)$r.squared, 2)
+#q2 <- bquote(R^2==.(format(r2b, digits = 2)))
+plot(x2, y2, xlab = "X", ylab = "Y", main = "Plot B")
+abline(fit2)
+#title(q2)
+x3 <- runif(25, 0, 10)
+y3 <- 3 - 2 * x3 + rnorm(length(x3), sd = 5)
+fit3 <- lm(y3 ~ x3)
+r2c <- round(summary(fit3)$r.squared, 2)
+#q3 <- bquote(R^2==.(format(r2c, digits = 2)))
+plot(x3, y3, xlab = "X", ylab = "Y", main = "Plot C")
+abline(fit3)
+#title(q3)
+x4 <- runif(25, -10, 10)
+y4 <- 2 - 2 * x4 + 3 - x4^2
+fit4 <- lm(y4 ~ x4)
+r2c <- round(summary(fit4)$r.squared, 2)
+#q4 <- bquote(R^2==.(format(r2c, digits = 2)))
+plot(x4, y4, xlab = "X", ylab = "Y", main = "Plot D")
+abline(fit4)
+#title(q4)
+par(mfrow = c(1, 1))
+```
+
+### Solution to Question 3
+
+- Graph A has $R^2 \approx 1$ since the data is almost perfectly linear.
+- Graph C has the next greatest $R^2$ value since it has the second most linear relation. It has $R^2 = 0.42$.
+- Graphs B and D would both have $R^2$ values close to $0$. Hard to tell by looking at the graphs which is smaller than the other. 
+  - Graph B has has $R^2 = 0.01$. It is a cloud of unrelated points.
+  - Graph D has $R^2 = 0.17$. A quadratic relation seems more reasonable than linear.
+
+<br>  
+
+::: {.callout-tip}
+That was fun! Try some out on your own [http://istics.net/Correlations/](http://istics.net/Correlations/){target="_blank"} .
+:::
+
+
+## Question 4 {#sec-q4}
+
+Each of the four linear models have approximately the same intercept $\hat{\beta}_0 \approx 3$, slope $\hat{\beta}_1 \approx 0.5$, and $R^2 \approx 0.67$. Do you believe the linear model $\hat{y} = 3 + 0.5x$ fits all four data sets equally well? Why or why not? 
+
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+#| eval: true
+#| output: true
+adf <- data.frame(x = unlist(anscombe[,1:4]),
+                 y = unlist(anscombe[,5:8]),
+                 set = factor(rep(1:4, each = 11)))
+ggplot(adf, aes(x = x, y = y, group = set, col = set)) +
+  geom_point(col = "black") +
+  geom_smooth(aes(group = set), formula = y ~ x, method = "lm", se = FALSE) +
+  facet_grid(. ~ set) +
+  theme_bw()
+```
+
+### Solution to Question 4
+
+
+- The model **does fit** the data in plot 1 pretty well.
+- The model **does not fit** the data in plot 2. The relation is both positive and negative. A quadratic model seems more appropriate. 
+- The model **does fit** the data in plot 3 well. There is one extreme outlier that is likely heavily influencing the model and we may want to investigate further.
+- The mode **does not fit** the data in plot 4. There is virtually no relation in all data except for one outlier.
+
+<br>  
+
+
+
+## A Caution with $R^2$ {#sec-caution}
+
+It may seem sensible to choose between models based on the value of  
+$R^2$, but you should avoid this misconception:
+
+1. $R^2$ never decreases as regressors are added to an existing model. Basically, we can increase $R^2$ by simply adding more and more regressors to our existing model, even if they are nonsensical and make the model more difficult to interpret.
+
+2. $R^2$ doesn’t tell us whether a model adequately describes the pattern of the observed data.  $R^2$ is a useful statistic for measuring model fit when there is approximately a *linear* relationship between the response values and fitted values.
+
+
+In [Question 2a](#sec-q2a), we found the $R^2$ value for the linear model for `price` based on the predictor `rooms` is $R^2=0.4841$
+
+In the code cell below we add a variable `junk` to our model which is literally a bunch (the same number as the number of observations in `house`) of randomly selected values from the standard normal distribution that have absolutely nothing to do with housing prices.
+
+```{r}
+set.seed(29) # for reproducibility
+n_price <- length(house$price)
+junk <- rnorm(n_price)
+silly_lmod <- update(price_lmod, . ~ . + junk)
+summary(silly_lmod)$r.squared
+```
+
+By adding an additional variable with no information, the $R^2$ increased to $0.4897$.
+
+```{r}
+plot(junk, house$price,
+     main = "No Relation Between New Predictor and Price")
+```
+
+## Question 5 {#sec-q5}
+
+403 African Americans were interviewed in a study to understand the prevalence of obesity, diabetes, and other cardiovascular risk factors in central Virginia.  The `diabetes` data are in the `faraway` package. Run `?diabetes` for more info.
+ 
+ 
+```{r}
+data(diabetes, package = "faraway")
+glimpse(diabetes)
+```
+
+
+We will consider the relationship between cholesterol and several of the predictors.  
+
+- Regress total cholesterol on stabilized glucose, high density lipoprotein, glycosolated hemoglobin, age, gender, height, weight, waist size, and hip size.  
+- Determine the equation for the fitted model.
+- What is the fitted value for the third observation?
+- Plot the residuals versus fitted values.  Are there any unusual residuals? Do the error assumptions seem valid?
+- How much response variation does the model explain?  Is this a meaningful measure of model fit? Explain why or why and you may use additional plots to support your answer.
+
+
+### Solution to Question 5
+
+
+#### Fit a Linear Model
+
+```{r}
+# enter formula
+fm <- chol ~ stab.glu + hdl + glyhb + age + gender + height + weight + waist + hip
+
+# enter formula into model
+lmod <- lm(fm, data = diabetes)
+```
+
+Here we summarize the results of the model.
+
+```{r}
+summary(lmod)
+```
+
+
+#### Finding the Fitted Values
+
+```{r}
+#fitted(lmod) # do not run, shows all 402 fitted values
+fitted(lmod)[3] # pulls off on third column
+lmod$fitted.values[3] # Another way to do same
+```
+
+#### Residual plot
+
+```{r}
+plot(lmod, which = 1)
+```
+
+
+```{r}
+# another method
+plot(residuals(lmod) ~ fitted(lmod))
+abline(0, 0, lty = 2, col = "red")
+```
+
+
+
+Based on the residuals vs fitted plot: 
+
+- The mean error zero assumption seems fairly accurate.
+- The constant variance assumption does not seem completely accurate though not a total mess.
+- The errors do seem to be uncorrelated since there is no discernible pattern in the scatter plot (which is good).
+- We cannot judge the normality assumption from the residuals vs fitted plot, but we can look at a qq-plot to help assess that assumption.
+  - Based on the qq-plot below, the normality assumption does seem reasonably valid.
+- There seem to be three particularly influential outliers labeled by their indices in the residuals vs fitted plot above.
+  - Below we extract information about these three observations
+  
+```{r}
+diabetes[c(63, 295, 378), ]
+```
+
+```{r}
+qqnorm(residuals(lmod))
+qqline(residuals(lmod))
+```
+
+
+
+#### Measuring Response Variation 
+
+We compare $y$ (observed) and $\hat{y}$ (fitted) values.
+
+However, there is a NA for one of the $y$ values in the data, so
+note that `lmod$model$chol` are the remaining the $y$ values for the rows without missing data
+
+```{r}
+plot(lmod$model$chol ~ fitted(lmod), xlab = "yhat", ylab = "y")
+abline(lm(lmod$model$chol ~ fitted(lmod)), col = "red")
+```
+
+```{r}
+summary(lmod)$r.squared # r-squared
+```
+
+We have $R^2 = 0.1699$ which tells us about 17% of the variation in the value of total cholesterol is explained by our very complicated model. The $R^2$ value is misleading in this case since it will get larger and larger as we include more and more variables. See [cautions about $R^2](#sec-caution) for more details.
+
+<br>  
+
+# Appendix: Useful Functions with `lm()`
+
+Some useful commands working with `lm`:
+
+- `coef(lmod)` returns the values of the regression coefficients.
+- `x <- model.matrix( ~ x1 + x2 + x3 + x4, data = data.frame)` creates matrix $\mathbf{X}$.
+- `y <- data.frame$response_var` creates vector of observed values of $\mathbf{y}$.
+- `residuals(lmod)` vector of residuals $\hat{\boldsymbol\epsilon}$.
+- `deviance(lmod)` computes the RSS of the linear model.
+- `df.residual(lmod)` computes the degrees of freedom $n-p$.
+- `sigma(lmod)` computes the estimate for the standard error $\hat{\sigma}$.
+- `summary(lmod)$r.squared` gives $R^2$ value.
+- `summary(lmod)$adj.r.squared` gives the adjusted $R^2$ value.
+- `names(lmod)` lists quantities we can extract from the `lmod`.
+- `vcov(lmod)` estimated covariance matrix of the regression coefficients.
