@@ -3227,6 +3227,21 @@ Caution
 <li><code>per_child_poverty</code>: percentage of children living in poverty</li>
 <li><code>per_singleparent</code>: percentage of children living in single parent household</li>
 </ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The source of the data collector indicates <code>teen_birth_rate</code> is the percentage of all births in the county that are by teenagers. I don’t believe this is accurate based on the values of this variable.</p>
+<p>I believe <code>teen_birth_rate</code> is actually the number of teen births (age 15-19) per <span class="math inline">\(1,\!000\)</span> births. A value of 50 means 50 out of every 1000 births are by teens and I don’t believe this means 50% of the births are teen births.</p>
+<p>I leave the description from the data source above. Feel free to interpret the results as either a percentage (out of 100 births) or interpret the values as rates per per <span class="math inline">\(1,\!000\)</span> births which I think is what the variable is actually measuring. Sorry if this is not clear.</p>
+</div>
+</div>
 <p>Run the code cell below to store the data to a data frame named <code>births</code> that you will use in the questions that follow. Be sure to reload this data each time you start a new R session.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>births <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/Births_County.csv&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>

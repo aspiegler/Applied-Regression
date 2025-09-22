@@ -123,6 +123,14 @@ The data set `Births_County.csv` consists of data from almost $3,\!000$ counties
 - `per_child_poverty`: percentage of children living in poverty
 - `per_singleparent`: percentage of children living in single parent household
 
+::: {.callout-warning}
+The source of the data collector indicates `teen_birth_rate` is the percentage of all births in the county that are by teenagers. I don't believe this is accurate based on the values of this variable. 
+
+I believe `teen_birth_rate` is actually the number of teen births (age 15-19) per $1,\!000$ births. A value of 50 means 50 out of every 1000 births are by teens and I don't believe this means 50% of the births are teen births.
+
+I leave the description from the data source above. Feel free to interpret the results as either a percentage (out of 100 births) or interpret the values as rates per per $1,\!000$ births which I think is what the variable is actually measuring. Sorry if this is not clear.
+:::
+
 Run the code cell below to store the data to a data frame named `births` that you will use in the questions that follow. Be sure to reload this data each time you start a new R session.
 
 ```{r}
