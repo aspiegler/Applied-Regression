@@ -3210,9 +3210,9 @@ vertical-align: -.125em;
 <section id="the-coefficient-of-determination-r2" class="level1">
 <h1>The Coefficient of Determination, <span class="math inline">\(R^2\)</span></h1>
 <p>A common measure of goodness of fit is <span style="color:blue"><strong><span class="math inline">\(R^2\)</span>, the coefficient of determination</strong></span> (or percentage of variance explained), given by</p>
-<p><span class="math display">\[R^2=1- \frac{\sum (\widehat{Y}_i - Y_i)^2}{\sum (Y_i - \overline{Y})^2} =1- \frac{\mbox{RSS}}{\mbox{TSS}}= \frac{\mbox{SS}_{\rm reg}} {\mbox{TSS}} = \mbox{Cor}^2(\mathbf{y}, \hat{\mathbf{y}}) .\]</span></p>
+<p><span class="math display">\[R^2=1- \frac{\sum (Y_i - \widehat{Y}_i)^2}{\sum (Y_i - \overline{Y})^2} =1- \frac{\mbox{RSS}}{\mbox{TSS}}= \frac{\mbox{SS}_{\rm reg}} {\mbox{TSS}} = \mbox{Cor}^2(\mathbf{y}, \hat{\mathbf{y}}) .\]</span></p>
 <p>Where we have:</p>
-<p><span class="math inline">\(\mbox{RSS} = \sum (Y_i - \overline{Y})^2\)</span> is the <span style="color:blue"><strong>Residual Sum of Squares (RSS)</strong></span>.</p>
+<p><span class="math inline">\(\mbox{RSS} = \sum (Y_i - \widehat{Y}_i)^2\)</span> is the <span style="color:blue"><strong>Residual Sum of Squares (RSS)</strong></span>.</p>
 <ul>
 <li>RSS measures the variability in our response that <strong>is NOT explained by our model</strong>.</li>
 </ul>

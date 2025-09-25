@@ -177,12 +177,12 @@ Which estimate do you believe is more accurate? Why?
 
 A common measure of goodness of fit is [**$R^2$, the coefficient of determination**]{style="color:blue"} (or percentage of variance explained), given by 
 
-$$R^2=1- \frac{\sum (\widehat{Y}_i - Y_i)^2}{\sum (Y_i - \overline{Y})^2} =1- \frac{\mbox{RSS}}{\mbox{TSS}}= \frac{\mbox{SS}_{\rm reg}} {\mbox{TSS}} = \mbox{Cor}^2(\mathbf{y}, \hat{\mathbf{y}}) .$$
+$$R^2=1- \frac{\sum (Y_i - \widehat{Y}_i)^2}{\sum (Y_i - \overline{Y})^2} =1- \frac{\mbox{RSS}}{\mbox{TSS}}= \frac{\mbox{SS}_{\rm reg}} {\mbox{TSS}} = \mbox{Cor}^2(\mathbf{y}, \hat{\mathbf{y}}) .$$
 
 Where we have:
 
 
-$\mbox{RSS} = \sum (Y_i - \overline{Y})^2$ is the [**Residual Sum of Squares (RSS)**]{style="color:blue"}.
+$\mbox{RSS} = \sum (Y_i - \widehat{Y}_i)^2$ is the [**Residual Sum of Squares (RSS)**]{style="color:blue"}.
 
 - RSS measures the variability in our response that **is NOT explained by our model**.
 
