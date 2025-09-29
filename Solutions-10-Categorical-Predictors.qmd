@@ -205,12 +205,6 @@ head(data.frame(group = UN11$group, d1, d2, d3), 10)
 
 
 
-Using the `UN11` data frame:
-
-- If an observation is in the first level, then it returns TRUE which when added to 0 gives 1.
-- If an observation is not in the first level, then it returns FALSE which when added to 0 gives 0.
-- Similar for the other groups.
-
 
 # One-Factor Models
 
