@@ -1,0 +1,521 @@
+---
+title: "Module 10: Categorical Predictors"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+editor: source
+#execute:
+#  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+
+## Additional Reading
+
+---
+
+- [Section 3.8 Categorical Predictors](https://jfrench.github.io/LinearRegression/linear-model-estimation.html#categorical-predictors) from *A Progressive Introduction to Linear Models*
+- Chapter 7 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/Q7wgCRrz))
+- Sections 5.1-5.2 of *Applied Linear Regression* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+
+
+# Loading Required Packages
+ 
+---
+
+
+```{r}
+#| message: false
+library(tidyverse)
+library(alr4) # to access UN11 data set
+```
+
+
+# Categorical Predictors
+
+Categorical predictors are often called [**factors**]{style="color:blue"}. Factors can have two levels (e.g., survived or died) or multiple levels (single, married, divorced, widowed).
+
+We will discuss two basic uses of categorical predictors in linear regression models. 
+
+- [**Parallel lines regression models**]{style="color:blue"} produce different parallel lines for each level of the categorical variable.
+- [**Separate lines regression models**]{style="color:blue"} produce separate (typically non-parallel) lines for each level of the categorical variable.
+
+
+## Nominal and Ordinal Variables
+
+Categorical variables are often distinguished by whether or not they have a logical order or ranking: 
+
+- Those that cannot be ordered logically are called  [**nominal**]{style="color:blue"}. For example, gender, marital status, political party.
+- Those that have an order in a sensible manner are called  [**ordinal**]{style="color:blue"}. For example, category of hurricane, high school class (freshman, sophomore, junior, senior).
+
+
+# The United Nations Data
+
+
+## Question 1 
+
+Run the code chunk below to load the `UN11` data set below and read the help documentation to familiarize yourself with the data. How many observations are in the data set? How many variables?
+
+```{r}
+data(UN11)
+```
+
+
+## Solution to Question 1 
+
+
+
+<br>  
+
+
+
+## Question 2
+
+Create side-by-side box plots for the variable `lifeExpF` for each of the categories of the `group` variable and describe any interesting observations about the data.
+
+
+### Solution to Question 2
+
+
+<br>  
+
+
+# Indicator Variables
+
+Suppose we wish to determine whether the categorical predictor marital status (single, cohabiting, married, divorced, and widowed) is associated with personal income. How is this type of descriptive variable entered into a quantitative model?
+
+[**Dummy**]{style="color:blue"} or [**indicator variables**]{style="color:blue"} are used to include categorical predictors in a regression model.
+
+- An [**indicator function**]{style="color:blue"} is a function that takes the value 1 if a certain property is true and 0 otherwise. 
+- An [**indicator variable**]{style="color:blue"} is the variable that results from applying an indicator function to each observation of a variable. 
+
+We denote indicator functions using the notation,
+
+$$
+I_S(x) =
+\begin{cases}
+1 & \textrm{if}\;x \in S\\
+0 & \textrm{if}\;x \notin S
+\end{cases}.
+$$
+
+Some examples of indicator functions:
+
+- $I_{\rm{africa}}(\text{"Afghanistan"})= 0$
+- $I_{\rm{africa}}(\text{"Botswana"})= 1$
+- $I_{\{2,3\}}(2) = 1$.
+- $I_{\{2,3\}}(2.5) = 0$.
+
+In our example, `group` has $d=3$ levels, $L_1$, $L_2$, and $L_3$ corresponding to `oecd`, `other`, and `africa`, respectively. We can define three different dummy variables:
+
+- $D_1$ (is country OECD?), 
+- $D_2$ (is country Other?), and 
+- $D_3$ (is country in Africa?).
+
+Let $c_i$ denote the value of $C$ for observation $i$. For example $c_2 = \text{"other"}$. We assign values to $D_1$, $D_2$, and $D_3$ using the indicator function below.
+
+
+$$d_{i,j} = I_{L_j}(c_i) = \left\{ \begin{array}{ll} 1 & \mbox{if } c_i \in L_j \\
+0 & \mbox{if } c_i \notin L_j \end{array} \right.$$
+
+
+::: {.callout-note}
+- Values $-1$ and $1$, or $1$ and $2$, are sometimes used, but this is less common and more difficult to interpret. 
+- The assignment labels are mostly arbitrary and do not affect the results.
+:::
+
+
+## Question 3
+
+
+Use the `if_else()` function to create and assign values to dummy variables `d1`, `d2`, and `d3`. Replace `??` in the code chunk below with appropriate expressions/values. Then run the code and check the output displayed on screen.
+
+
+### Solution to Question 3
+
+
+```{r}
+#| eval: false
+UN11 |> 
+  mutate(d1 = if_else(??),
+         d2 = if_else(??),
+         d3 = if_else(??)) |>
+  select(c(group, d1, d2, d3))
+```
+
+
+
+# One-Factor Models
+
+If the only predictor is a factor, then the regression model is called a [**one-factor**]{style="color:blue"} or [**one-way**]{style="color:blue"} design. Regression coefficients for factor variables in a one-way model are often called [**effects**]{style="color:blue"}.
+
+
+## Question 4 
+
+Let $Y$ denote the response variable `lifeExpF`. What would be problematic about using the linear model proposed below?
+
+$$Y =  \beta_0 + \beta_1 D_1 + \beta_2 D_2 + \beta_3 D_3 + \epsilon$$
+
+### Solution to Question 4
+
+
+<br>  
+
+
+## Question 5
+
+Using a treatment contrast with the first level of group as the reference level (`oecd`), what would be our model for `oecd` countries? What is the model for `other` countries? For `africa` countries?
+
+$$E(\mbox{lifeExpF } \vert \mbox{ group})= \beta_0+ \beta_2 D_2+ \beta_3 D_3$$.
+
+### Solution to Question 5
+
+
+
+<br>  
+
+## Fitting a One-Factor Model with R
+
+R will fit a one-factor model if you: 
+
+- Add the necessary dummy variables manually to the `formula` argument of `lm`.
+- Include the factor variable in the formula of `lm` (dropping the dummy variable for the first level of the factor automatically).
+
+
+```{r}
+# First we add dummy variables to the data frame
+UN11$d1 <- if_else(UN11$group == "oecd", 1, 0)
+UN11$d2 <- if_else(UN11$group == "other", 1, 0)
+UN11$d3 <- if_else(UN11$group == "africa", 1, 0)
+```
+
+
+```{r}
+# fit overparameterized model
+lm(lifeExpF ~ d1 + d2 + d3, data = UN11)
+```
+
+```{r}
+# fit proper model
+lm(lifeExpF ~ d2 + d3, data = UN11)
+```
+
+```{r}
+# What R will do by default
+lm(lifeExpF ~ group, data = UN11)
+```
+
+## Question 6 {#sec-q6}
+
+Compare the output from the previous three models and comment on the differences, similarities of each.
+
+
+### Solution to Question 6
+
+
+<br>  
+
+
+## Question 7 {#sec-q7}
+
+Interpret the practical meaning of the regression coefficients $\widehat{\beta}_0$,  $\widehat{\beta}_2$ and  $\widehat{\beta}_3$
+
+### Solution to Question 7
+
+
+<br>  
+
+
+
+# Factors and Quantitative Predictors
+
+It is common to study the effect of a factor after adjusting for one or more other quantitative regressors.   If we have a mixture of factors and quantitative variables in our data, it’s useful to create a scatter plot of the response versus the quantitative predictor that distinguishes the observations for each level of the categorical predictor. - This helps us assess whether the relationship between the response and quantitative regressor differs for the levels of the factor.
+
+
+## Question 8 {#sec-q8}
+
+Create a plot to show the relation of the response `lifeExpF` and predictor `log(ppgdp)` for each of the three country `groups`. What are some interesting observations/patterns you can observe in the plots?
+
+
+### Solution to Question 8
+
+
+<br>  
+
+
+# Comparing Models 
+
+Suppose we have a response $Y$, a quantitative regressor $X$, and a *two-level factor* variable represented by a single dummy variable $D$:
+
+::: {.callout-note}
+The model described extends naturally when the factor has more than 2 levels (as with our `group` predictor).
+:::
+
+
+$$D = \left\{ \begin{array}{ll} 
+0 & \mbox{for the reference level} \\
+1 & \mbox{for the treatment level} \end{array} \right.$$
+
+Consider several possible regression models. 
+
+
+## A Simple Linear Regression Model
+
+A **simple linear regression model** with one quantitative predictor will produce the same, single regression line for all levels of the categorical variable (combined), $Y= \beta_0 + \beta_1 X + \epsilon$.  
+
+
+## Question 9 {#sec-q9}
+
+Enter code to fit a simple linear model with `log(ppgdp)` as the regressor and `lifeExpF` as the response. Store the output of the linear model to an object called `lmods` (`s` is for simple). Add this line to the scatter plot you created in [Question 8](#sec-q8)
+
+
+### Solution to Question 9
+
+
+
+
+<br>  
+
+
+## A One-Way Model
+
+We looked at a  **one-way model** in [Question 7](#sec-q7) and [Question 8](#sec-q8). This model uses only a factor predictor but no quantitative predictor, $Y= \beta_0 + \beta_2 D + \epsilon$. 
+
+  
+```{r}
+lmodo <- lm(lifeExpF ~  group, data = UN11)
+summary(lmodo)
+```
+
+
+$$\begin{align}
+& \widehat{E} (\mbox{lifeExpF }\vert\mbox{ group = oecd}) = \widehat{\beta}_0 = 82.45\\
+& \widehat{E} (\mbox{lifeExpF } \vert\mbox{ group = other}) = \widehat{\beta}_0 + \widehat{\beta}_2 = 82.45 - 7.12 = 75.33 \\
+& \widehat{E} (\mbox{lifeExpF } \vert \mbox{ group = africa})= \widehat{\beta}_0 + \widehat{\beta}_3 = 82.45 - 22.67 = 59.79.
+\end{align}$$ 
+  
+
+## Main Effects or Parallel Lines Model
+
+[**Main effects or parallel lines models**]{style="color:blue"} create separate regression lines for each group, each having the same slope, $Y= \beta_0+ \beta_1 X+ \beta_2 D + \epsilon$.  
+
+- $\beta_2$ represents the vertical distance between the regression lines (the effect of the treatment).
+
+## Question 10 {#sec-q10}
+
+Enter code to fit a main effects model with `log(ppgdp)` as a predictor with `d2` and `d3` as the treatment levels and `lifeExpF` as the response. Store the result to `lmodp`. Then interpret the values of the coefficients in practical terms. 
+
+
+### Solution to Question 10
+
+
+<br>  
+
+
+## Question 11 {#sec-q11}
+
+Find formulas for each of the parallel lines in your model from [Question 10](#sec-q10). 
+
+
+### Solution to Question 11
+
+
+<br>  
+
+
+### Plotting Parallel Lines Model
+
+
+```{r}
+#| eval: true
+#| echo: false
+lmodp <- lm(lifeExpF ~ log(ppgdp) + group, data = UN11)
+```
+
+```{r}
+# create column of predictions
+UN11 <- UN11 |>
+  mutate(life_fitted = predict(lmodp))
+```
+
+```{r}
+# add a line geom for each model
+ggplot(UN11, aes(x = log(ppgdp), y = lifeExpF)) +
+  geom_point(aes(shape = group, color = group)) +
+  geom_line(aes(x = log(ppgdp), y = life_fitted, color = group))
+```
+
+
+## Interaction Model
+
+[**Interaction or separate lines model**]{style="color:blue"} plot separate lines for each group that have different slopes, $Y= \beta_0+ \beta_1 X+ \beta_2 D+ \beta_3 XD + \epsilon$.  
+
+In R, we can use the syntax `y ~ x + u + x:u` or `y ~ x*u`
+
+- `x:d` means the interaction between `x` and `d`.
+- `x*d` means the cross between `x` and `d` (`x`, `d`, and the interaction between `x` and `d`). 
+
+## Question 12 {#ec-q12}
+
+Enter code to fit an interaction  model with `log(ppgdp)` as a predictor with `d2` and `d3` (dummy variables for `group`) as the treatment levels and `lifeExpF` as the response. Store the result to `lmodi`.
+
+### Solution to Question 12
+
+
+
+<br>  
+
+
+## Question 13 {#sec-q13}
+
+Find formulas for each of the separate lines in your model from [Question 12](#sec-q12) 
+
+### Solution to Question 13
+
+
+<br>  
+
+
+## Plotting the Interaction Model
+
+
+```{r}
+#| message: false
+# using ggplot2
+ggplot(UN11, aes(x = log(ppgdp), y = lifeExpF, col = group, shape = group)) + 
+  geom_point() + 
+  geom_smooth(method = "lm") + 
+  theme_bw() + 
+  theme(legend.position="top")
+```
+
+```{r}
+# using base graphics
+# create different colors/symbols for each group
+grp_col = as.numeric(UN11$group)
+
+# plot data, using different colors/symbols for each group
+plot(lifeExpF ~ log(ppgdp), data = UN11, 
+     col = grp_col, pch = grp_col)
+# fitted lines for each group, 
+# changing color for each group.  
+# Make sure to match the color number with color number used in plot!
+abline(59.21366, 2.24254, col = 1)
+abline(59.21366 - 11.17310, 2.24254 + 0.92944, col = 2)
+abline(59.21366 - 22.98484, 2.24254 + 1.09498, col = 3)
+
+# create the legend
+legend("topleft", legend = c("oecd", "other", "africa"), col = 1:3, pch = 1:3, lty = 1)
+```
+
+
+## Question 14
+
+Run the code cell below to display the first 10 rows of the model matrix for the interaction model. Based on the output, describe how are the last two columns of the model matrix $X$ computed?
+
+
+```{r}
+#| eval: false
+head(model.matrix(lmodi), 10)
+```
+
+
+### Solution to Question 14
+
+
+<br>  
+
+## Question 15
+
+Interpret each coefficient in your separate lines models from [Question 13](#sec-q13).
+
+
+### Solution to Question 15
+
+
+<br>  
+<br>  
+<br>  
+
+
+# Appendix A: Multiple Linear Regression Models
+
+
+## The Basic Model
+
+
+$$Y = \beta_0 + \beta_1 X_1  + \beta_2 X_2 + \ldots + \beta_{p-1} X_{p-1} + \epsilon .$$
+
+## Error Assumptions
+
+1. The errors $\epsilon_i$ have [**mean zero, $E(\epsilon_i) = 0$**]{style="color:blue"} for all $i$. 
+2. The errors are [**normally distributed**]{style="color:blue"}.
+3. The errors all have the same, [**constant variance (homoscedascity)**]{style="color:blue"}.
+4. The [**errors are uncorrelated**]{style="color:blue"}.
+5. [**Collinearity**]{style="color:blue"} No combination of predictors has a perfect association. 
+
+We can restate error assumptions (1)-(4) as:
+
+$$\large \epsilon_i \sim N(0, \sigma^2) \qquad \text{and} \qquad \text{Cov}(\epsilon_i, \epsilon_j) = 0 \ \ \text{ if } i \ne j.$$
+
+
+## The OLS Estimator {#sec-append-ols}
+
+
+$$\boldsymbol{\hat{\beta}} = \left( \mathbf{X}^T \mathbf{X} \right)^{-1}  \mathbf{X}^T \mathbf{y}$$
+We can express solution to OLS equivalently as the solution to a matrix equation
+
+$$\mathbf{X} \boldsymbol{\hat{\beta}} = \mathbf{H} \mathbf{y} , \qquad \mathbf{R} \boldsymbol{\hat{\beta}} = \mathbf{Q}^T \mathbf{y} , \quad \text{or} \quad  \boldsymbol{\hat{\beta}} =  \mathbf{V} \mathbf{\Sigma}^{-1} \mathbf{U}^T \mathbf{y} .$$
+
+
+## Measurements of Association
+
+- [**Covariance**]{style="color:blue"} measures how strong is the dependence between two variables
+
+$$\mbox{Cov}(X,Y) = E\bigg( (X-\mu_X)(Y-\mu_Y) \bigg) . $$ 
+
+
+- The [**correlation coefficient**]{style="color:blue"} is scaled measure of the relation between $X$ and $Y$ 
+
+$$\rho_{X,Y} = \frac{\mbox{Cov}(X,Y)}{\sigma_X \cdot \sigma_Y} .$$
+
+
+
+- [**$R^2$, the coefficient of determination**]{style="color:blue"} is the percentage of variance in the response explained by the model
+
+$$R^2=1- \frac{\sum (Y_i - \widehat{Y}_i)^2}{\sum (Y_i - \overline{Y})^2} =1- \frac{\mbox{RSS}}{\mbox{TSS}}= \frac{\mbox{SS}_{\rm reg}} {\mbox{TSS}} = \mbox{Cor}^2(\mathbf{y}, \hat{\mathbf{y}}) .$$
+
+  - $\mbox{RSS} = \sum (Y_i - \widehat{Y}_i)^2$ is the [**Residual Sum of Squares (RSS)**]{style="color:blue"} (variation that is not explained by model).
+  - $\mbox{TSS} = \sum (Y_i - \overline{Y})^2$ is the [**Total Sum of Squares correct for the mean (TSS)**]{style="color:blue"} (total variation in the response). 
+  - $\mbox{SS}_{\rm reg} = \sum (\widehat{Y}_i - \overline{Y})^2 = \mbox{TSS} - \mbox{RSS}$ is the [**regression sum of squares**]{style="color:blue"} (variation that is explained by model).
+
+$$\mbox{TSS} =  \mbox{RSS} + \mbox{SS}_{\rm reg} .$$
+
+
+# Appendix B: Useful Functions with `lm()`
+
+Some useful commands working with `lm`:
+
+- `coef(lmod)` returns the values of the regression coefficients.
+- `x <- model.matrix( ~ x1 + x2 + x3 + x4, data = data.frame)` creates matrix $\mathbf{X}$.
+- `y <- data.frame$response_var` creates vector of observed values of $\mathbf{y}$.
+- `residuals(lmod)` vector of residuals $\hat{\boldsymbol\epsilon}$.
+- `deviance(lmod)` computes the RSS of the linear model.
+- `df.residual(lmod)` computes the degrees of freedom $n-p$.
+- `sigma(lmod)` computes the estimate for the standard error $\hat{\sigma}$.
+- `summary(lmod)$r.squared` gives $R^2$ value.
+- `summary(lmod)$adj.r.squared` gives the adjusted $R^2$ value.
+- `names(lmod)` lists quantities we can extract from the `lmod`.
+- `vcov(lmod)` estimated covariance matrix of the regression coefficients.
+
+
+

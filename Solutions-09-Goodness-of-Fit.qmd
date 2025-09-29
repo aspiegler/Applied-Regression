@@ -24,7 +24,7 @@ license: "CC BY-NC-SA"
 ---
 
 - [Section 3.10 Evaluating model fit](https://jfrench.github.io/LinearRegression/linear-model-estimation.html) from *A Progressive Introduction to Linear Models*
-- Chapter 5 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+- Chapter 5 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/Q7wgCRrz))
 - Sections 3.4.6 and 4.5 of *Applied Linear Regression* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
 
 

@@ -24,7 +24,7 @@ license: "CC BY-NC-SA"
 ---
 
 - [Chapter 3 Linear Model Estimation](https://jfrench.github.io/LinearRegression/linear-model-estimation.html) from *A Progressive Introduction to Linear Models*
-- Chapter 4 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+- Chapter 4 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/Q7wgCRrz))
 - Chapter 3 of *Applied Linear Regression* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
 
 
