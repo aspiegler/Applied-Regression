@@ -3089,6 +3089,14 @@ vertical-align: -.125em;
   <li><a href="#question-14" id="toc-question-14" class="nav-link" data-scroll-target="#question-14">Question 14</a></li>
   <li><a href="#question-15" id="toc-question-15" class="nav-link" data-scroll-target="#question-15">Question 15</a></li>
   </ul></li>
+  <li><a href="#practice" id="toc-practice" class="nav-link" data-scroll-target="#practice">Practice</a>
+  <ul class="collapse">
+  <li><a href="#sec-q16" id="toc-sec-q16" class="nav-link" data-scroll-target="#sec-q16">Question 16</a></li>
+  <li><a href="#sec-q17" id="toc-sec-q17" class="nav-link" data-scroll-target="#sec-q17">Question 17</a></li>
+  <li><a href="#sec-q18" id="toc-sec-q18" class="nav-link" data-scroll-target="#sec-q18">Question 18</a></li>
+  <li><a href="#sec-q19" id="toc-sec-q19" class="nav-link" data-scroll-target="#sec-q19">Question 19</a></li>
+  <li><a href="#sec-q20" id="toc-sec-q20" class="nav-link" data-scroll-target="#sec-q20">Question 20</a></li>
+  </ul></li>
   <li><a href="#appendix-a-multiple-linear-regression-models" id="toc-appendix-a-multiple-linear-regression-models" class="nav-link" data-scroll-target="#appendix-a-multiple-linear-regression-models">Appendix A: Multiple Linear Regression Models</a>
   <ul class="collapse">
   <li><a href="#the-basic-model" id="toc-the-basic-model" class="nav-link" data-scroll-target="#the-basic-model">The Basic Model</a></li>
@@ -3097,6 +3105,11 @@ vertical-align: -.125em;
   <li><a href="#measurements-of-association" id="toc-measurements-of-association" class="nav-link" data-scroll-target="#measurements-of-association">Measurements of Association</a></li>
   </ul></li>
   <li><a href="#appendix-b-useful-functions-with-lm" id="toc-appendix-b-useful-functions-with-lm" class="nav-link" data-scroll-target="#appendix-b-useful-functions-with-lm">Appendix B: Useful Functions with <code>lm()</code></a></li>
+  <li><a href="#appendix-c-collinearity-and-regression" id="toc-appendix-c-collinearity-and-regression" class="nav-link" data-scroll-target="#appendix-c-collinearity-and-regression">Appendix C: Collinearity and Regression</a>
+  <ul class="collapse">
+  <li><a href="#identifiability" id="toc-identifiability" class="nav-link" data-scroll-target="#identifiability">Identifiability</a></li>
+  <li><a href="#orthogonality" id="toc-orthogonality" class="nav-link" data-scroll-target="#orthogonality">Orthogonality</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -3517,6 +3530,102 @@ F-statistic: 159.3 on 2 and 196 DF,  p-value: &lt; 2.2e-16</code></pre>
 </section>
 </section>
 </section>
+<section id="practice" class="level1">
+<h1>Practice</h1>
+<p>Run the code cell below to load the <code>storms</code> data frame from the <code>dplyr</code> package. Then answer the questions below. Then run the second code cell below to store cleaned data to <code>storms_clean</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load storms data</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(storms, <span class="at">package =</span> <span class="st">&quot;dplyr&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># clean storms data</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>storms_clean <span class="ot">&lt;-</span> storms <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">c</span>(wind, pressure, status, lat, long)) <span class="sc">|&gt;</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">status =</span> <span class="fu">factor</span>(status))</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(storms_clean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      wind           pressure                      status          lat       
+ Min.   : 10.00   Min.   : 882.0   tropical storm     :6830   Min.   : 7.00  
+ 1st Qu.: 30.00   1st Qu.: 986.0   hurricane          :4803   1st Qu.:18.30  
+ Median : 45.00   Median :1000.0   tropical depression:3569   Median :26.60  
+ Mean   : 50.05   Mean   : 993.5   extratropical      :2151   Mean   :27.01  
+ 3rd Qu.: 65.00   3rd Qu.:1007.0   other low          :1453   3rd Qu.:33.80  
+ Max.   :165.00   Max.   :1024.0   subtropical storm  : 298   Max.   :70.70  
+                                   (Other)            : 433                  
+      long        
+ Min.   :-136.90  
+ 1st Qu.: -78.80  
+ Median : -62.30  
+ Mean   : -61.56  
+ 3rd Qu.: -45.50  
+ Max.   :  13.50  
+                  </code></pre>
+</div>
+</div>
+<section id="sec-q16" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q16">Question 16</h2>
+<p>Create the following three plots. Plot the response <code>wind</code> on the <span class="math inline">\(y\)</span>-axis and create</p>
+<ul>
+<li>One plot with <code>pressure</code> as the predictor on the <span class="math inline">\(x\)</span>-axis.</li>
+<li>Another plot with <code>lat</code> as the predictor on the <span class="math inline">\(x\)</span>-axis.</li>
+<li>A third plot with <code>long</code> as the predictor on the <span class="math inline">\(x\)</span>-axis.</li>
+</ul>
+<p>In each of the three plots, map some attribute (such as color) to the <code>status</code> variable so we can include information about the storm <code>status</code> in the plot.</p>
+<section id="solution-to-question-16" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-16">Solution to Question 16</h3>
+<p><br></p>
+</section>
+</section>
+<section id="sec-q17" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q17">Question 17</h2>
+<p>Based on the plots in <a href="#sec-q16">Question 16</a>, does it make sense to use <code>pressure</code> as a predictor? Use <code>lat</code> as a predictor? Use <code>long</code> as a predictor? Explain why or why not.</p>
+<section id="solution-to-question-17" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-17">Solution to Question 17</h3>
+<p><br></p>
+</section>
+</section>
+<section id="sec-q18" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q18">Question 18</h2>
+<p>The categorical variable <code>status</code> has 9 different levels listed below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">levels</span>(storms_clean<span class="sc">$</span>status)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] &quot;disturbance&quot;            &quot;extratropical&quot;          &quot;hurricane&quot;             
+[4] &quot;other low&quot;              &quot;subtropical depression&quot; &quot;subtropical storm&quot;     
+[7] &quot;tropical depression&quot;    &quot;tropical storm&quot;         &quot;tropical wave&quot;         </code></pre>
+</div>
+</div>
+<p>Add 9 dummy variables named <code>s1</code>, <code>s2</code>, … , <code>s9</code> to the <code>storms_clean</code> data frame.</p>
+<section id="solution-to-question-18" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-18">Solution to Question 18</h3>
+<p><br></p>
+</section>
+</section>
+<section id="sec-q19" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q19">Question 19</h2>
+<p>Construct a parallel lines model for the response variable <code>wind</code> using regressors <code>pressure</code> and <code>status</code>.</p>
+<ul>
+<li>Write out a formula to predict the <code>wind</code> speed for storms classified with the status <code>hurricane</code>. Interpret the values of the coefficients in practical terms.</li>
+<li>Write out a formula to predict the <code>wind</code> speed for storms classified with the status <code>tropical storm</code>. Interpret the values of the coefficients in practical terms.</li>
+</ul>
+<section id="solution-to-question-19" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-19">Solution to Question 19</h3>
+<p><br></p>
+</section>
+</section>
+<section id="sec-q20" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q20">Question 20</h2>
+<p>Construct a separate lines (or interaction) model for the response variable <code>wind</code> using regressors <code>pressure</code> and <code>status</code>.</p>
+<ul>
+<li>Write out a formula to predict the <code>wind</code> speed for storms classified with the status <code>hurricane</code>. Interpret the values of the coefficients in practical terms.</li>
+<li>Write out a formula to predict the <code>wind</code> speed for storms classified with the status <code>tropical storm</code>. Interpret the values of the coefficients in practical terms.</li>
+</ul>
+<section id="solution-to-question-20" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-20">Solution to Question 20</h3>
+<p><br></p>
+</section>
+</section>
+</section>
 <section id="appendix-a-multiple-linear-regression-models" class="level1">
 <h1>Appendix A: Multiple Linear Regression Models</h1>
 <section id="the-basic-model" class="level2">
@@ -3578,6 +3687,241 @@ F-statistic: 159.3 on 2 and 196 DF,  p-value: &lt; 2.2e-16</code></pre>
 <li><code>names(lmod)</code> lists quantities we can extract from the <code>lmod</code>.</li>
 <li><code>vcov(lmod)</code> estimated covariance matrix of the regression coefficients.</li>
 </ul>
+</section>
+<section id="appendix-c-collinearity-and-regression" class="level1">
+<h1>Appendix C: Collinearity and Regression</h1>
+<p>Suppose we want to construct a one-factor model where the categorical variable has <span class="math inline">\(d\)</span> levels and we include <span class="math inline">\(d\)</span> dummy variables (one for each level instead of <span class="math inline">\(d-1\)</span> by dropping the first dummy variable) and an intercept term. Why is this problematic?</p>
+<p>Consider our example with <code>UN11</code> data where we constructed a model for predicting the response <code>lifeExpF</code> based on the level of the categorical variable <code>group</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create dummy variables</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(alr4)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(UN11)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>UN11 <span class="ot">&lt;-</span> <span class="fu">transform</span>(UN11, </span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>          <span class="at">d1 =</span> <span class="fu">ifelse</span>(group <span class="sc">==</span> <span class="st">&quot;oecd&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">d2 =</span> <span class="fu">ifelse</span>(group <span class="sc">==</span> <span class="st">&quot;other&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>),</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>          <span class="at">d3 =</span> <span class="fu">ifelse</span>(group <span class="sc">==</span> <span class="st">&quot;africa&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Each observation is in exactly one group (either <code>oecd</code>, <code>other</code>, or <code>africa</code>).</li>
+<li>One of the dummy variables is <code>1</code> and the other two are <code>0</code>.</li>
+<li>Thus, for each observation, <span class="math inline">\(d_1 + d_2 + d_3 = 1\)</span>.</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct model matrix</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> d1 <span class="sc">+</span> d2 <span class="sc">+</span> d3, <span class="at">data =</span> UN11)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            (Intercept) d1 d2 d3
+Afghanistan           1  0  1  0
+Albania               1  0  1  0
+Algeria               1  0  0  1
+Angola                1  0  0  1
+Anguilla              1  0  1  0
+Argentina             1  0  1  0</code></pre>
+</div>
+</div>
+<p>We can see the columns are linearly dependent since <span class="math inline">\(\text{intercept} = d_1 + d_2 + d_3\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compute X^T X</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>z <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(x)</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>z</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            (Intercept) d1  d2 d3
+(Intercept)         199 31 115 53
+d1                   31 31   0  0
+d2                  115  0 115  0
+d3                   53  0   0 53</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># try to find inverse of X^T X</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">det</span>(z)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -2.283134e-09</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#solve(z)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we try to solve using a matrix decomposition such as <span class="math inline">\(QR\)</span> or <span class="math inline">\(SVD\)</span>, we run into trouble as well.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># the QR decomposition</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>qr_result <span class="ot">&lt;-</span> <span class="fu">qr</span>(x)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>q <span class="ot">&lt;-</span> <span class="fu">qr.Q</span>(qr_result)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fu">qr.R</span>(qr_result)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>q[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            [,1]        [,2]        [,3]         [,4]
+[1,] -0.07088812 -0.03045087  0.05237625 -0.056832550
+[2,] -0.07088812 -0.03045087  0.05237625 -0.024005046
+[3,] -0.07088812 -0.03045087 -0.11364657 -0.122787703
+[4,] -0.07088812 -0.03045087 -0.11364657  0.983130533
+[5,] -0.07088812 -0.03045087  0.05237625  0.000715377
+[6,] -0.07088812 -0.03045087  0.05237625  0.000715377</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>r</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            (Intercept)        d1        d2            d3
+Afghanistan   -14.10674 -2.197532 -8.152134 -3.757070e+00
+Albania         0.00000  5.115746 -3.501850 -1.613896e+00
+Algeria         0.00000  0.000000  6.023268 -6.023268e+00
+Angola          0.00000  0.000000  0.000000 -2.143363e-14</code></pre>
+</div>
+</div>
+<p>If we try to solve <span class="math inline">\(R \boldsymbol{\beta} = Q^T \mathbf{y}\)</span>, there is a free variable and the solution is not unique. With <span class="math inline">\(SVD\)</span>, the diagonal matrix <span class="math inline">\(\Sigma\)</span> has a zero along the diagonal and is not invertible.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>svd_result <span class="ot">&lt;-</span> <span class="fu">svd</span>(x)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>v <span class="ot">&lt;-</span> svd_result<span class="sc">$</span>v</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>sigma <span class="ot">&lt;-</span> <span class="fu">diag</span>(svd_result<span class="sc">$</span>d)  <span class="co"># makes diagonal from singular values</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>u <span class="ot">&lt;-</span> svd_result<span class="sc">$</span>u</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>v</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            [,1]       [,2]       [,3] [,4]
+[1,] -0.81767422 -0.2438551 -0.1481336  0.5
+[2,] -0.09783446 -0.1869174 -0.8399347 -0.5
+[3,] -0.53705352  0.6438315  0.2169205 -0.5
+[4,] -0.18278624 -0.7007693  0.4748807 -0.5</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>u[<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, ]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            [,1]        [,2]       [,3]         [,4]
+[1,] -0.07954005  0.04732105 0.01139080  0.659522993
+[2,] -0.07954005  0.04732105 0.01139080  0.689034232
+[3,] -0.05873998 -0.11175814 0.05410784  0.269755448
+[4,] -0.05873998 -0.11175814 0.05410784 -0.005187605
+[5,] -0.07954005  0.04732105 0.01139080 -0.011934135
+[6,] -0.07954005  0.04732105 0.01139080 -0.011934135</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>sigma</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]     [,2]     [,3]         [,4]
+[1,] 17.03202 0.000000 0.000000 0.000000e+00
+[2,]  0.00000 8.452399 0.000000 0.000000e+00
+[3,]  0.00000 0.000000 6.038813 0.000000e+00
+[4,]  0.00000 0.000000 0.000000 1.271616e-14</code></pre>
+</div>
+</div>
+<section id="identifiability" class="level2">
+<h2 class="anchored" data-anchor-id="identifiability">Identifiability</h2>
+<p>The least squares estimator is the solution to the matrix equation <span class="math inline">\(\mathbf{X}^T \mathbf{X} \boldsymbol{\hat{\beta}} = \mathbf{X}^T \mathbf{y}\)</span>, where <span class="math inline">\(\mathbf{X}\)</span> is the <span class="math inline">\(n \times p\)</span> <span style="color:blue"><strong>model (or design) matrix</strong></span>.</p>
+<p><span style="color:blue"><strong>Unidentifiability</strong></span> will occur when <span class="math inline">\(X\)</span> is not full rank} (the columns of <span class="math inline">\(X\)</span> are linearly dependent).</p>
+<ul>
+<li>If <span class="math inline">\(\mathbf{X}^T \mathbf{X}\)</span> cannot be inverted, there is no unique solution to the equation and <span class="math inline">\(\boldsymbol{\hat{\beta}}\)</span> is <span style="color:blue"><strong>unidentifiable</strong></span>.</li>
+<li>Unidentifiable means that different parameter values can result in the same model (predictions).</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Problems with unidentifiability are rare for observational data, but more common with experiments. Here are some examples for observational data:</p>
+<ul>
+<li>A person’s weight is measured and entered in both pounds and kilos. One is just a multiple of the other.</li>
+<li>We record the number of years of pre-university education, university education, and total education. There is a perfect linear relationship between these variables.</li>
+<li>We have more variables than observations.
+<ul>
+<li>When <span class="math inline">\(p=n\)</span> we have a <span style="color:blue"><strong>saturated model</strong></span>, and we may be able to estimate some of the parameters.<br>
+</li>
+<li>When <span class="math inline">\(p&gt;n\)</span>, we have a <span style="color:blue"><strong>supersaturated model</strong></span>, and cannot uniquely estimate parameters.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<ul>
+<li>Removing one (or more) of the linearly dependent columns should correct the problem!</li>
+<li>R tries to fit the largest identifiable model by removing variables in reverse order of appearance in the model formula.</li>
+<li>We can usually identify the source of linear dependence with a little thought, or if necessary, using linear algebra to understand the structure of of the matrix <span class="math inline">\(\mathbf{X}^T \mathbf{X}\)</span>.</li>
+</ul>
+</section>
+<section id="orthogonality" class="level2">
+<h2 class="anchored" data-anchor-id="orthogonality">Orthogonality</h2>
+<p>Let <span class="math inline">\(\mathbf{X}_j\)</span> denote the vector of observed values for regressor <span class="math inline">\(X_j\)</span>. Vectors <span class="math inline">\(\mathbf{X}_i\)</span> and <span class="math inline">\(\mathbf{X}_j\)</span> are <span style="color:blue"><strong>orthogonal</strong></span> if <span class="math inline">\(X_i^T X_j=0\)</span>.</p>
+<p>It is generally good for regressors to be orthogonal, especially when designing experiments, because orthogonality ensures that their association with the response variable can be estimated independently from each other. This property leads to stable parameter estimates that are easy to interpret since the addition or removal of orthogonal regressors does not change the other coefficient estimates.</p>
+<p>If a regressor <span class="math inline">\(\mathbf{X}_i\)</span> is orthogonal to another regressor (and all other regressors already in the model):</p>
+<ul>
+<li>It’s addition or deletion from the fitted model will not change the estimated regression coefficients for the other regressors.</li>
+<li>The values of <span class="math inline">\(\mathbf{X}_i\)</span> have no effect on the relation between all other regressors and the prediction.</li>
+<li>Removing the regressor does effect the estimates standard error a little bit.</li>
+</ul>
+<section id="example-odor-data" class="level3">
+<h3 class="anchored" data-anchor-id="example-odor-data">Example: Odor Data</h3>
+<p>The <code>odor</code> data set from the <code>faraway</code> package contains data from an experiment to determine the effects of temperature (<code>temp</code>), gas/liquid ratio (<code>gas</code>), and packing height (<code>pack</code>) in reducing unpleasant <code>odor</code> of a chemical product.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(odor, <span class="at">package =</span> <span class="st">&quot;faraway&quot;</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(odor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  odor temp gas pack
+1   66   -1  -1    0
+2   39    1  -1    0
+3   43   -1   1    0
+4   49    1   1    0
+5   58   -1   0   -1
+6   17    1   0   -1</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="co"># predictors are pairwise orthogonal</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">crossprod</span>(odor<span class="sc">$</span>temp, odor<span class="sc">$</span>gas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1]
+[1,]    0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crossprod</span>(odor<span class="sc">$</span>temp, odor<span class="sc">$</span>pack)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1]
+[1,]    0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">crossprod</span>(odor<span class="sc">$</span>pack, odor<span class="sc">$</span>gas)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     [,1]
+[1,]    0</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="co"># construct model matrix</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>x_odor <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(<span class="sc">~</span> temp <span class="sc">+</span> gas <span class="sc">+</span> pack, </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>                  <span class="at">data =</span> odor)</span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">crossprod</span>(x_odor) <span class="co"># matrix crossproduct X^T X</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            (Intercept) temp gas pack
+(Intercept)          15    0   0    0
+temp                  0    8   0    0
+gas                   0    0   8    0
+pack                  0    0   0    8</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model using all three predictors and intercept</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>odor_lmod1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(odor <span class="sc">~</span> temp <span class="sc">+</span> gas <span class="sc">+</span> pack, <span class="at">data =</span> odor)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(odor_lmod1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)        temp         gas        pack 
+     15.200     -12.125     -17.000     -21.375 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co"># remove the intercept from the model</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>odor_lmod2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(odor <span class="sc">~</span> temp <span class="sc">+</span> gas <span class="sc">+</span> pack <span class="sc">+</span> <span class="dv">0</span>, <span class="at">data =</span> odor)</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(odor_lmod2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   temp     gas    pack 
+-12.125 -17.000 -21.375 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="co"># add intercept back but now remove pack as predictor</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>odor_lmod3 <span class="ot">&lt;-</span> <span class="fu">lm</span>(odor <span class="sc">~</span> temp <span class="sc">+</span> gas, <span class="at">data =</span> odor)</span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(odor_lmod3)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept)        temp         gas 
+     15.200     -12.125     -17.000 </code></pre>
+</div>
+</div>
+</section>
+</section>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div>CC BY-NC-SA</div></div></section></div></main>

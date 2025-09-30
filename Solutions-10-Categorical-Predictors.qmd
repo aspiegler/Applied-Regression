@@ -196,6 +196,14 @@ UN11 |>
 
 
 ```{r}
+temp <- transform(UN11, 
+          d1 = ifelse(group == "oecd", 1, 0),
+          d2 = ifelse(group == "other", 1, 0),
+          d3 = ifelse(group == "africa", 1, 0))
+temp[1:10, c("group", "d1", "d2", "d3")]
+```
+
+```{r}
 # another method in base R
 d1 <- if_else(UN11$group == "oecd", 1, 0)
 d2 <- if_else(UN11$group == "other", 1, 0)
@@ -647,6 +655,99 @@ The interpretation of the **intercept terms** for an interaction model **can be 
 :::
 
 
+# Practice
+
+
+Run the code cell below to load the `storms` data frame from the `dplyr` package. Then answer the questions below. Then run the second code cell below to store cleaned data to `storms_clean`.
+
+```{r}
+# load storms data
+data(storms, package = "dplyr")
+```
+
+
+
+```{r}
+# clean storms data
+storms_clean <- storms |>
+  select(c(wind, pressure, status, lat, long)) |> 
+  mutate(status = factor(status))
+summary(storms_clean)
+```
+
+## Question 16 {#sec-q16}
+
+Create the following three plots.  Plot the response `wind` on the $y$-axis and create
+
+- One plot with `pressure` as the predictor on the $x$-axis.
+- Another plot with `lat` as the predictor on the $x$-axis.
+- A third plot with `long` as the predictor on the $x$-axis.
+
+In each of the three plots, map some attribute (such as color) to the `status` variable so we can include information about the storm `status` in the plot.
+
+
+### Solution to Question 16
+
+```{r}
+ggplot(storms_clean, aes(x = pressure, y = wind, color = status)) + 
+  geom_point()
+```
+
+
+
+
+## Question 17 {#sec-q17}
+
+Based on the plots in [Question 16](#sec-q16), does it make sense to use `pressure` as a predictor? Use `lat` as a predictor? Use `long` as a predictor? Explain why or why not.
+
+### Solution to Question 17
+
+
+<br>  
+
+## Question 18 {#sec-q18}
+
+The categorical variable `status` has 9 different levels listed below.
+
+```{r}
+levels(storms_clean$status)
+```
+
+
+Add 9 dummy variables named `s1`, `s2`, ... , `s9` to the `storms_clean` data frame.
+
+### Solution to Question 18
+
+
+<br>  
+
+
+## Question 19 {#sec-q19}
+
+Construct a parallel lines model for the response variable `wind` using regressors `pressure` and `status`. 
+
+- Write out a formula to predict the `wind` speed for storms classified with the status `hurricane`. Interpret the values of the coefficients in practical terms.
+- Write out a formula to predict the `wind` speed for storms classified with the status `tropical storm`. Interpret the values of the coefficients in practical terms.
+
+### Solution to Question 19
+
+
+<br>  
+
+## Question 20 {#sec-q20}
+
+Construct a separate lines (or interaction) model for the response variable `wind` using regressors `pressure` and `status`. 
+
+- Write out a formula to predict the `wind` speed for storms classified with the status `hurricane`. Interpret the values of the coefficients in practical terms.
+- Write out a formula to predict the `wind` speed for storms classified with the status `tropical storm`. Interpret the values of the coefficients in practical terms.
+
+### Solution to Question 20
+
+
+<br>  
+
+
+
 
 
 # Appendix A: Multiple Linear Regression Models
@@ -719,4 +820,162 @@ Some useful commands working with `lm`:
 - `names(lmod)` lists quantities we can extract from the `lmod`.
 - `vcov(lmod)` estimated covariance matrix of the regression coefficients.
 
+# Appendix C: Collinearity and Regression
 
+Suppose we want to construct a one-factor model where the categorical variable has $d$ levels and we include $d$ dummy variables (one for each level instead of $d-1$ by dropping the first dummy variable) and an intercept term. Why is this problematic?
+
+Consider our example with `UN11` data where we constructed a model for predicting the response `lifeExpF` based on the level of the categorical variable `group`.
+
+
+```{r}
+# create dummy variables
+library(alr4)
+data(UN11)
+UN11 <- transform(UN11, 
+          d1 = ifelse(group == "oecd", 1, 0),
+          d2 = ifelse(group == "other", 1, 0),
+          d3 = ifelse(group == "africa", 1, 0))
+```
+
+
+- Each observation is in exactly one group (either `oecd`, `other`, or `africa`).
+- One of the dummy variables is `1` and the other two are `0`.
+- Thus, for each observation, $d_1 + d_2 + d_3 = 1$.
+
+
+```{r}
+# construct model matrix
+x <- model.matrix(~ d1 + d2 + d3, data = UN11)
+head(x)
+```
+
+We can see the columns are linearly dependent since $\text{intercept} = d_1 + d_2 + d_3$.
+
+
+```{r}
+# compute X^T X
+z <- crossprod(x)
+z
+```
+
+
+```{r}
+# try to find inverse of X^T X
+det(z)
+#solve(z)
+```
+
+If we try to solve using a matrix decomposition such as $QR$ or $SVD$, we run into trouble as well.
+
+```{r}
+# the QR decomposition
+qr_result <- qr(x)
+q <- qr.Q(qr_result)
+r <- qr.R(qr_result)
+q[1:6, ]
+r
+```
+
+If we try to solve $R \boldsymbol{\beta} = Q^T \mathbf{y}$, there is a free variable and the solution is not unique. With $SVD$, the diagonal matrix $\Sigma$ has a zero along the diagonal and is not invertible.
+
+
+```{r}
+svd_result <- svd(x)
+v <- svd_result$v
+sigma <- diag(svd_result$d)  # makes diagonal from singular values
+u <- svd_result$u
+v
+u[1:6, ]
+sigma
+```
+
+## Identifiability
+
+The least squares estimator is the solution to the matrix equation
+$\mathbf{X}^T \mathbf{X} \boldsymbol{\hat{\beta}} = \mathbf{X}^T \mathbf{y}$,
+where $\mathbf{X}$ is the $n \times p$ [**model (or design) matrix**]{style="color:blue"}.
+
+
+[**Unidentifiability**]{style="color:blue"} will occur when $X$ is not full rank} (the columns of $X$ are linearly dependent).
+
+- If $\mathbf{X}^T \mathbf{X}$ cannot be inverted, there is no unique solution to the equation and $\boldsymbol{\hat{\beta}}$ is [**unidentifiable**]{style="color:blue"}. 
+- Unidentifiable means that different parameter values can result in the same model (predictions).
+
+::: {.callout-note}
+Problems with unidentifiability are rare for observational data, but more common with experiments.  Here are some examples for observational data:
+
+- A person's weight is measured and entered in both pounds and kilos.  One is just a multiple of the other.
+- We record the number of years of pre-university education, university education, and total education.  There is a perfect linear relationship between these variables.
+- We have more variables than observations.  
+  - When $p=n$ we have a [**saturated model**]{style="color:blue"}, and we may be able to estimate some of the parameters.  
+  - When $p>n$, we have a [**supersaturated model**]{style="color:blue"}, and cannot uniquely estimate parameters. 
+:::
+
+- Removing one (or more) of the linearly dependent columns should correct the problem!
+- R tries to fit the largest identifiable model by removing variables in reverse order of appearance in the model formula.
+- We can usually identify the source of linear dependence with a little thought, or if necessary, using linear algebra to understand the structure of of the matrix $\mathbf{X}^T \mathbf{X}$.
+
+
+## Orthogonality
+
+Let $\mathbf{X}_j$ denote the vector of observed values for regressor $X_j$. Vectors $\mathbf{X}_i$ and $\mathbf{X}_j$ are [**orthogonal**]{style="color:blue"} if $X_i^T X_j=0$.
+
+
+It is generally good for regressors to be orthogonal, especially when designing experiments, because orthogonality ensures that their association with the response variable can be estimated independently from each other. This property leads to stable parameter estimates that are easy to interpret since the addition or removal of orthogonal regressors does not change the other coefficient estimates.
+
+If a regressor $\mathbf{X}_i$ is orthogonal to another regressor (and all other regressors already in the model):
+
+- It’s addition or deletion from the fitted model will not change the estimated regression coefficients for the other regressors.
+- The values of $\mathbf{X}_i$ have no effect on the relation between all other regressors and the prediction.
+- Removing the regressor does effect the estimates standard error a little bit.
+
+
+
+### Example: Odor Data
+
+The `odor` data set from the `faraway` package contains data from an experiment to determine the effects of temperature (`temp`), gas/liquid ratio (`gas`), and packing height (`pack`) in reducing unpleasant `odor` of a chemical product.
+
+
+```{r}
+data(odor, package = "faraway")
+head(odor)
+```
+
+
+```{r}
+# predictors are pairwise orthogonal
+crossprod(odor$temp, odor$gas)
+crossprod(odor$temp, odor$pack)
+crossprod(odor$pack, odor$gas)
+```
+
+
+
+```{r}
+# construct model matrix
+x_odor <- model.matrix(~ temp + gas + pack, 
+                  data = odor)
+crossprod(x_odor) # matrix crossproduct X^T X
+```
+
+
+
+```{r}
+# model using all three predictors and intercept
+odor_lmod1 <- lm(odor ~ temp + gas + pack, data = odor)
+coef(odor_lmod1)
+```
+
+
+```{r}
+# remove the intercept from the model
+odor_lmod2 <- lm(odor ~ temp + gas + pack + 0, data = odor)
+coef(odor_lmod2)
+```
+
+
+```{r}
+# add intercept back but now remove pack as predictor
+odor_lmod3 <- lm(odor ~ temp + gas, data = odor)
+coef(odor_lmod3)
+```
