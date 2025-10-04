@@ -515,6 +515,14 @@ UN11 <- UN11 |>
 # add a line geom for each model
 ggplot(UN11, aes(x = log(ppgdp), y = lifeExpF)) +
   geom_point(aes(shape = group, color = group)) +
+  geom_smooth(method = "lm")
+```
+
+
+```{r}
+# add a line geom for each model
+ggplot(UN11, aes(x = log(ppgdp), y = lifeExpF)) +
+  geom_point(aes(shape = group, color = group)) +
   geom_line(aes(x = log(ppgdp), y = life_fitted, color = group))
 ```
 
@@ -694,7 +702,16 @@ ggplot(storms_clean, aes(x = pressure, y = wind, color = status)) +
 ```
 
 
+```{r}
+ggplot(storms_clean, aes(x = lat, y = wind, color = status)) + 
+  geom_point()
+```
 
+
+```{r}
+ggplot(storms_clean, aes(x = long, y = wind, color = status)) + 
+  geom_point()
+```
 
 ## Question 17 {#sec-q17}
 
@@ -702,6 +719,10 @@ Based on the plots in [Question 16](#sec-q16), does it make sense to use `pressu
 
 ### Solution to Question 17
 
+
+Using `pressure` in the model does make sense there does appear to be a strong (negative) linear relationship.
+
+On the other hand, using `lat` or `long` in the model does not make since there does not seem to be a linear relationship with the response.
 
 <br>  
 
@@ -713,11 +734,26 @@ The categorical variable `status` has 9 different levels listed below.
 levels(storms_clean$status)
 ```
 
-
 Add 9 dummy variables named `s1`, `s2`, ... , `s9` to the `storms_clean` data frame.
 
 ### Solution to Question 18
 
+```{r}
+status_name <- levels(storms_clean$status)
+
+storms_clean <- storms_clean |> 
+  mutate(s1 = if_else(status == status_name[1], 1, 0),
+         s2 = if_else(status == status_name[2], 1, 0),
+         s3 = if_else(status == status_name[3], 1, 0),
+         s4 = if_else(status == status_name[4], 1, 0),
+         s5 = if_else(status == status_name[5], 1, 0),
+         s6 = if_else(status == status_name[6], 1, 0),
+         s7 = if_else(status == status_name[7], 1, 0),
+         s8 = if_else(status == status_name[8], 1, 0),
+         s9 = if_else(status == status_name[9], 1, 0))
+
+head(storms_clean)
+```
 
 <br>  
 
@@ -731,8 +767,62 @@ Construct a parallel lines model for the response variable `wind` using regresso
 
 ### Solution to Question 19
 
+```{r}
+# without using dummy variables
+# the output is easier to interpret
+storm_lmodp <- lm(wind ~ pressure + status, data = storms_clean)
+storm_lmodp
+```
 
-<br>  
+
+$$\begin{align}
+E( \widehat{\mbox{wind}} \vert \mbox{pressure} = x , \ \text{status = hurricane} ) &=  947.9299 - 0.9094 x + 19.6783 \\
+&= 964.6082 - 0.9094 x.
+\end{align}$$
+
+- The coefficient $19.6783$ tells us how much greater the prediction for the wind speed is for hurricanes are compared to disturbances that have the same pressure. It means the disturbance line has been vertically shift up by $19.6783$ to obtain the hurricane line
+
+- Holding all other variables constant, for each 1 millibar increase in pressure in a hurricane, the hurricane's wind speed is predicted to decrease by about $0.9094$ knots, on average.
+
+- The wind speed of a hurricane with 0 millibars of pressure is predicted to be $947.9299$ knots. This does not make practical sense since Earth has an atmosphere and it is impossible for the pressure to be 0 millibars anywhere on Earth.
+
+
+$$\begin{align}
+E( \widehat{\mbox{wind}} \vert \mbox{pressure} = x , \ \text{status = tropical storm} ) &=  947.9299 - 0.9094 x + 6.4719 \\
+&= 954.4018 - 0.9094 x.
+\end{align}$$
+
+
+- The coefficient $6.4719$ tells us how much greater the prediction for the wind speed is for tropical storms are compared to disturbances that have the same pressure. It means the disturbance line has been vertically shift up by $6.4719$ to obtain the tropical storm line. 
+
+- Holding all other variables constant, for each 1 millibar increase in pressure in a tropical storm, the tropical storm's wind speed is predicted to decrease by about $0.9094$ knots, on average.
+
+- The wind speed of a tropical storm with 0 millibars of pressure is predicted to be $954.4018$ knots. This does not make practical sense since Earth has an atmosphere and it is impossible for the pressure to be 0 millibars anywhere on Earth.
+
+
+```{r}
+# using dummy variables gives same result
+# output is a little harder to interpret
+lm(wind ~ pressure + s2 + s3 + s4 + s5 + s6 + s7 + s8 + s9, data = storms_clean)
+```
+
+::: {.callout-note}
+In the plot below it may be difficult to make out some of the regression lines since they are the same color as the points which they pass through, and some are very close and overlap each other.
+:::
+
+```{r}
+# create column of predictions
+storms_clean <- storms_clean |>
+  mutate(wind_fitted = predict(storm_lmodp))
+```
+
+```{r}
+# add a line geom for each model
+ggplot(storms_clean, aes(x = pressure, y = wind, color = status)) +
+  geom_point(size = 0.5) +  # make points smaller so can see lines
+  geom_line(aes(x = pressure, y = wind_fitted, color = status),
+            linewidth = 1)
+```
 
 ## Question 20 {#sec-q20}
 
@@ -743,11 +833,49 @@ Construct a separate lines (or interaction) model for the response variable `win
 
 ### Solution to Question 20
 
+```{r}
+storm_lmods <- lm(wind ~ pressure * status, data = storms)
+storm_lmods
+```
 
 <br>  
 
+$$\begin{align}
+E( \widehat{\mbox{wind}} \vert \mbox{pressure} = x , \ \text{status = hurricane} ) &=  957.12115 - 0.91852 x + 92.77579 - 0.07583 x \\
+&= 1049.897 -0.994354 x.
+\end{align}$$
 
 
+- The coefficient $92.77579$ tells us how much greater the prediction for the wind speed is for hurricanes that have 0 millibars of pressure compared to disturbances (the baseline group) with 0 millibars of pressure. It means the hurricane line is generally above the disturbance line since it is positive.
+
+- The interaction coefficient $-0.07583$ tells the slope of the regression is line for hurricanes is more negative (steeper in this case) than the slope of the regression line for disturbances (the baseline group). This means increases pressure by the same amount in a hurricane compared to a disturbance will result in a greater decrease in the wind speed in hurricanes compared to disturbances.
+
+
+- Holding all other variables constant, for each 1 millibar increase in pressure in a hurricane, the hurricane's wind speed is predicted to decrease by about $0.9944$ knots, on average.
+
+- The wind speed of a hurricane with 0 millibars of pressure is predicted to be $1049.897$ knots. This does not make practical sense since Earth has an atmosphere and it is impossible for the pressure to be 0 millibars anywhere on Earth.
+
+$$\begin{align}
+E( \widehat{\mbox{wind}} \vert \mbox{pressure} = x , \ \text{status = tropical storm} ) &=  957.12115 - 0.91852 x - 78.53245 - 0.07583 x \\
+&= 878.5887 - 0.83354 x.
+\end{align}$$
+
+
+- The coefficient $-78.53245$ tells us how much greater the prediction for the wind speed is for tropical storms that have 0 millibars of pressure compared to disturbances (the baseline group) with 0 millibars of pressure. It means the tropical storm line is generally below the disturbance line since it is negative.
+
+- The interaction coefficient $0.08498$ tells the slope of the regression is line for tropical storms is less negative (flatter in this case) than the slope of the regression line for disturbances (the baseline group). This means increases pressure by the same amount in a tropical storm compared to a disturbance will result in a smaller decrease in the wind speed in tropical storms compared to disturbances.
+
+
+- Holding all other variables constant, for each 1 millibar increase in pressure in a tropical storm, the tropical storm's wind speed is predicted to decrease by about $0.83354$ knots, on average.
+
+- The wind speed of a tropical storm with 0 millibars of pressure is predicted to be $878.5887$ knots. This does not make practical sense since Earth has an atmosphere and it is impossible for the pressure to be 0 millibars anywhere on Earth.
+
+
+```{r}
+ggplot(storms_clean, aes(x = pressure, y = wind, color = status)) +
+  geom_point(size = 0.5) + 
+  geom_smooth(method = "lm") 
+```
 
 
 # Appendix A: Multiple Linear Regression Models
