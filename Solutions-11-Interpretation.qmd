@@ -353,6 +353,13 @@ With observational data, variables are almost never truly independent. Maybe inc
 We can consider how does adding or removing one predictor effect the others in the model. For example, does removing `log(Miles)` effect the role of `Tax` in linear model for `Fuel`.
 
 
+----
+
+# WE STOPPED HERE MONDAY
+
+----
+
+
 ## Question 8 {#sec-q8}
 
 
@@ -365,52 +372,9 @@ Fit a linear model for the response `Fuel` in terms of predictors `Tax`, `Dlic`,
 ### Solution to Question 8
 
 
-```{r}
-# remove log(Miles) from fuel_lmod
-fuel_lmod1 <- update(fuel_lmod, . ~ . - log(Miles))
-coef(fuel_lmod1)
-```
 
-
-
-```{r}
-b0_new <- coef(fuel_lmod1)[[1]] #beta_0
-b1_new <- coef(fuel_lmod1)[[2]] #beta_1
-b2_new <- coef(fuel_lmod1)[[3]] #beta_2
-b3_new <- coef(fuel_lmod1)[[4]] #beta_3
-```
-
-
-Next, we compute the new intercept term.
-
-```{r}
-(effect_tax_new <- b0_new + b2_new * xbar_Dlic + 
-   b3_new * xbar_Income1K)
-```
-
-Thus we have the model
-
-$$\mbox{E}(\mbox{Fuel} \ | \ \mbox{Tax}, \mbox{Dlic}=903.68, \mbox{Income1K}=28.4) = 704.364 - 4.527 (\mbox{Tax})$$
-
-When we include `log(Miles)` as a regressor, we have:
-
-$$\mbox{E}(\mbox{Fuel} \ | \ \mbox{Tax, Dlic=903.68, Income1K=28.4, log(Miles) = 10.91}) = 698.34 - 4.23(\mbox{Tax})$$
-
-```{r}
-plot(predictorEffect("Tax", fuel_lmod1))
-```
-
-
-Whether or not we include `log(Miles)` as a regressor:
-
-- The slope and intercept do not change too much. 
-- The slope in updated model (without `log(Miles)`) has a greater (negative) magnitude. 
-- The regressors `Tax` and `log(Miles)` seem to be mostly independent.
-- Any additional variability in the response `log(Miles)` explains is not likely already accounted for by `Tax`.
-
-
-
-
+<br>  
+<br>  
 
 
 ## Question 9 {#sec-q9}
@@ -447,48 +411,11 @@ Discuss how the values of the coefficients have changed (or not) and why that ma
 
 ### Solution to Question 9
 
-### Another Model
 
-
-```{r}
-# change from Income1K to Income
-fuel_lmod2 <- lm(Fuel ~ Tax + Dlic + Income + log(Miles), data = fuel2001)
-coef(fuel_lmod2)
-```
-
-
-$$E( \mbox{Fuel} \ | \ \mbox{Tax, Drivers, Income, Miles})=154.193 - 4.228 (\mbox{Tax}) + 0.479 (\mbox{Dlic}) - 0.006 (\mbox{Income}) + 26.755 \log{(\mbox{Miles})}$$
-
-We have only changed the predictor `Income1K` in `fuel_lmod` to `Income` which is used in the new `fuel_lmod2`. The other predictors and response variable have not been changed. Recall, `Income = Income1K * 1000`.
-
-- An increase of `Income1K` by 1 unit decreased `Fuel` by $6.135$ gallons per person.
-- An increase in `Income1K` by 1 unit is equivalent to an increase in `Income` by $0.001$ units.
-- In our new model, we see 1 unit increase `Income` is associated with an increase of $(6.135)(0.001) = 0.006135$.
-
-
-
-#### Yet Another Model
-
-```{r}
-# fit model several changes to units
-fuel_lmod3 <- lm(FuelC ~ Tax + Drivers + Income + log(Miles), data = fuel2001)
-coef(fuel_lmod3)
-```
-
-$$E( \mbox{FuelC} \ | \ \mbox{Tax, Drivers, Income, Miles})=227,\!356 - 22,\!700 (\mbox{Tax}) + 0.6566 (\mbox{Drivers}) - 18.196 (\mbox{Income}) + 75,\!794.1 \log{(\mbox{Miles})}$$
-
-- None of the coefficients have changed signs. 
-  - The direction (positive/negative) of each association should not be affected, 
-  - But the magnitudes have changed.
-- Intercept has increased (a lot). This makes sense since the response `FuelC` has larger units than population adjusted `Fuel` originally used in our model.
-- The `Tax` slope has also increased in magnitude since its units are the same but the units of the response are no longer adjusted for population (and thus much larger values).
-- The `log(Miles)` slope also increased in magnitude due to the same reason as with `Tax`. It's units are the same in both models while the response is not.
--  The `Income1K` slope has increased as well, but by not as much since some of the change in units to `FuelC` has been offset by using `Income` in place of `Income1K` (recall `Income = 1000 * Income1K`).
-- `Fuel` and `Dlic` in the original model are all adjusted for population. Unadjusted both for population and using `FuelC` and `Dlic` instead does not effect the slope coefficients as much since they changes "cancel out" to some degree.
 
 
 <br>  
-
+<br>  
 
 # Regressors on Logarithmic Scale
 
@@ -508,8 +435,7 @@ summary(fuel2001)
 ### Solution to Question 10
 
 
-Predictors that span several orders of magnitude should be transformed to a logarithmic scale.
-
+<br>  
 <br>  
 
 
@@ -588,9 +514,10 @@ summary(lmod_log)$coefficients[5, 1] #log coeff
 ### Solution to Question 11
 
 
-We can interpret the regression coefficient for `log(Miles)` as follows. For every 1% increase in the number of miles of Federal highway in a state, the fuel consumption per capita is expected to increase by $0.26755$ gallons per person, on average.
 
-We can interpret the regression coefficient for $\log_{10}{(\mbox{Miles})}$ as follows. If we increase the number of miles of Federal highway in a state by a factor of 10, the fuel consumption per capita is expected to increase by $61.6$ gallons per person, on average.
+<br>  
+<br>  
+
 
 ## Log-Level Interpretation
 
@@ -629,7 +556,6 @@ When we scale $X$ by a factor of $c$, the response is predicted to grow by a fac
 
 [**Log-log**]{style="color:blue"}: $\mathbf{\mbox{E}(\log{Y} \ | \ X=x) = \boldsymbol\beta_0 + \boldsymbol\beta_1 \log{X}}$: When we scale $X$ by a factor of $c$, the response is predicted to grow by a factor of $c^{\beta_1}$, on average.
 
-
 ## Question 12 {#sec-q12}
 
 Answer each of the following.
@@ -641,10 +567,6 @@ For a log-level model, interpret the relationship between $X$ and the mean of $Y
 
 ### Solution to Question 12a
 
-- The expected value of $Y$ is predicted to increase exponentially with a continuous exponential growth rate of $0.3$ or $30\%$.
-- For each increase in $X$ by 1 unit, the expected value of $Y$ is predicted to increase by a factor of $e^{0.3} \approx 1.349859$.
-- For each increase in $X$ by 1 unit, the expected value of $Y$ is predicted to grow by $34.99\%$ on average.
-- All three of the interpretations above are equivalent.
 
 <br>  
 
@@ -655,7 +577,6 @@ For a log-log model, what is the expected change in $Y$ if we multiply $X$ by a 
 
 ### Solution to Question 12b
 
-- When we scale $X$ by a factor of $c$, the response is predicted to grow by a factor of $c^{\beta_1}$, on average.
 
 <br>  
 
@@ -666,8 +587,6 @@ For a log-log model, interpret the relationship between $X$ and the expected val
 
 ### Solution to Question 12c
 
-- When we scale $X$ by a factor of $1.10$ (a 10% increase), the response is predicted to grow by a factor of $(1.1)^{0.3} \approx 1.029$, on average. 
-- Thus, when we increase  $X$ by 10% increase, the response is predicted to grow by by $2.9\%$, on average. 
 
 <br>  
 <br>  
@@ -701,9 +620,11 @@ pairs(~ BMI18 + WT2 + WT9 + WT18, data = BGSgirls)
 
 ### Solution to Question 13
 
-- First note there is a **positive linear relationship between the response and the three predictors**.
-- The relationship is strongest between `BMI18` and `WT18`.  
-- The predictors themselves are also positively correlated
+
+
+<br>  
+<br>  
+
 
 ## Question 14 {#sec-q14}
 
@@ -726,14 +647,13 @@ By taking the difference between the weight measurements, we can create new, ess
 - Add both new variables to the data frame `BGSgirls`.
 
 
+
 ### Solution to Question 15
 
 
-```{r}
-BGSgirls$DW9 <- BGSgirls$WT9-BGSgirls$WT2
-BGSgirls$DW18 <- BGSgirls$WT18-BGSgirls$WT9
-#BGSgirls$DW218 <- BGSgirls$WT18-BGSgirls$WT2
-```
+
+<br>  
+<br>  
 
 
 ## Question 16 {#sec-q16}
@@ -745,13 +665,17 @@ Based on the scatter plot matrix above, how can you tell that the new regressors
 ### Solution to Question 16
 
 
-```{r}
-# basic scatterplot matrix
-pairs(~ BMI18 + DW9 + DW18, data = BGSgirls)
-```
 
+<br>  
+<br>  
 
 ## Comparing BMI Different Models
+
+```{r}
+#| echo: false
+BGSgirls$DW9 <- BGSgirls$WT9-BGSgirls$WT2
+BGSgirls$DW18 <- BGSgirls$WT18-BGSgirls$WT9
+```
 
 We construct several similar multiple linear regression models for `BMI18`.
 
@@ -790,13 +714,11 @@ coef(m3)
 | `DW18` |  --           | 0.287        | `NA` |
 
 
-
 ## Question 17 {#sec-q17}
 
 Comment on how the `WT2` coefficient is the same/different in the different models.
 
 ### Solution to Question 17
-
 
 
 <br>  
@@ -811,8 +733,11 @@ Why are their `NA`s in Model 3?
 ### Solution to Question 18
 
 
+
+
 <br>  
 <br>  
+
 
 
 
@@ -831,4 +756,3 @@ There two main methods for collecting data: observational studies and experiment
   - **We should be very careful claiming causation when working with observational data.**
   
 - We are not always able to collect data using an experiment due to ethical and practical limitations.
-  
