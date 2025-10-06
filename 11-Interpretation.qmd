@@ -650,9 +650,9 @@ Comment on how the `WT2` coefficient is the same/different in the different mode
 
 ### Solution to Question 17
 
-In Model 1, the effect of `WT2` seems to be negative, while in Model 2 we cannot conclude the effect is different from 0.
 
-When regressors are correlated, interpretation of the effect of a regressor depends not only on the other regressors in the model, but also upon the linear transformation of the variables used.
+<br>  
+<br>  
 
 
 ## Question 18 {#sec-q18}
@@ -662,12 +662,12 @@ Why are their `NA`s in Model 3?
 
 ### Solution to Question 18
 
-The regressors `DW9` and `DW18` are a related by a formula to `WT2`, `WT9`, and/or `WT18`. Thus the model matrix has columns that are linearly dependent. 
 
 
-::: {.callout-note}
-R first removes variables entered last in the model until there is no orthogonal relations.
-:::
+
+<br>  
+<br>  
+
 
 
 
