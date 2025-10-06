@@ -1,0 +1,834 @@
+---
+title: "Solutions 11: Interpretation of Coefficients"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+editor: source
+#execute:
+#  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+
+## Additional Reading
+
+---
+
+- [Chapter 4 Interpreting a Linear Model](https://jfrench.github.io/LinearRegression/interp-chapter.html#effect-plots) from *A Progressive Introduction to Linear Models*
+- Pages 68-70 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/Q7wgCRrz))
+- Chapter 4 of *Applied Linear Regression* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+
+
+# Loading Required Packages
+ 
+---
+
+
+```{r}
+#| message: false
+library(tidyverse)
+library(alr4) # for fuel2001 data
+library(effects)  # for effect plots
+```
+
+
+# Constructing a Multiple Linear Regression Model
+
+
+Run the code chunk below to load the `fuel2001` data frame from the `alr4` package.
+
+
+```{r}
+# be sure you have loaded the alr4 package
+data(fuel2001)
+```
+
+The variables (for the year 2001 unless otherwise noted) are:
+
+- `Drivers`: Number of Licensed drivers in the state
+- `FuelC`: Gasoline sold for road use (1000s of gal.)
+- `Miles`: Miles of Federal-aid highway miles in the state
+- `Pop`: 2001 population age 16 and over
+- `Tax`: Gasoline state tax rate (cents/gallon)
+- `Income`: Per capita personal income (year 2000)
+
+> What is the relationship between fuel consumption and various regressors for the 50 United States and the District of Columbia?  
+
+## Transforming the Data
+
+- Some of the variables are adjusted for population. Others are are not.
+- Some dollar values are given in thousands of dollars. Others are given in dollars.
+- Some units of fuel are given in gallons. Others are given in 1000's of gallons.
+- Our model should have regressor variables with compatible units with the response variable.
+
+## Question 1 {#sec-q1}
+
+Create the following variables:
+
+- Create a new variable called `Fuel` that converts units of `FuelC` from 1000's of gallons to **gallons per person**.
+- Create a new variable called `Income1k`that converts the units of `Income` from dollars per capita to **1000's of dollars** per capita.
+- Convert the units of `Drivers` from number people to **number of people per capita**.
+
+
+After running the code in your solution, you will have created and added the three new variables to the `fuel2001` data frame:
+
+- `Fuel`: Average amount of gasoline sold for road use per person (Gallons/person)
+- `Income1K`: Average personal income (in thousands) for the year 2000 per person ($1K/person)
+- `Dlic`: Number of licensed drivers per 1000 persons (licensed drivers/1K persons) 
+
+### Solution to Question 1
+
+
+#### Code in Base R
+
+```{r}
+# create new regressors/transformed responses to fuel2001 data frame
+fuel2001$Fuel <- 1000 * fuel2001$FuelC / fuel2001$Pop
+fuel2001$Dlic <- 1000 * fuel2001$Drivers / fuel2001$Pop
+fuel2001$Income1K <- fuel2001$Income / 1000
+```
+
+
+#### Code Use `dplyr`
+
+```{r}
+# create new regressors/transformed responses to fuel2001 data frame
+fuel2001 <- fuel2001 |>
+  mutate(Fuel = 1000 * FuelC / Pop,
+         Dlic = 1000 * Drivers / Pop,
+         Income1K = Income / 1000)
+```
+
+
+```{r}
+glimpse(fuel2001)
+```
+
+## Question 2: Fitting a Model {#sec-q2}
+
+
+Use R to find the coefficients for a regression model to determine how `Fuel` (gallons per person) is related to `Tax` (cents per gallon), `Dlic` (drivers per 1000 residents), `Income1k` (thousands of dollars of income per capita), and `Miles` (federal highway miles). Then write out the formula in the form below.
+
+$$E( \mbox{Fuel} \ | \ \mbox{Tax, Dlic, Income1K, Miles})=\beta_0+\beta_1 (\mbox{Tax}) +\beta_2 (\mbox{Dlic}) + \beta_3 (\mbox{Income1K}) + \beta_4 \log{(\mbox{Miles})}$$
+
+::: {.callout-tip}
+Store the `lm` output to `fuel_lmod` for consistency with future code.
+:::
+
+
+### Solution to Question 2
+
+
+```{r}
+# fit model
+fuel_lmod <- lm(Fuel ~ Tax + Dlic + Income1K + log(Miles), data = fuel2001)
+coef(fuel_lmod)
+```
+
+
+We see the fitted model is:
+
+$$\widehat{\mbox{E}}(\mbox{Fuel} \ | \ \mbox{Tax, Dlic, Income1k, Miles}) = 154.19 - 4.228 (\mbox{Tax}) + 0.472 (\mbox{Dlic}) - 6.135(\mbox{Income1K}) + 26.755 \log{(\mbox{Miles})}$$
+
+This equation represents the estimated mean of `Fuel` given fixed values of the regressors `Tax`, `Dlic`, `Income1K`, and `Miles`.
+
+
+# Interpreting a Multiple Linear Regression Model
+
+
+Each observation in the data set `fuel2001` consists of data from a single state or the District of Columbia. There are 51 observations in total. Our model in [Question 2](#sec-q2) uses the following variables:
+
+- `Fuel`: Average amount of gasoline sold for road use per person (Gallons/person)
+- `Tax`: Gasoline state tax rate (cents/gallon)
+- `Dlic`: Number of licensed drivers per 1000 persons (licensed drivers/1K persons) 
+- `Income1K`: Average personal income (in thousands) for the year 2000 per person ($1K/person)
+- `Miles`: Miles of Federal-aid highway miles in the state
+
+## Question 3: Interpreting the Intercept {#sec-q3}
+
+Interpret the intercept coefficient in the multiple linear regression model from [Question 2](#sec-q2) in practical terms, if possible.
+
+$$\widehat{\mbox{E}}(\mbox{Fuel} \ | \ \mbox{Tax, Dlic, Income1k, Miles}) = 154.19 - 4.228 (\mbox{Tax}) + 0.472 (\mbox{Dlic}) - 6.135(\mbox{Income1K}) + 26.755 \log{(\mbox{Miles})}$$
+
+### Solution to Question 3
+
+If a state has no tax on gasoline, no licensed drivers, and an average individual income of 0 dollars per person, then the expected average amount of gasoline sold for road use is $154.19$ gallons per person. This does not make any practical sense since no such state exists (it is out of our range of interest).
+
+## Question 4: Interpreting a Slope {#sec-q4}
+
+Interpret the slope coefficient for `Tax` in the multiple linear regression model from [Question 2](#sec-q2) in practical terms, if possible.
+
+
+### Solution to Question 4
+
+
+*Statistically adjusting for the effects of the number of drivers, the average personal income of the state, and the number of federal-aid highway miles in the state*, each 1 cent per gallon increase in the gas state tax is *associated* with a decrease in the average amount of gasoline sold for road use by about $4.228$ gallons per person in the state.
+
+*Controlling for the effects of the number of drivers, the average personal income of the state, and the number of federal-aid highway miles in the state*, each 1 cent per gallon increase in the gas state tax is *associated* with a decrease in the average amount of gasoline sold for road use by about $4.228$ gallons per person in the state.
+
+*If we hold the number of drivers, the average personal income of the state, and the number of federal-aid highway miles in the state constant*, each 1 cent per gallon increase in the gas state tax is *associated* with a decrease in the average amount of gasoline sold for road use by about $4.228$ gallons per person in the state.
+
+# Controllling for Other Variables
+
+The `fuel2001` data is [**observational**]{style="color:blue"}. **We can observe association but not the cause of the association**. In order to claim a change in the value of one predictor is what *causes* the response variable to change we would have forcibly to change the state sales tax on gasoline while hold all other variables steady, and then observe what happens to the amount of fuel sold. That is neither possible nor ethical. We can force people to make the same amount of money for example.
+
+*Controlling* variables is rare in many fields (social, political, and behavioral sciences for example), especially with observational data.  [**Experimental designs**]{style="color:blue"} are typically needed if researchers are to control the level of or exposure to a variable.
+
+::: {.callout-note}
+[See the appendix](#sec-append) for a brief summary of observational studies and experiments.
+:::
+
+When we say we are controlling for other variables, we can interpret this as saying the relation between the predictor and response variable is the same no matter the values of the other predictors.
+
+*If we hold the number of drivers, the average personal income of the state, and the number of federal-aid highway miles in the state constant*
+
+
+- If a state has 800 licensed drivers per $1,000$ residents, an average personal income of $30,\!000$ per person, and $90,\!000$ miles of federal-aid highway miles, increasing the state gas tax by 1 cent per gallon is associated with an expected decrease in the average amount of gasoline sold for road use by about $4.228$ gallons per person in the state.
+
+
+- If another state has 900 licensed drivers per $1,000$ residents, an average personal income of $50,\!000$ per person, and $2,\!000$ miles of federal-aid highway miles, increasing the state gas tax by 1 cent per gallon is associated with an expected decrease in the average amount of gasoline sold for road use by about $4.228$ gallons per person in the state.
+
+
+# Effects Plots
+
+An [**effects plot**]{style="color:blue"} displays the effect of a regressor on the response while holding the other **regressors** at their mean values.
+
+$$\begin{align}
+\hat{y} &= \beta_0 + \beta_1 (\bar{X}_1) +  \ldots + \beta_{i-1} (\bar{X}_{i-1}) + {\color{blue}{\beta_i (X_i)}} + \beta_{i+1} (\bar{X}_{i+1}) + \ldots + \beta_{p-1} (\bar{X}_{p-1})\\
+&= \gamma_0 + {\color{blue}{\beta_i (X_i)}}
+\end{align}$$
+
+
+::: {.callout-warning}
+The distinction between the terms **regressors** and **predictors** is important. `Miles` as a predictor variable that we regress on `log(Miles)`. We use the mean value of the regressor `log(Miles)` when constructing the effects plot and not the mean of the predictor.
+:::
+
+
+## Question 5 {#sec-q5}
+
+Complete the R code below to compute the sample means for each of the **regressors**.
+
+
+### Solution to Question 5
+
+
+```{r}
+xbar_Tax <- mean(fuel2001$Tax)
+xbar_Dlic <- mean(fuel2001$Dlic)
+xbar_Income1K <- mean(fuel2001$Income1K)
+xbar_log_Miles <- mean(log(fuel2001$Miles))
+```
+
+
+## Question 6 {#sec-q6}
+
+What is the effect of `Tax` on the expected fuel consumption when the other **regressors** are fixed at their sample mean values? Write a formula to express this relation.
+
+
+$$\widehat{\mbox{E}}(\mbox{Fuel} \ | \ \mbox{Tax}, \mbox{Dlic} = \overline{\mbox{Dlic}}, \mbox{Income1k} = \overline{\mbox{Income1k}}, \log{(\mbox{Miles})} = \gamma_0 +  \beta_1 (\mbox{Tax}) $$
+
+### Solution to Question 6
+
+
+First, we extract each of the coefficients in the Fuel Consumption model `fuel_lmod` from the coefficient array below.
+
+```{r}
+coef(fuel_lmod)
+```
+
+```{r}
+# one method
+b0 <- summary(fuel_lmod)$coefficients[1, 1] #beta_0
+b1 <- summary(fuel_lmod)$coefficients[2, 1] #beta_1
+b2 <- summary(fuel_lmod)$coefficients[3, 1] #beta_2
+b3 <- summary(fuel_lmod)$coefficients[4, 1] #beta_3
+b4 <- summary(fuel_lmod)$coefficients[5, 1] #beta_4
+```
+
+
+```{r}
+#| eval: false
+# another method
+b0 <- coef(fuel_lmod)[[1]] #beta_0
+b1 <- coef(fuel_lmod)[[2]] #beta_1
+b2 <- coef(fuel_lmod)[[3]] #beta_2
+b3 <- coef(fuel_lmod)[[4]] #beta_3
+b4 <- coef(fuel_lmod)[[5]] #beta_4
+```
+
+
+Next, we compute the new intercept term.
+
+```{r}
+(effect_tax <- b0 + b2 * xbar_Dlic + 
+   b3 * xbar_Income1K + b4 * xbar_log_Miles)
+```
+
+Thus we have the model
+
+$$\mbox{E}(\mbox{Fuel} \ | \ \mbox{Tax, Dlic=903.68, Income1K=28.4, log(Miles) = 10.91}) = 698.34 - 4.23(\mbox{Tax})$$
+
+## Creating an Effects Plot
+
+
+The [`effects` package]https://cran.r-project.org/web/packages/effects/vignettes/predictor-effects-gallery.pdf)  can be used to generate effect plots for the predictors of a fitted linear model.
+
+
+The `predictorEffect` function computes the response for different values of the predictors of interest while holding the other predictors constant at their mean values.
+
+`predictor`: the name of the predictor we want to plot.
+`mod`: the fitted model. The function works with `lm` objects.
+
+
+```{r}
+#library(effects)  # required package
+plot(predictorEffect("Tax", fuel_lmod))
+```
+
+- The shaded area indicates the 95% confidence interval band for the estimated response. 
+- The many tick marks along the the x-axis of the effect plot indicate observed values of the $x$-axis variable.
+- Estimating the slope of the line in the effects plot, we have:
+
+$$\hat{\beta}_1  \approx \frac{650 - 670}{15 - 10}  4$$
+
+### Generating Other Effects Plots
+
+Run commands in the code cell below to generate effects plots for the other predictors in `fuel_lmod` in [Question 2](#sec-q2). 
+
+
+```{r}
+# generate effects plots for other predictors
+#plot(predictorEffect("Dlic", fuel_lmod))
+#plot(predictorEffect("Income1K", fuel_lmod))
+#plot(predictorEffect("Miles", fuel_lmod))  # more on this later
+```
+
+
+
+## Question 7
+
+If instead of fixing the values of the regressors at their mean, we choose other values such as the minimum value of each of regressors.
+
+What effect (if any) would this have on the slope/intercept of the graph above? 
+
+### Solution to Question 7
+
+
+```{r}
+(eff_tax_min <- b0 + b2*min(fuel2001$Dlic) + 
+   b3*min(fuel2001$Income1K) + b4*(min(log(fuel2001$Miles))))
+```
+
+
+```{r}
+min(fuel2001$Dlic)
+min(fuel2001$Income1K)
+min(log(fuel2001$Miles))
+```
+
+Thus we have the model
+
+$$\mbox{E}(\mbox{Fuel} \ | \ \mbox{Tax, Dlic=700.2, Income1K=20.993, log(Miles) = 7.336}) = 552.062 - 4.23(\mbox{Tax})$$
+
+- The slope has not changed.
+- The intercept is decreased from $698.34$ to $552.062$.
+- The line has been shifted down.
+- On average, the amount of gasoline sold per person is less when the other regressors at set equal to their minimum values compared to mean values.
+
+
+## Dropping Regressors
+
+
+With observational data, variables are almost never truly independent. Maybe increasing `Tax` by 1 cent per gallon is also associated with a decrease in `log(Miles)`? In which case, should we hold `log(Miles)` constant when considering changes to `Tax`?  
+
+We can consider how does adding or removing one predictor effect the others in the model. For example, does removing `log(Miles)` effect the role of `Tax` in linear model for `Fuel`.
+
+
+## Question 8 {#sec-q8}
+
+
+Fit a linear model for the response `Fuel` in terms of predictors `Tax`, `Dlic`, and `Income1K` (dropping the `log(Miles)` regressor). 
+
+- Discuss how the values of the coefficients have changed (or not) and why that makes sense.
+- Create an effects plot for `Tax` (setting the other predictors equal to their mean values) and comment on how it compares to the effects plot for `Tax` using the full that included `log(Miles)`.
+
+
+### Solution to Question 8
+
+
+```{r}
+# remove log(Miles) from fuel_lmod
+fuel_lmod1 <- update(fuel_lmod, . ~ . - log(Miles))
+coef(fuel_lmod1)
+```
+
+
+
+```{r}
+b0_new <- coef(fuel_lmod1)[[1]] #beta_0
+b1_new <- coef(fuel_lmod1)[[2]] #beta_1
+b2_new <- coef(fuel_lmod1)[[3]] #beta_2
+b3_new <- coef(fuel_lmod1)[[4]] #beta_3
+```
+
+
+Next, we compute the new intercept term.
+
+```{r}
+(effect_tax_new <- b0_new + b2_new * xbar_Dlic + 
+   b3_new * xbar_Income1K)
+```
+
+Thus we have the model
+
+$$\mbox{E}(\mbox{Fuel} \ | \ \mbox{Tax}, \mbox{Dlic}=903.68, \mbox{Income1K}=28.4) = 704.364 - 4.527 (\mbox{Tax})$$
+
+When we include `log(Miles)` as a regressor, we have:
+
+$$\mbox{E}(\mbox{Fuel} \ | \ \mbox{Tax, Dlic=903.68, Income1K=28.4, log(Miles) = 10.91}) = 698.34 - 4.23(\mbox{Tax})$$
+
+```{r}
+plot(predictorEffect("Tax", fuel_lmod1))
+```
+
+
+Whether or not we include `log(Miles)` as a regressor:
+
+- The slope and intercept do not change too much. 
+- The slope in updated model (without `log(Miles)`) has a greater (negative) magnitude. 
+- The regressors `Tax` and `log(Miles)` seem to be mostly independent.
+- Any additional variability in the response `log(Miles)` explains is not likely already accounted for by `Tax`.
+
+
+
+
+
+
+## Question 9 {#sec-q9}
+
+Run the code chunk below to see the coefficients from the original multiple linear regression model `fuel_lmod` from [Question 2](#sec-q2).
+
+```{r}
+coef(fuel_lmod)
+```
+
+Run the code chunks below to fit a similar multiple linear regression models:
+
+- The first code chunk creates `fuel_lmod2` that uses `Income` instead of `Income1K`. Otherwise, the other variables are unchanged from `fuel_lmod` created in [Question 2](#sec-q2).
+
+::: {.callout-note}
+Both `Income` and `Income1K` are measurements of a states per capita personal income. `Income` has units dollars and `Income1K` has units thousands of dollars. Thus, `Income1K = Income / 1000`.
+:::
+
+
+- The second code chunk creates `fuel_lmod3` that uses the variables: `FuelC`, `Tax`, `Drivers`, `Income`, and `Miles`.
+
+
+::: {.callout-note}
+
+- `FuelC` has gasoline sold in 1000's of gallons while `Fuel` has units gallons per person.
+- `Drivers` has units number of licensed drivers while `Dlic` has units licensed drivers per 1000 people.
+- `Miles` and `Tax` have the same units in all models.
+
+:::
+
+
+Discuss how the values of the coefficients have changed (or not) and why that makes sense.
+
+
+### Solution to Question 9
+
+### Another Model
+
+
+```{r}
+# change from Income1K to Income
+fuel_lmod2 <- lm(Fuel ~ Tax + Dlic + Income + log(Miles), data = fuel2001)
+coef(fuel_lmod2)
+```
+
+
+$$E( \mbox{Fuel} \ | \ \mbox{Tax, Drivers, Income, Miles})=154.193 - 4.228 (\mbox{Tax}) + 0.479 (\mbox{Dlic}) - 0.006 (\mbox{Income}) + 26.755 \log{(\mbox{Miles})}$$
+
+We have only changed the predictor `Income1K` in `fuel_lmod` to `Income` which is used in the new `fuel_lmod2`. The other predictors and response variable have not been changed. Recall, `Income = Income1K * 1000`.
+
+- An increase of `Income1K` by 1 unit decreased `Fuel` by $6.135$ gallons per person.
+- An increase in `Income1K` by 1 unit is equivalent to an increase in `Income` by $0.001$ units.
+- In our new model, we see 1 unit increase `Income` is associated with an increase of $(6.135)(0.001) = 0.006135$.
+
+
+
+#### Yet Another Model
+
+```{r}
+# fit model several changes to units
+fuel_lmod3 <- lm(FuelC ~ Tax + Drivers + Income + log(Miles), data = fuel2001)
+coef(fuel_lmod3)
+```
+
+$$E( \mbox{FuelC} \ | \ \mbox{Tax, Drivers, Income, Miles})=227,\!356 - 22,\!700 (\mbox{Tax}) + 0.6566 (\mbox{Drivers}) - 18.196 (\mbox{Income}) + 75,\!794.1 \log{(\mbox{Miles})}$$
+
+- None of the coefficients have changed signs. 
+  - The direction (positive/negative) of each association should not be affected, 
+  - But the magnitudes have changed.
+- Intercept has increased (a lot). This makes sense since the response `FuelC` has larger units than population adjusted `Fuel` originally used in our model.
+- The `Tax` slope has also increased in magnitude since its units are the same but the units of the response are no longer adjusted for population (and thus much larger values).
+- The `log(Miles)` slope also increased in magnitude due to the same reason as with `Tax`. It's units are the same in both models while the response is not.
+-  The `Income1K` slope has increased as well, but by not as much since some of the change in units to `FuelC` has been offset by using `Income` in place of `Income1K` (recall `Income = 1000 * Income1K`).
+- `Fuel` and `Dlic` in the original model are all adjusted for population. Unadjusted both for population and using `FuelC` and `Dlic` instead does not effect the slope coefficients as much since they changes "cancel out" to some degree.
+
+
+<br>  
+
+
+# Regressors on Logarithmic Scale
+
+Logarithms are commonly used both for the response and for regressors.
+
+
+## Question 10 {#sec-q10}
+
+Based on the summary output below, why do you think we used a log scale on `Miles` in our original model `fuel_lmod`?
+
+
+```{r}
+summary(fuel2001)
+```
+
+
+### Solution to Question 10
+
+
+Predictors that span several orders of magnitude should be transformed to a logarithmic scale.
+
+<br>  
+
+
+## Log or Natural Log
+
+In the code block below, we create new variables that are the natural log and log base 10 of `Miles` and recreate the linear model using each of these new variables.
+
+```{r}
+# create new variables storing log's
+fuel2001$LnMiles <- log(fuel2001$Miles)
+fuel2001$LogMiles <- log10(fuel2001$Miles)
+
+# two ways for replacing log(Miles) with LnMiles
+lmod_ln <- lm(Fuel ~ Tax + Dlic + Income1K + LnMiles, data = fuel2001)
+#lmod_ln <- update(fuel_lmod, . ~ . , - log(Miles) + LnMiles)
+
+# two ways for replacing natural log with log base 10
+lmod_log <- lm(Fuel ~ Tax + Dlic + Income1K + LogMiles, data = fuel2001)
+#lmod_log <- update(fuel_lmod, . ~ . , - log(Miles) + LogMiles)
+
+# compare coefficients
+coef(lmod_ln)  
+coef(lmod_log)  
+
+# compare R^2
+summary(lmod_ln)$r.squared  
+summary(lmod_log)$r.squared
+```
+
+## Effects Plots and Log Scales
+
+
+```{r}
+# miles plotted on linear scale
+plot(predictorEffect("Miles", fuel_lmod))
+```
+
+
+```{r}
+# natural log of Miles
+plot(predictorEffect("LnMiles", lmod_ln))
+```
+
+
+```{r}
+# effects plot with log base 10 
+plot(predictorEffect("LogMiles", lmod_log))
+```
+
+
+The effect of increasing `Miles` is greater in states with fewer miles of roadway, with relatively little change in states with the most roadway. 
+
+This is the usual effect of logarithms: the fitted effect changes most rapidly when the regressor is small and less rapidly when the predictor is large.
+
+
+# Interpreting Coefficients with Log Scale on Regressor
+
+## Natural Log Scale 
+
+Regressor $X_j$ increasing by 1% while the other regressors remain constant is associated with a $\beta_j/100$ increase in the response variable, on average.
+
+## Common Log (base 10) Scale 
+
+Regressor $X_j$ increasing by a factor of 10 (an increase of 900%) while the other regressors remain constant is associated with a $\beta_j$ increase in the response variable, on average.
+
+
+## Question 11 {#sec-q11}
+
+Interpret the meaning of the coefficient associated to the natural log and log base 10 of `Miles`  which you can find below.
+
+```{r}
+summary(lmod_ln)$coefficients[5, 1] #ln coeff
+summary(lmod_log)$coefficients[5, 1] #log coeff
+```
+
+### Solution to Question 11
+
+
+We can interpret the regression coefficient for `log(Miles)` as follows. For every 1% increase in the number of miles of Federal highway in a state, the fuel consumption per capita is expected to increase by $0.26755$ gallons per person, on average.
+
+We can interpret the regression coefficient for $\log_{10}{(\mbox{Miles})}$ as follows. If we increase the number of miles of Federal highway in a state by a factor of 10, the fuel consumption per capita is expected to increase by $61.6$ gallons per person, on average.
+
+## Log-Level Interpretation
+
+It is common for responses to be transformed to a logarithmic scale for theoretical or practical considerations.  
+
+$$\mbox{E}( \log{Y} \ | \ X)= \beta_0 + \beta_1 X.$$
+
+This is sometimes called a [**log-level model**]{style="color:blue"}. 
+
+- A unit increase in $X$ is associated with a change in the mean $Y$ by the multiplicative effect $\exp^{\beta_1}$.
+- **Thus $beta_1$ is the continuous exponential growth/decay rate.**
+
+It is often acceptable to approximate the expected value of a log by the log of the expected value:
+
+$$\log{( \mbox{E}(Y \ | \ X=x) )} \approx\mbox{E}(\log{Y} \ | \ X=x)$$
+
+Thus, we have
+
+$$\mbox{E}(Y \ | \ X=x) \approx e^{\rm{E}(\log{Y} \ | \ X=x)} = e^{\beta_0 + \beta_1 X}=e^{\beta_0}e^{\beta_1X}.$$
+
+## Log-log Interpretation
+
+Consider the log-log simple linear regression model
+
+$$\mbox{E}( \log{Y} \ | \ X) = \beta_0 + \beta_1 \log{X}.$$
+
+When we scale $X$ by a factor of $c$, the response is predicted to grow by a factor of $c^{\beta_1}$, on average.
+
+## Summary of Interpretations (Simple Linear Regression)
+
+[**Level-level**]{style="color:blue"}: $\mathbf{\mbox{E}(Y \ | \ X=x)} = \boldsymbol\beta_0 + \boldsymbol\beta_1 X$: The predicted change in the response is $\beta_1$ when we increase $X$ by 1 unit, on average.
+
+[**Level-log**]{style="color:blue"}: $\mathbf{\mbox{E}(Y \ | \ X=x)} = \boldsymbol\beta_0 + \boldsymbol\beta_1 \log{X}$: When we increase $X$ by 1%, the response is predicted to increase by  $\beta_j/100$, on average.
+
+[**Log-level**]{style="color:blue"}: $\mathbf{\mbox{E}(\log{Y} \ | \ X=x) = \boldsymbol\beta_0 + \boldsymbol\beta_1 X}$: A unit increase in $X$ is predicted to change the response by a factor of $e^{\beta_1}$, on average. The continuous growth rate is $\beta_1$.
+
+[**Log-log**]{style="color:blue"}: $\mathbf{\mbox{E}(\log{Y} \ | \ X=x) = \boldsymbol\beta_0 + \boldsymbol\beta_1 \log{X}}$: When we scale $X$ by a factor of $c$, the response is predicted to grow by a factor of $c^{\beta_1}$, on average.
+
+
+## Question 12 {#sec-q12}
+
+Answer each of the following.
+
+### Question 12a
+
+For a log-level model, interpret the relationship between $X$ and the mean of $Y$ when $X$ increases by 1 unit and $\beta_j=0.3$ and the other predictors do not change.
+
+
+### Solution to Question 12a
+
+- The expected value of $Y$ is predicted to increase exponentially with a continuous exponential growth rate of $0.3$ or $30\%$.
+- For each increase in $X$ by 1 unit, the expected value of $Y$ is predicted to increase by a factor of $e^{0.3} \approx 1.349859$.
+- For each increase in $X$ by 1 unit, the expected value of $Y$ is predicted to grow by $34.99\%$ on average.
+- All three of the interpretations above are equivalent.
+
+<br>  
+
+
+## Question 12b
+
+For a log-log model, what is the expected change in $Y$ if we multiply $X$ by a factor of $c$.
+
+### Solution to Question 12b
+
+- When we scale $X$ by a factor of $c$, the response is predicted to grow by a factor of $c^{\beta_1}$, on average.
+
+<br>  
+
+
+## Solution to Question 12c
+
+For a log-log model, interpret the relationship between $X$ and the expected value of $Y$ when $X$ increases by $10\%$ and $\beta_1=0.3$.
+
+### Solution to Question 12c
+
+- When we scale $X$ by a factor of $1.10$ (a 10% increase), the response is predicted to grow by a factor of $(1.1)^{0.3} \approx 1.029$, on average. 
+- Thus, when we increase  $X$ by 10% increase, the response is predicted to grow by by $2.9\%$, on average. 
+
+<br>  
+<br>  
+
+# Case Study: Berkeley Guidance Study
+
+Data from the Berkeley guidance study of children born in 1928-29 in Berkeley, CA. `BGSgirls` is a data frame from the `alr4` package that contains data from just the girls in the study.
+
+```{r}
+data(BGSgirls)
+head(BGSgirls)
+```
+
+## Dictionary of Data
+
+- `BMI18`: the body mass index at age 18
+- `WT2`, `WT9`, and `WT18`: the weights at ages 2, 9, and 18 (in kg) for the $n=70$ girls in the study.
+
+
+## Question 13: Relations Between Regressors {#sec-q13}
+
+Run the code chunk below to generate a scatter plot matrix to analyze possible associations between the response `BMI18` and among possible predictors `WT2`, `WT9`, and `WT18`. 
+
+Does there seem to be any relations among the predictors? Explain why these relations make practical sense.
+
+
+```{r}
+# create scatter plot matrix
+pairs(~ BMI18 + WT2 + WT9 + WT18, data = BGSgirls)
+```
+
+### Solution to Question 13
+
+- First note there is a **positive linear relationship between the response and the three predictors**.
+- The relationship is strongest between `BMI18` and `WT18`.  
+- The predictors themselves are also positively correlated
+
+## Question 14 {#sec-q14}
+
+How can we adjust our model to account for the relations between the regressors?
+
+### Solution to Question 14
+
+
+
+<br>  
+<br>  
+
+
+## Question 15: Adjusting the Regressors {#sec-q15}
+
+By taking the difference between the weight measurements, we can create new, essentially uncorrelated variables.
+
+- Create a new predictor variable called `DW9` that is the weight gain from age 2 to 9.
+- Create a new predictor variable called `DW18` that is the weight gain from age 9 to 18.
+- Add both new variables to the data frame `BGSgirls`.
+
+
+### Solution to Question 15
+
+
+```{r}
+BGSgirls$DW9 <- BGSgirls$WT9-BGSgirls$WT2
+BGSgirls$DW18 <- BGSgirls$WT18-BGSgirls$WT9
+#BGSgirls$DW218 <- BGSgirls$WT18-BGSgirls$WT2
+```
+
+
+## Question 16 {#sec-q16}
+
+Create a scatter plot matrix to analyze potential relations between the response `BMI18` and possible predictor variables `DW9` and `DW18`.
+
+Based on the scatter plot matrix above, how can you tell that the new regressors seem to be more independent from each other?
+
+### Solution to Question 16
+
+
+```{r}
+# basic scatterplot matrix
+pairs(~ BMI18 + DW9 + DW18, data = BGSgirls)
+```
+
+
+## Comparing BMI Different Models
+
+We construct several similar multiple linear regression models for `BMI18`.
+
+### `BMI` relation to `WT2`, `WT9` and `WT18`
+
+```{r}
+m1 <- lm(BMI18 ~ WT2 + WT9 + WT18, BGSgirls)
+coef(m1)
+```
+
+### `BMI` relation to `WT2`, `DW9` and `DW18`
+
+```{r}
+m2 <- lm(BMI18 ~ WT2 + DW9 + DW18, BGSgirls)
+coef(m2)
+```
+
+### `BMI` relation to `WT2`, `WT9`, `WT18`, `DW9` and `DW18`
+
+```{r}
+m3 <- lm(BMI18 ~ WT2 + WT9 + WT18 + DW9 + DW18, BGSgirls)
+coef(m3)
+```
+
+
+### Summary of Model Coefficients
+
+
+| Regressor | Model 1 | Model 2 | Model 3  | 
+|----------|---------|---------|----------|      
+| `Intercept`  | 8.298   | 8.298        | 8.298 |   
+| `WT2`  | -0.383        | -0.065       | -0.383 |
+| `WT9`  | 0.032         | --           | 0.032  |
+| `WT18` | 0.287         | --           | -- |
+| `DW9`  |  --           | 0.318        | `NA` |
+| `DW18` |  --           | 0.287        | `NA` |
+
+
+
+## Question 17 {#sec-q17}
+
+Comment on how the `WT2` coefficient is the same/different in the different models.
+
+### Solution to Question 17
+
+
+
+<br>  
+<br>  
+
+
+## Question 18 {#sec-q18}
+
+Why are their `NA`s in Model 3?
+
+
+### Solution to Question 18
+
+
+<br>  
+<br>  
+
+
+
+# Appendix: Observational and Experimental Predictors {#sec-append}
+
+There two main methods for collecting data: observational studies and experiments.
+
+- In an [**experiment**]{style="color:blue"}, researchers assign participants to different treatment levels of some (typically categorical) variable.
+  - Ideally the assignment is random.
+  - There is a control group that has received no treatment.
+  - If the two previous conditions are satisfied, we have a [**randomized controlled trial or RCE**]{style="color:blue"}.
+  - **RCE's can be used to determine causation.**
+  
+- In an [**observational study**]{style="color:blue"}, values of variables are observed rather than set by the researchers.
+  - Observational studies can be used to show an association between variables exists.
+  - **We should be very careful claiming causation when working with observational data.**
+  
+- We are not always able to collect data using an experiment due to ethical and practical limitations.
+  
