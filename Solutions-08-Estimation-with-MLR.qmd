@@ -911,11 +911,11 @@ qr.R(qr_result2)
 The [**singular values**]{style="color:blue"} of matrix $A$ are the square roots of the eigenvalues of $A^TA$.
 :::
 
-- $\mathbf{U}$ is an orthogonal matrix whose columns form an orthonormal basis for the column space of $X$.
+- $\mathbf{U}$ is an $n \times n$ orthogonal matrix whose columns form an orthonormal basis for the column space of $X$.
 
-- $\mathbf{\Sigma}$ is a diagonal matrix containing the singular values of $\mathbf{X}$ along its diagonal.
+- $\mathbf{\Sigma} = \begin{bmatrix} \mathbf{D} & 0 \\ 0 & 0 \end{bmatrix}$ is an $n \times p$ rectangular matrix (same dimensions as $\mathbf{X}$) with a diagonal block $\mathbf{D}$ containing the singular values of $\mathbf{X}$ along its diagonal.
 
-- $\mathbf{V}$ is an orthogonal matrix whose columns form an orthonormal basis for the row space of $\mathbf{X}$ .
+- $\mathbf{V}$ is an $p \times p$ orthogonal matrix whose columns form an orthonormal basis for the row space of $\mathbf{X}$ .
 
 ::: {.callout-note title="SVD Example" appearance="simple" collapse="true"}
 
@@ -932,9 +932,34 @@ $$ \begin{bmatrix} 1 & 1 \\ 1 & 0 \\ 0 & 1 \end{bmatrix} = \begin{bmatrix} \sqrt
 
 Using this decomposition, the least squares solution can be expressed as
 
-$$\boldsymbol{\hat{\beta}} = \mathbf{V} \mathbf{\Sigma}^{-1} \mathbf{U}^T \mathbf{y} .$$
+$$\boldsymbol{\hat{\beta}} = \mathbf{V} \mathbf{\Sigma}^{+} \mathbf{U}^T \mathbf{y} .$$
 
 This formulation avoids the need to compute the numerically unstable inverse of $\mathbf{X}^{T} \mathbf{X}$.
+
+::: {.callout-note}
+The notation $\boldsymbol{\Sigma}^{+}$ denotes the [pseudoinverse](https://en.wikipedia.org/wiki/Moore%E2%80%93Penrose_inverse). Since $\boldsymbol{\Sigma}$ is rectangular, it does not have a proper inverse. The pseudoinverse of $\boldsymbol{\Sigma}$ is obtained by:
+
+
+1. First take the reciprocal of each non-zero entry in $\boldsymbol{\Sigma}$.
+2. Then take the transpose of the resulting matrix of reciprocals.
+
+:::
+
+
+::: {.callout-note title="SVD pseudoinverse" appearance="simple" collapse="true"}
+
+In the previous SVD example, we have 
+
+$$ \boldsymbol{\Sigma} = \begin{bmatrix} \sqrt{3} & 0 \\ 0 & 1 \\ 0 & 0 \end{bmatrix}.$$
+
+The pseudoinverse is
+$$\boldsymbol{\Sigma}^+ = \begin{bmatrix} \frac{1}{\sqrt{3}} & 0 & 0 \\ 0 & 1 & 0\end{bmatrix}.$$
+
+Notice we have $\boldsymbol{\Sigma} \boldsymbol{\Sigma}^+ = \mathbf{I}_3$ and $\boldsymbol{\Sigma}^+ \boldsymbol{\Sigma} = \mathbf{I}_2$. They are "sort of" inverses.
+:::
+
+
+
 
 
 ```{r}
