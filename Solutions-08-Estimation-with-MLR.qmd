@@ -913,7 +913,7 @@ The [**singular values**]{style="color:blue"} of matrix $A$ are the square roots
 
 - $\mathbf{U}$ is an $n \times n$ orthogonal matrix whose columns form an orthonormal basis for the column space of $X$.
 
-- $\mathbf{\Sigma} = \begin{bmatrix} \mathbf{D} & 0 \\ 0 & 0 \end{bmatrix}$ is an $n \times p$ rectangular matrix (same dimensions as $\mathbf{X}$) with a diagonal block $\mathbf{D}$ containing the singular values of $\mathbf{X}$ along its diagonal.
+- $\mathbf{\Sigma} = \begin{bmatrix} \mathbf{D} & 0 \\ 0 & 0 \end{bmatrix}$ is an $n \times p$  matrix (same dimensions as $\mathbf{X}$) with a diagonal block $\mathbf{D}$ containing the singular values of $\mathbf{X}$ along its diagonal.
 
 - $\mathbf{V}$ is an $p \times p$ orthogonal matrix whose columns form an orthonormal basis for the row space of $\mathbf{X}$ .
 
