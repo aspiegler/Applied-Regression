@@ -10,7 +10,7 @@ editor: source
 warning: false
 ---
 
-# Solutions HW 5: Due Wed, Oct 8 at 2:00 PM
+# HW 5: Due Wed, Oct 8 at 2:00 PM
 
 ## Instructions:
 
