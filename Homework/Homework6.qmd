@@ -1,0 +1,171 @@
+---
+title: "Homework 6"
+author: 
+  - name: "Enter your name"
+    affiliation: "University of Colorado Denver"
+format: 
+  html:
+    embed-resources: true    
+editor: source
+warning: false
+---
+
+# HW 6: NOT Collected 
+
+
+# Loading Data and Required Packages
+
+
+Run the code cells below to load required packages. We will work with the `UN11` data frame from the `alr4` package.
+
+```{r}
+#| message: false
+#| warning: false
+# load required packages 
+library(tidyverse)
+library(alr4)
+library(effects)
+data(UN11, package = "alr4")
+```
+
+
+```{r}
+#| eval: false
+glimpse(UN11)
+```
+
+
+## Introduction
+
+Load the `UN11` data set from the `alr4` package. The data set includes 237 observations related to national health, welfare, and education statistics for 210 places, mostly UN members, but also other areas that are not independent countries. More details can be found by running `?alr4` in the console. The variables in the data set include:
+
+- `region`: region of the world
+- `group`: a factor with levels `oecd` for countries that are members of the OECD, the Organization for Economic Co-operation and Development, as of May 2012, `africa` for countries on the African continent, and `other` for all other countries. No OECD countries are located in Africa.
+- `fertility`: number of children per woman
+- `ppgdp`: per capita gross domestic product in US dollars
+- `lifeExpF`: female life expectancy, in years
+- `pctUrban`: percent urban
+
+
+We will consider the relationship between the response `log(fertility)` and several of the other variables in the data set.
+
+# Question 1 {#sec-q1}
+
+Fit a linear model regressing the response `log(fertility)` on the predictor `pctUrban`. Print the estimated coefficients of the model.
+
+
+## Solution to Question 1
+
+
+
+
+<br>  
+<br>  
+
+# Question 2 {#sec-q3}
+
+What is the equation for the fitted model?
+
+## Solution to Question 2
+
+
+
+<br>  
+<br>  
+
+
+# Question 3 {#sec-q3}
+
+Interpret the estimated coefficient for `pctUrban` in a straightforward sentence in the context of this example.
+
+## Solution to Question 3
+
+
+
+
+<br>  
+<br>  
+
+
+# Question 4 {#sec-q4}
+
+Use the fitted model to construct an effect plot for `pctUrban` on `fertility` (on the original scale for `fertility`). Note you will need to modify the `axes` argument of the `plot` function. 
+
+
+::: {.callout-tip}
+The `effects` package has a vignette that may be helpful, it may be accessed by running `vignette("predictor-effects-gallery", package = "effects")` in the R console.
+:::
+
+## Solution to Question 4
+
+
+
+<br>  
+<br>  
+
+# Question 5 {#sec-q5}
+
+Interpret the effects plot from [Question 4](#sec-q4).
+
+## Solution to Question 5
+
+
+
+<br>  
+<br>  
+
+
+# Question 6 {#sec-q6}
+
+Fit the linear model regressing `log(fertility)` on both `log(ppgdp)` and `lifeExpF`. Print the results to the R Console. Use this fitted model to also answer Questions 7-10.
+
+## Solution to Question 6
+
+
+<br>  
+<br>  
+
+# Question 7
+
+What is the equation for the fitted model from the previous Question?
+
+## Solution to Question 7
+
+
+<br>  
+<br>  
+
+
+# Question 8 {#sec-q8}
+
+Mathematically, if we increase `ppgdp` by 25%, what is the expected decrease in fertility? (You don't need to interpret this, just compute it).
+
+## Solution to Question 8
+
+
+
+<br>  
+<br>  
+
+
+# Question 9 {#sec-q9}
+
+Interpret the estimated coefficient for `ppgdp` in a straightforward sentence in the context of the Question when `ppgdp` increases by 25%.
+
+## Solution to Question 9
+
+
+<br>  
+<br>  
+
+# Question 10 {#sec-q10}
+
+Construct an effect plot of `ppgdp` on `fertility` (both on their original scale) using the fitted model from Question 6.
+
+## Solution to Question 10
+
+
+<br>  
+<br>  
+
+
