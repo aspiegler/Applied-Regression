@@ -91,6 +91,10 @@ If the null hypotheses is true, how likely would we be to obtain the observed sa
 
 $$t = \frac{\text{observed} - \text{null}}{\text{SE}} = \frac{\widehat{\beta}_1 - 0}{\text{SE}(\widehat{\beta}_1)}.$$ 
 
+Recall the OLS estimate for $\hat{\beta}_1$ is
+
+$$\hat{\beta}_1 = \frac{\sum (x_i - \bar{x})(y - \bar{y})}{\sum (x_i - \bar{x})^2}.$$
+
 
 In regression, the standard error can be approximated by the formula:
 
@@ -142,6 +146,15 @@ summary(lmod_area)
 ```
 
 Since the p-value $0.00027$ is less than the significance level chosen (5%), the test is statistically significant. We can reject $H_0$ and accept $H_a$. In this context we can say the linear association between `Area` and `Species` is significant, and the slope coefficient corresponding to `Area`. is not equal to zero.
+
+If we square the $t$ test statistic, we get 
+
+```{r}
+(0.08196 / 0.01971)^2
+```
+
+which is the value of the $F$-statistic stated in the summary output of the linear model.
+
 
 # Hypothesis Tests with Multiple Linear Regression
 
@@ -585,3 +598,7 @@ The $p$-value $<0.001$ which is extremely small (less than just about any signif
 
 -   If we reject $H_0$, this means there is enough evidence to support the claim in $H_a$.
 -   If we do not reject $H_0$, this means there is not evidence to reject $H_0$ nor support $H_a$. The test is inconclusive.
+
+# Appendix B: Deriving the Standard Error
+
+

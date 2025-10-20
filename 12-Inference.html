@@ -3228,6 +3228,8 @@ F-statistic: 17.29 on 1 and 28 DF,  p-value: 0.0002748</code></pre>
 <h2 class="anchored" data-anchor-id="calculating-the-test-statistic">Calculating the Test Statistic</h2>
 <p>If the null hypotheses is true, how likely would we be to obtain the observed sample data?</p>
 <p><span class="math display">\[t = \frac{\text{observed} - \text{null}}{\text{SE}} = \frac{\widehat{\beta}_1 - 0}{\text{SE}(\widehat{\beta}_1)}.\]</span></p>
+<p>Recall the OLS estimate for <span class="math inline">\(\hat{\beta}_1\)</span> is</p>
+<p><span class="math display">\[\hat{\beta}_1 = \frac{\sum (x_i - \bar{x})(y - \bar{y})}{\sum (x_i - \bar{x})^2}.\]</span></p>
 <p>In regression, the standard error can be approximated by the formula:</p>
 <p><span class="math display">\[
 \text{SE}(\widehat{\beta}_1) = \sqrt{ \frac{\sum (\hat{y}_i - y_i)^2 / (n-2)}{\sum (x_i - \bar{x})^2 }}.

@@ -3098,6 +3098,7 @@ vertical-align: -.125em;
   <li><a href="#sec-q14" id="toc-sec-q14" class="nav-link" data-scroll-target="#sec-q14">Question 14</a></li>
   </ul></li>
   <li><a href="#sec-appendA" id="toc-sec-appendA" class="nav-link" data-scroll-target="#sec-appendA">Appendix A: Summary of Hypothesis Testing</a></li>
+  <li><a href="#appendix-b-deriving-the-standard-error" id="toc-appendix-b-deriving-the-standard-error" class="nav-link" data-scroll-target="#appendix-b-deriving-the-standard-error">Appendix B: Deriving the Standard Error</a></li>
   </ul>
 </nav>
 </div>
@@ -3226,6 +3227,8 @@ F-statistic: 17.29 on 1 and 28 DF,  p-value: 0.0002748</code></pre>
 <h2 class="anchored" data-anchor-id="calculating-the-test-statistic">Calculating the Test Statistic</h2>
 <p>If the null hypotheses is true, how likely would we be to obtain the observed sample data?</p>
 <p><span class="math display">\[t = \frac{\text{observed} - \text{null}}{\text{SE}} = \frac{\widehat{\beta}_1 - 0}{\text{SE}(\widehat{\beta}_1)}.\]</span></p>
+<p>Recall the OLS estimate for <span class="math inline">\(\hat{\beta}_1\)</span> is</p>
+<p><span class="math display">\[\hat{\beta}_1 = \frac{\sum (x_i - \bar{x})(y - \bar{y})}{\sum (x_i - \bar{x})^2}.\]</span></p>
 <p>In regression, the standard error can be approximated by the formula:</p>
 <p><span class="math display">\[
 \text{SE}(\widehat{\beta}_1) = \sqrt{ \frac{\sum (\hat{y}_i - y_i)^2 / (n-2)}{\sum (x_i - \bar{x})^2 }}.
@@ -3292,6 +3295,14 @@ F-statistic: 17.29 on 1 and 28 DF,  p-value: 0.0002748</code></pre>
 </div>
 </div>
 <p>Since the p-value <span class="math inline">\(0.00027\)</span> is less than the significance level chosen (5%), the test is statistically significant. We can reject <span class="math inline">\(H_0\)</span> and accept <span class="math inline">\(H_a\)</span>. In this context we can say the linear association between <code>Area</code> and <code>Species</code> is significant, and the slope coefficient corresponding to <code>Area</code>. is not equal to zero.</p>
+<p>If we square the <span class="math inline">\(t\)</span> test statistic, we get</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(<span class="fl">0.08196</span> <span class="sc">/</span> <span class="fl">0.01971</span>)<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 17.29142</code></pre>
+</div>
+</div>
+<p>which is the value of the <span class="math inline">\(F\)</span>-statistic stated in the summary output of the linear model.</p>
 </section>
 </section>
 </section>
@@ -3301,9 +3312,9 @@ F-statistic: 17.29 on 1 and 28 DF,  p-value: 0.0002748</code></pre>
 <h2 class="anchored" data-anchor-id="sec-q4">Question 4</h2>
 <p>Write out a formula for the fitted model based on code and output below.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>lmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> Area <span class="sc">+</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>            Scruz <span class="sc">+</span> Adjacent, <span class="at">data =</span> gala)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>lmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> Area <span class="sc">+</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>            Scruz <span class="sc">+</span> Adjacent, <span class="at">data =</span> gala)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -3471,8 +3482,8 @@ Note
 <section id="comparing-with-fit-of-null-model" class="level2">
 <h2 class="anchored" data-anchor-id="comparing-with-fit-of-null-model">Comparing with Fit of Null Model</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>nullmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> gala) </span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(nullmod, lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>nullmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> gala) </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(nullmod, lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -3508,19 +3519,19 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <section id="solution-to-question-9" class="level3">
 <h3 class="anchored" data-anchor-id="solution-to-question-9">Solution to Question 9</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>(ss <span class="ot">&lt;-</span> <span class="dv">381081-89231</span>) <span class="co"># SS_{reg}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>(ss <span class="ot">&lt;-</span> <span class="dv">381081-89231</span>) <span class="co"># SS_{reg}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 291850</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>(mean.ss <span class="ot">&lt;-</span> ss<span class="sc">/</span><span class="dv">5</span>) <span class="co">#regression mean sum squares</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(mean.ss <span class="ot">&lt;-</span> ss<span class="sc">/</span><span class="dv">5</span>) <span class="co">#regression mean sum squares</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 58370</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(mean.rss <span class="ot">&lt;-</span> <span class="dv">89231</span><span class="sc">/</span><span class="dv">24</span>) <span class="co">#residual mean sum squares</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>(mean.rss <span class="ot">&lt;-</span> <span class="dv">89231</span><span class="sc">/</span><span class="dv">24</span>) <span class="co">#residual mean sum squares</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3717.958</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>(fstat <span class="ot">&lt;-</span> mean.ss<span class="sc">/</span>mean.rss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>(fstat <span class="ot">&lt;-</span> mean.ss<span class="sc">/</span>mean.rss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 15.69948</code></pre>
 </div>
@@ -3573,33 +3584,33 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <section id="verifying-the-output-again" class="level2">
 <h2 class="anchored" data-anchor-id="verifying-the-output-again">Verifying the Output Again</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the sum of squares</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>(rss0 <span class="ot">&lt;-</span> <span class="fu">deviance</span>(nullmod)) <span class="co"># RSS of null (TSS)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the sum of squares</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>(rss0 <span class="ot">&lt;-</span> <span class="fu">deviance</span>(nullmod)) <span class="co"># RSS of null (TSS)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 381081.4</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>(rss <span class="ot">&lt;-</span> <span class="fu">deviance</span>(lmod)) <span class="co"># RSS of proposed model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>(rss <span class="ot">&lt;-</span> <span class="fu">deviance</span>(lmod)) <span class="co"># RSS of proposed model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 89231.37</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the degrees of freedom</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>(df0 <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(nullmod)) <span class="co"># df of null model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the degrees of freedom</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>(df0 <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(nullmod)) <span class="co"># df of null model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 29</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>(df <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(lmod)) <span class="co">#  df of proposed model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>(df <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(lmod)) <span class="co">#  df of proposed model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 24</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the F-statistic</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>(f <span class="ot">&lt;-</span> ((rss0 <span class="sc">-</span> rss)<span class="sc">/</span>(df0 <span class="sc">-</span> df))<span class="sc">/</span>(rss<span class="sc">/</span>df)) <span class="co"># F-stat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the F-statistic</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>(f <span class="ot">&lt;-</span> ((rss0 <span class="sc">-</span> rss)<span class="sc">/</span>(df0 <span class="sc">-</span> df))<span class="sc">/</span>(rss<span class="sc">/</span>df)) <span class="co"># F-stat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 15.69941</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the P-value with pf</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pf(q, df1, df2) computes area to left of q</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="co"># This is a right-tail test (so 1-pf)</span></span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pf</span>(f, <span class="at">df1 =</span> df0 <span class="sc">-</span> df, <span class="at">df2 =</span> df) <span class="co"># P-value</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the P-value with pf</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pf(q, df1, df2) computes area to left of q</span></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co"># This is a right-tail test (so 1-pf)</span></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pf</span>(f, <span class="at">df1 =</span> df0 <span class="sc">-</span> df, <span class="at">df2 =</span> df) <span class="co"># P-value</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6.837893e-07</code></pre>
 </div>
@@ -3608,7 +3619,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <section id="compare-with-summary-of-lm" class="level2">
 <h2 class="anchored" data-anchor-id="compare-with-summary-of-lm">Compare with Summary of <code>lm</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -3720,9 +3731,9 @@ F-statistic:  15.7 on 5 and 24 DF,  p-value: 6.838e-07</code></pre>
 <section id="compute-the-f-statistic-and-p-value." class="level4">
 <h4 class="anchored" data-anchor-id="compute-the-f-statistic-and-p-value.">Compute the <span class="math inline">\(F\)</span>-statistic and <span class="math inline">\(p\)</span>-value.</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit reduced model (full without Area)</span></span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>lmods <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz <span class="sc">+</span> Adjacent, <span class="at">data =</span> gala)</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lmods, lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># fit reduced model (full without Area)</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>lmods <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz <span class="sc">+</span> Adjacent, <span class="at">data =</span> gala)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lmods, lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -3740,7 +3751,7 @@ Model 2: Species ~ Area + Elevation + Nearest + Scruz + Adjacent
 <p>The <span class="math inline">\(p\)</span>-value is larger than just about any reasonable significance level, thus the test is not statistically significant and we fail to reject the claim that <span class="math inline">\(\beta_{\rm Area} =0\)</span>. However, be careful, we do not accept the claim that <span class="math inline">\(\beta_{\rm Area} =0\)</span> either. We simply say the test is inconclusive.</p>
 <p>Comparing the output above with full model test.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -3775,20 +3786,20 @@ F-statistic:  15.7 on 5 and 24 DF,  p-value: 6.838e-07</code></pre>
 <p>An alternative approach is to use a <span class="math inline">\(t\)</span>-statistic for testing the hypotheses:</p>
 <p><span class="math display">\[ t_i = \frac{\widehat{\beta}_i-0}{\mbox{se}(\widehat{\beta}_i)}= \frac{\widehat{\beta}_i}{\mbox{se}(\widehat{\beta}_i)}\]</span> using a <span class="math inline">\(t\)</span>-distribution with <span class="math inline">\(\mbox{df}_{\Omega}=n-p\)</span> degrees of freedom.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculation of t-stat</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>beta.area <span class="ot">&lt;-</span> <span class="fu">summary</span>(lmod)<span class="sc">$</span>coeff[<span class="dv">2</span>,<span class="dv">1</span>]</span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>se.area <span class="ot">&lt;-</span> <span class="fu">summary</span>(lmod)<span class="sc">$</span>coeff[<span class="dv">2</span>,<span class="dv">2</span>]</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>(t <span class="ot">&lt;-</span> beta.area<span class="sc">/</span>se.area)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculation of t-stat</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>beta.area <span class="ot">&lt;-</span> <span class="fu">summary</span>(lmod)<span class="sc">$</span>coeff[<span class="dv">2</span>,<span class="dv">1</span>]</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>se.area <span class="ot">&lt;-</span> <span class="fu">summary</span>(lmod)<span class="sc">$</span>coeff[<span class="dv">2</span>,<span class="dv">2</span>]</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>(t <span class="ot">&lt;-</span> beta.area<span class="sc">/</span>se.area)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -1.067611</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># verifying p-value</span></span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span><span class="fu">pt</span>(t, <span class="fu">df.residual</span>(lmod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># verifying p-value</span></span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span><span class="fu">pt</span>(t, <span class="fu">df.residual</span>(lmod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.296318</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># matching F-stat</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>t<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># matching F-stat</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>t<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.139792</code></pre>
 </div>
@@ -3805,8 +3816,8 @@ F-statistic:  15.7 on 5 and 24 DF,  p-value: 6.838e-07</code></pre>
 <li><p><span class="math inline">\(H_a: \beta_1 \neq 0\)</span></p></li>
 </ul>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare results to test of beta_Area = 0 when no other predictors in model</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Species <span class="sc">~</span> Area, gala))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare results to test of beta_Area = 0 when no other predictors in model</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Species <span class="sc">~</span> Area, gala))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -3854,9 +3865,9 @@ F-statistic: 17.29 on 1 and 28 DF,  p-value: 0.0002748</code></pre>
 <section id="compute-the-f-statistic-and-p-value" class="level4">
 <h4 class="anchored" data-anchor-id="compute-the-f-statistic-and-p-value">Compute the <span class="math inline">\(F\)</span>-statistic and <span class="math inline">\(p\)</span>-value</h4>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine full and reduced models</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>lmods <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz, <span class="at">data =</span> gala) <span class="co"># fit reduced model</span></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lmods, lmod) <span class="co"># compare models using general f-test</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Determine full and reduced models</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>lmods <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span> Scruz, <span class="at">data =</span> gala) <span class="co"># fit reduced model</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(lmods, lmod) <span class="co"># compare models using general f-test</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -3918,6 +3929,9 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <li>If we reject <span class="math inline">\(H_0\)</span>, this means there is enough evidence to support the claim in <span class="math inline">\(H_a\)</span>.</li>
 <li>If we do not reject <span class="math inline">\(H_0\)</span>, this means there is not evidence to reject <span class="math inline">\(H_0\)</span> nor support <span class="math inline">\(H_a\)</span>. The test is inconclusive.</li>
 </ul>
+</section>
+<section id="appendix-b-deriving-the-standard-error" class="level1">
+<h1>Appendix B: Deriving the Standard Error</h1>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div>CC BY-NC-SA</div></div></section></div></main>

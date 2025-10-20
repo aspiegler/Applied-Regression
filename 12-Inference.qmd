@@ -98,7 +98,13 @@ If the null hypotheses is true, how likely would we be to obtain the observed sa
 $$t = \frac{\text{observed} - \text{null}}{\text{SE}} = \frac{\widehat{\beta}_1 - 0}{\text{SE}(\widehat{\beta}_1)}.$$ 
 
 
+Recall the OLS estimate for $\hat{\beta}_1$ is
+
+$$\hat{\beta}_1 = \frac{\sum (x_i - \bar{x})(y - \bar{y})}{\sum (x_i - \bar{x})^2}.$$
+
+
 In regression, the standard error can be approximated by the formula:
+
 
 $$
 \text{SE}(\widehat{\beta}_1) = \sqrt{ \frac{\sum (\hat{y}_i - y_i)^2 / (n-2)}{\sum (x_i - \bar{x})^2 }}.
