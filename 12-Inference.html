@@ -3047,16 +3047,28 @@ vertical-align: -.125em;
    
   <ul class="collapse">
   <li><a href="#additional-reading" id="toc-additional-reading" class="nav-link active" data-scroll-target="#additional-reading">Additional Reading</a></li>
-  <li><a href="#loading-required-packages-and-data" id="toc-loading-required-packages-and-data" class="nav-link" data-scroll-target="#loading-required-packages-and-data">Loading Required Packages and Data</a>
+  <li><a href="#loading-required-packages-and-data" id="toc-loading-required-packages-and-data" class="nav-link" data-scroll-target="#loading-required-packages-and-data">Loading Required Packages and Data</a></li>
+  <li><a href="#hypothesis-testing-for-a-simple-linear-regression" id="toc-hypothesis-testing-for-a-simple-linear-regression" class="nav-link" data-scroll-target="#hypothesis-testing-for-a-simple-linear-regression">Hypothesis Testing for a Simple Linear Regression</a>
   <ul class="collapse">
   <li><a href="#sec-q1" id="toc-sec-q1" class="nav-link" data-scroll-target="#sec-q1">Question 1</a></li>
+  <li><a href="#setting-up-the-hypotheses" id="toc-setting-up-the-hypotheses" class="nav-link" data-scroll-target="#setting-up-the-hypotheses">Setting Up The Hypotheses</a></li>
   <li><a href="#sec-q2" id="toc-sec-q2" class="nav-link" data-scroll-target="#sec-q2">Question 2</a></li>
-  </ul></li>
-  <li><a href="#setting-up-the-hypotheses" id="toc-setting-up-the-hypotheses" class="nav-link" data-scroll-target="#setting-up-the-hypotheses">Setting Up The Hypotheses</a>
-  <ul class="collapse">
+  <li><a href="#calculating-the-test-statistic" id="toc-calculating-the-test-statistic" class="nav-link" data-scroll-target="#calculating-the-test-statistic">Calculating the Test Statistic</a></li>
   <li><a href="#sec-q3" id="toc-sec-q3" class="nav-link" data-scroll-target="#sec-q3">Question 3</a></li>
   </ul></li>
-  <li><a href="#measuring-significance" id="toc-measuring-significance" class="nav-link" data-scroll-target="#measuring-significance">Measuring Significance</a></li>
+  <li><a href="#hypothesis-tests-with-multiple-linear-regression" id="toc-hypothesis-tests-with-multiple-linear-regression" class="nav-link" data-scroll-target="#hypothesis-tests-with-multiple-linear-regression">Hypothesis Tests with Multiple Linear Regression</a>
+  <ul class="collapse">
+  <li><a href="#sec-q4" id="toc-sec-q4" class="nav-link" data-scroll-target="#sec-q4">Question 4</a></li>
+  <li><a href="#sec-q5" id="toc-sec-q5" class="nav-link" data-scroll-target="#sec-q5">Question 5</a></li>
+  </ul></li>
+  <li><a href="#setting-up-the-hypotheses-1" id="toc-setting-up-the-hypotheses-1" class="nav-link" data-scroll-target="#setting-up-the-hypotheses-1">Setting Up The Hypotheses</a>
+  <ul class="collapse">
+  <li><a href="#sec-q6" id="toc-sec-q6" class="nav-link" data-scroll-target="#sec-q6">Question 6</a></li>
+  </ul></li>
+  <li><a href="#measuring-significance" id="toc-measuring-significance" class="nav-link" data-scroll-target="#measuring-significance">Measuring Significance</a>
+  <ul class="collapse">
+  <li><a href="#an-initial-test-statistic" id="toc-an-initial-test-statistic" class="nav-link" data-scroll-target="#an-initial-test-statistic">An Initial Test Statistic</a></li>
+  </ul></li>
   <li><a href="#general-f-test-for-comparing-two-nested-regression-models" id="toc-general-f-test-for-comparing-two-nested-regression-models" class="nav-link" data-scroll-target="#general-f-test-for-comparing-two-nested-regression-models">General <span class="math inline">\(F\)</span> Test for Comparing Two Nested Regression Models:</a>
   <ul class="collapse">
   <li><a href="#set-up-hypotheses" id="toc-set-up-hypotheses" class="nav-link" data-scroll-target="#set-up-hypotheses">Set Up Hypotheses</a></li>
@@ -3065,26 +3077,27 @@ vertical-align: -.125em;
   <li><a href="#analysis-of-variation-anova-table" id="toc-analysis-of-variation-anova-table" class="nav-link" data-scroll-target="#analysis-of-variation-anova-table">Analysis of Variation (ANOVA) Table</a>
   <ul class="collapse">
   <li><a href="#comparing-with-fit-of-null-model" id="toc-comparing-with-fit-of-null-model" class="nav-link" data-scroll-target="#comparing-with-fit-of-null-model">Comparing with Fit of Null Model</a></li>
-  <li><a href="#sec-q4" id="toc-sec-q4" class="nav-link" data-scroll-target="#sec-q4">Question 4</a></li>
-  <li><a href="#sec-q5" id="toc-sec-q5" class="nav-link" data-scroll-target="#sec-q5">Question 5</a></li>
-  <li><a href="#sec-q6" id="toc-sec-q6" class="nav-link" data-scroll-target="#sec-q6">Question 6</a></li>
   <li><a href="#sec-q7" id="toc-sec-q7" class="nav-link" data-scroll-target="#sec-q7">Question 7</a></li>
+  <li><a href="#sec-q8" id="toc-sec-q8" class="nav-link" data-scroll-target="#sec-q8">Question 8</a></li>
+  <li><a href="#sec-q9" id="toc-sec-q9" class="nav-link" data-scroll-target="#sec-q9">Question 9</a></li>
+  <li><a href="#sec-q10" id="toc-sec-q10" class="nav-link" data-scroll-target="#sec-q10">Question 10</a></li>
   <li><a href="#verifying-the-output-again" id="toc-verifying-the-output-again" class="nav-link" data-scroll-target="#verifying-the-output-again">Verifying the Output Again</a></li>
   <li><a href="#compare-with-summary-of-lm" id="toc-compare-with-summary-of-lm" class="nav-link" data-scroll-target="#compare-with-summary-of-lm">Compare with Summary of <code>lm</code></a></li>
   <li><a href="#visualizing-the-f-dist" id="toc-visualizing-the-f-dist" class="nav-link" data-scroll-target="#visualizing-the-f-dist">Visualizing the F-dist</a></li>
   <li><a href="#interpreting-the-results" id="toc-interpreting-the-results" class="nav-link" data-scroll-target="#interpreting-the-results">Interpreting the Results</a></li>
-  <li><a href="#sec-q8" id="toc-sec-q8" class="nav-link" data-scroll-target="#sec-q8">Question 8</a></li>
+  <li><a href="#sec-q11" id="toc-sec-q11" class="nav-link" data-scroll-target="#sec-q11">Question 11</a></li>
   </ul></li>
   <li><a href="#testing-a-single-regressor" id="toc-testing-a-single-regressor" class="nav-link" data-scroll-target="#testing-a-single-regressor">Testing a Single Regressor</a>
   <ul class="collapse">
-  <li><a href="#sec-q9" id="toc-sec-q9" class="nav-link" data-scroll-target="#sec-q9">Question 9</a></li>
+  <li><a href="#sec-q12" id="toc-sec-q12" class="nav-link" data-scroll-target="#sec-q12">Question 12</a></li>
   <li><a href="#using-a-t-statistic" id="toc-using-a-t-statistic" class="nav-link" data-scroll-target="#using-a-t-statistic">Using a t-statistic</a></li>
-  <li><a href="#sec-q10" id="toc-sec-q10" class="nav-link" data-scroll-target="#sec-q10">Question 10</a></li>
+  <li><a href="#sec-q13" id="toc-sec-q13" class="nav-link" data-scroll-target="#sec-q13">Question 13</a></li>
   </ul></li>
   <li><a href="#testing-a-pair-of-regressors" id="toc-testing-a-pair-of-regressors" class="nav-link" data-scroll-target="#testing-a-pair-of-regressors">Testing a Pair of Regressors</a>
   <ul class="collapse">
-  <li><a href="#sec-q11" id="toc-sec-q11" class="nav-link" data-scroll-target="#sec-q11">Question 11</a></li>
+  <li><a href="#sec-q14" id="toc-sec-q14" class="nav-link" data-scroll-target="#sec-q14">Question 14</a></li>
   </ul></li>
+  <li><a href="#sec-appendA" id="toc-sec-appendA" class="nav-link" data-scroll-target="#sec-appendA">Appendix A: Summary of Hypothesis Testing</a></li>
   </ul>
 </nav>
 </div>
@@ -3107,11 +3120,26 @@ vertical-align: -.125em;
 <h1>Loading Required Packages and Data</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(faraway)  <span class="co"># access gala data frame</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(faraway)  <span class="co"># access gala data frame</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ellipse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We have not used the <code>ellipse</code> package yet this semester. If you have not installed this package, be sure to run the command <code>install.packages(&quot;ellipse&quot;)</code> from the console below and re-run the code cell above.</p>
+</div>
 </div>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(gala)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gala)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># loading Galapagos data</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(gala)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(gala)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>             Species Endemics  Area Elevation Nearest Scruz Adjacent
 Baltra            58       23 25.09       346     0.6   0.6     1.84
@@ -3150,10 +3178,84 @@ Daphne.Major      18       11  0.34       119     8.0   8.0     1.84</code></pre
 <li><code>Scruz</code>: The distance from Santa Cruz Island (km).</li>
 <li><code>Adjacent</code>: The area of the adjacent island (<span class="math inline">\(\mbox{km}^2\)</span>).</li>
 </ul>
+</section>
+<section id="hypothesis-testing-for-a-simple-linear-regression" class="level1">
+<h1>Hypothesis Testing for a Simple Linear Regression</h1>
+<section id="sec-q1" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q1">Question 1</h2>
+<p>Write out a formula for the fitted model based on code and output below.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> Area <span class="sc">+</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>            Scruz <span class="sc">+</span> Adjacent, <span class="at">data =</span> gala)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>lmod_area <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> Area, <span class="at">data =</span> gala)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmod_area)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Species ~ Area, data = gala)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-99.495 -53.431 -29.045   3.423 306.137 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 63.78286   17.52442   3.640 0.001094 ** 
+Area         0.08196    0.01971   4.158 0.000275 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 91.73 on 28 degrees of freedom
+Multiple R-squared:  0.3817,    Adjusted R-squared:  0.3596 
+F-statistic: 17.29 on 1 and 28 DF,  p-value: 0.0002748</code></pre>
+</div>
+</div>
+<section id="solution-to-question-1" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-1">Solution to Question 1</h3>
+<p><br></p>
+</section>
+</section>
+<section id="setting-up-the-hypotheses" class="level2">
+<h2 class="anchored" data-anchor-id="setting-up-the-hypotheses">Setting Up The Hypotheses</h2>
+</section>
+<section id="sec-q2" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q2">Question 2</h2>
+<p>What do you think would be suitable hypothesis to test whether the predictor <code>Area</code> should be included?</p>
+<section id="solution-to-question-2" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-2">Solution to Question 2</h3>
+<p><br></p>
+</section>
+</section>
+<section id="calculating-the-test-statistic" class="level2">
+<h2 class="anchored" data-anchor-id="calculating-the-test-statistic">Calculating the Test Statistic</h2>
+<p>If the null hypotheses is true, how likely would we be to obtain the observed sample data?</p>
+<p><span class="math display">\[t = \frac{\text{observed} - \text{null}}{\text{SE}} = \frac{\widehat{\beta}_1 - 0}{\text{SE}(\widehat{\beta}_1)}.\]</span></p>
+<p>In regression, the standard error can be approximated by the formula:</p>
+<p><span class="math display">\[
+\text{SE}(\widehat{\beta}_1) = \sqrt{ \frac{\sum (\hat{y}_i - y_i)^2 / (n-2)}{\sum (x_i - \bar{x})^2 }}.
+\]</span></p>
+<ul>
+<li><span class="math inline">\(\frac{\sum (\hat{y}_i - y_i)^2\)</span> is the RSS of the model with <code>Area</code> as the only predictor.</li>
+<li><span class="math inline">\(n-2\)</span> denotes the degrees of freedom with <span class="math inline">\(2\)</span> being the number of regression coefficients.</li>
+<li><span class="math inline">\(\sum (x_i - \bar{x})^2\)</span> is the total sum of the squared deviance in the predictor.</li>
+</ul>
+</section>
+<section id="sec-q3" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q3">Question 3</h2>
+<p>Approximate the standard error for <span class="math inline">\(\widehat{\beta}_1\)</span>. Then use this result to compute the test statistic and p-value corresponding to this test.</p>
+<section id="solution-to-question-3" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-3">Solution to Question 3</h3>
+<p><br></p>
+</section>
+</section>
+</section>
+<section id="hypothesis-tests-with-multiple-linear-regression" class="level1">
+<h1>Hypothesis Tests with Multiple Linear Regression</h1>
+<section id="sec-q4" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q4">Question 4</h2>
+<p>Write out a formula for the fitted model based on code and output below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>lmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> Area <span class="sc">+</span> Elevation <span class="sc">+</span> Nearest <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>            Scruz <span class="sc">+</span> Adjacent, <span class="at">data =</span> gala)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -3180,36 +3282,33 @@ Multiple R-squared:  0.7658,    Adjusted R-squared:  0.7171
 F-statistic:  15.7 on 5 and 24 DF,  p-value: 6.838e-07</code></pre>
 </div>
 </div>
-<section id="sec-q1" class="level2">
-<h2 class="anchored" data-anchor-id="sec-q1">Question 1</h2>
-<p>Write out a formula for the fitted model based on the output above.</p>
-<section id="solution-to-question-1" class="level3">
-<h3 class="anchored" data-anchor-id="solution-to-question-1">Solution to Question 1</h3>
+<section id="solution-to-question-4" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-4">Solution to Question 4</h3>
 <p><span class="math display">\[\widehat{\mbox{Species}} = ?? + ?? \mbox{Area} + ?? \mbox{Elevation} + ?? \mbox{Nearest} + ?? \mbox{Scruz} + ?? \mbox{Adjacent}\]</span></p>
 <p><br></p>
 </section>
 </section>
-<section id="sec-q2" class="level2">
-<h2 class="anchored" data-anchor-id="sec-q2">Question 2</h2>
-<p>Which regressor has the strongest association with the number species on the island?</p>
-<section id="solution-to-question-2" class="level3">
-<h3 class="anchored" data-anchor-id="solution-to-question-2">Solution to Question 2</h3>
+<section id="sec-q5" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q5">Question 5</h2>
+<p>Which regressor has the strongest association with the number species on the island? Explain how you determined your answer.</p>
+<section id="solution-to-question-5" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-5">Solution to Question 5</h3>
 <p><br></p>
 </section>
 </section>
 </section>
-<section id="setting-up-the-hypotheses" class="level1">
+<section id="setting-up-the-hypotheses-1" class="level1">
 <h1>Setting Up The Hypotheses</h1>
 <p>How can we decide whether all or some of the regressor variables should be included in our model?</p>
 <ul>
-<li>Let <span class="math inline">\(\Omega\)</span> denote the proposed full model.</li>
-<li>Let <span class="math inline">\(\omega\)</span> denote a simpler model that uses a subset of all regressors.</li>
+<li>Let <span class="math inline">\(\Omega\)</span> denote the proposed <strong>complete or full model</strong>.</li>
+<li>Let <span class="math inline">\(\omega\)</span> denote a <strong>simpler model</strong> that uses a subset of all regressors.</li>
 </ul>
-<section id="sec-q3" class="level2">
-<h2 class="anchored" data-anchor-id="sec-q3">Question 3</h2>
+<section id="sec-q6" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q6">Question 6</h2>
 <p>What do you think would be suitable hypothesis to test whether <span class="math inline">\(\Omega\)</span> is a better model than <span class="math inline">\(\omega\)</span>?</p>
-<section id="solution-to-question-3" class="level3">
-<h3 class="anchored" data-anchor-id="solution-to-question-3">Solution to Question 3</h3>
+<section id="solution-to-question-6" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-6">Solution to Question 6</h3>
 <p><br></p>
 </section>
 </section>
@@ -3222,7 +3321,10 @@ F-statistic:  15.7 on 5 and 24 DF,  p-value: 6.838e-07</code></pre>
 <li>If <span class="math inline">\(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega}\)</span> is large, then <span class="math inline">\(\Omega\)</span> has a superior fit.</li>
 <li>How large of a difference is large enough?</li>
 </ul>
+<section id="an-initial-test-statistic" class="level2">
+<h2 class="anchored" data-anchor-id="an-initial-test-statistic">An Initial Test Statistic</h2>
 <p><span class="math display">\[\mbox{test stat} = \frac{\mbox{fit of observed model} - \mbox{fit of null model}}{\mbox{variability due to sampling}} = \frac{\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega}}{RSS_{\Omega}}.\]</span></p>
+</section>
 </section>
 <section id="general-f-test-for-comparing-two-nested-regression-models" class="level1">
 <h1>General <span class="math inline">\(F\)</span> Test for Comparing Two Nested Regression Models:</h1>
@@ -3235,6 +3337,19 @@ F-statistic:  15.7 on 5 and 24 DF,  p-value: 6.838e-07</code></pre>
 <h2 class="anchored" data-anchor-id="compute-the-test-statistic">Compute the Test Statistic</h2>
 <p>Suppose that model <span class="math inline">\(\Omega\)</span> has <span class="math inline">\(p\)</span> estimated regression coefficients and model <span class="math inline">\(\omega\)</span> has <span class="math inline">\(q\)</span> estimated regression coefficients. Then we use rescaling to get an <span style="color:blue"><strong>F-statistic</strong></span> which has <span style="color:blue"><strong>F-distribution</strong></span> under the null hypothesis given by:</p>
 <p><span class="math display">\[F =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{RSS_{\Omega}/df_{\Omega}} =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{\hat{\sigma}_{\Omega}^2} \sim F_{p-q,n-p} ,\]</span> where <span class="math inline">\(df_{\omega} = n -q\)</span>, <span class="math inline">\(df_{\Omega} = n -p\)</span>, and <span class="math inline">\(\hat{\sigma}_{\Omega}^2 = RSS_{\Omega}/df_{\Omega}\)</span>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We divide each <span class="math inline">\(RSS\)</span> by its degrees of freedom to calculate an <strong>unbiased</strong> estimate of the variance similar to how we divide by <span class="math inline">\(n-1\)</span> when finding an unbiased estimate for the standard deviation. This prevents underestimation.</p>
+</div>
+</div>
 <p>Are any of the predictors useful? We compare the full model <span class="math inline">\(\Omega\)</span> given by <span class="math inline">\(\mathbf{y} = \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\epsilon}\)</span> to the null model <span class="math inline">\(\omega\)</span> which is the constant mean model <span class="math inline">\(y = \mu + \epsilon\)</span> which we estimate with <span class="math inline">\(\hat{y} = \bar{y}\)</span>.</p>
 <ul>
 <li><p>Set up the hypotheses:</p>
@@ -3303,8 +3418,8 @@ F-statistic:  15.7 on 5 and 24 DF,  p-value: 6.838e-07</code></pre>
 <section id="comparing-with-fit-of-null-model" class="level2">
 <h2 class="anchored" data-anchor-id="comparing-with-fit-of-null-model">Comparing with Fit of Null Model</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>nullmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> gala) </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(nullmod, lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>nullmod <span class="ot">&lt;-</span> <span class="fu">lm</span>(Species <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> gala) </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(nullmod, lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -3318,41 +3433,41 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 </div>
 </div>
 </section>
-<section id="sec-q4" class="level2">
-<h2 class="anchored" data-anchor-id="sec-q4">Question 4</h2>
+<section id="sec-q7" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q7">Question 7</h2>
 <p>What is the first line of code above doing?</p>
-<section id="solution-to-question-4" class="level3">
-<h3 class="anchored" data-anchor-id="solution-to-question-4">Solution to Question 4</h3>
+<section id="solution-to-question-7" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-7">Solution to Question 7</h3>
 <p><br></p>
 </section>
 </section>
-<section id="sec-q5" class="level2">
-<h2 class="anchored" data-anchor-id="sec-q5">Question 5</h2>
+<section id="sec-q8" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q8">Question 8</h2>
 <p>Interpret the output from the <code>anova</code> function.</p>
-<section id="solution-to-question-5" class="level3">
-<h3 class="anchored" data-anchor-id="solution-to-question-5">Solution to Question 5</h3>
+<section id="solution-to-question-8" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-8">Solution to Question 8</h3>
 <p><br></p>
 </section>
 </section>
-<section id="sec-q6" class="level2">
-<h2 class="anchored" data-anchor-id="sec-q6">Question 6</h2>
+<section id="sec-q9" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q9">Question 9</h2>
 <p>Arrange the output of the anova function below into an ANOVA table such as the one shown earlier.</p>
-<section id="solution-to-question-6" class="level3">
-<h3 class="anchored" data-anchor-id="solution-to-question-6">Solution to Question 6</h3>
+<section id="solution-to-question-9" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-9">Solution to Question 9</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>(ss <span class="ot">&lt;-</span> <span class="dv">381081-89231</span>) <span class="co"># SS_{reg}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(ss <span class="ot">&lt;-</span> <span class="dv">381081-89231</span>) <span class="co"># SS_{reg}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 291850</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>(mean.ss <span class="ot">&lt;-</span> ss<span class="sc">/</span><span class="dv">5</span>) <span class="co">#regression mean sum squares</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(mean.ss <span class="ot">&lt;-</span> ss<span class="sc">/</span><span class="dv">5</span>) <span class="co">#regression mean sum squares</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 58370</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>(mean.rss <span class="ot">&lt;-</span> <span class="dv">89231</span><span class="sc">/</span><span class="dv">24</span>) <span class="co">#residual mean sum squares</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(mean.rss <span class="ot">&lt;-</span> <span class="dv">89231</span><span class="sc">/</span><span class="dv">24</span>) <span class="co">#residual mean sum squares</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 3717.958</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>(fstat <span class="ot">&lt;-</span> mean.ss<span class="sc">/</span>mean.rss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>(fstat <span class="ot">&lt;-</span> mean.ss<span class="sc">/</span>mean.rss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 15.69948</code></pre>
 </div>
@@ -3394,44 +3509,44 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 </table>
 </section>
 </section>
-<section id="sec-q7" class="level2">
-<h2 class="anchored" data-anchor-id="sec-q7">Question 7</h2>
+<section id="sec-q10" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q10">Question 10</h2>
 <p>Compare these calculations with the <code>summary</code> output from earlier.</p>
-<section id="solution-to-question-7" class="level3">
-<h3 class="anchored" data-anchor-id="solution-to-question-7">Solution to Question 7</h3>
+<section id="solution-to-question-10" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-10">Solution to Question 10</h3>
 <p><br></p>
 </section>
 </section>
 <section id="verifying-the-output-again" class="level2">
 <h2 class="anchored" data-anchor-id="verifying-the-output-again">Verifying the Output Again</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the sum of squares</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>(rss0 <span class="ot">&lt;-</span> <span class="fu">deviance</span>(nullmod)) <span class="co"># RSS of null (TSS)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the sum of squares</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>(rss0 <span class="ot">&lt;-</span> <span class="fu">deviance</span>(nullmod)) <span class="co"># RSS of null (TSS)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 381081.4</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>(rss <span class="ot">&lt;-</span> <span class="fu">deviance</span>(lmod)) <span class="co"># RSS of proposed model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>(rss <span class="ot">&lt;-</span> <span class="fu">deviance</span>(lmod)) <span class="co"># RSS of proposed model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 89231.37</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the degrees of freedom</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>(df0 <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(nullmod)) <span class="co"># df of null model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the degrees of freedom</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>(df0 <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(nullmod)) <span class="co"># df of null model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 29</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>(df <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(lmod)) <span class="co">#  df of proposed model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>(df <span class="ot">&lt;-</span> <span class="fu">df.residual</span>(lmod)) <span class="co">#  df of proposed model</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 24</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the F-statistic</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>(f <span class="ot">&lt;-</span> ((rss0 <span class="sc">-</span> rss)<span class="sc">/</span>(df0 <span class="sc">-</span> df))<span class="sc">/</span>(rss<span class="sc">/</span>df)) <span class="co"># F-stat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the F-statistic</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>(f <span class="ot">&lt;-</span> ((rss0 <span class="sc">-</span> rss)<span class="sc">/</span>(df0 <span class="sc">-</span> df))<span class="sc">/</span>(rss<span class="sc">/</span>df)) <span class="co"># F-stat</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 15.69941</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the P-value with pf</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pf(q, df1, df2) computes area to left of q</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># This is a right-tail test (so 1-pf)</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pf</span>(f, <span class="at">df1 =</span> df0 <span class="sc">-</span> df, <span class="at">df2 =</span> df) <span class="co"># P-value</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Compute the P-value with pf</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># pf(q, df1, df2) computes area to left of q</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># This is a right-tail test (so 1-pf)</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">pf</span>(f, <span class="at">df1 =</span> df0 <span class="sc">-</span> df, <span class="at">df2 =</span> df) <span class="co"># P-value</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 6.837893e-07</code></pre>
 </div>
@@ -3440,7 +3555,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <section id="compare-with-summary-of-lm" class="level2">
 <h2 class="anchored" data-anchor-id="compare-with-summary-of-lm">Compare with Summary of <code>lm</code></h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lmod)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -3486,33 +3601,33 @@ F-statistic:  15.7 on 5 and 24 DF,  p-value: 6.838e-07</code></pre>
 <section id="interpreting-the-results" class="level2">
 <h2 class="anchored" data-anchor-id="interpreting-the-results">Interpreting the Results</h2>
 </section>
-<section id="sec-q8" class="level2">
-<h2 class="anchored" data-anchor-id="sec-q8">Question 8</h2>
+<section id="sec-q11" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q11">Question 11</h2>
 <p>You perform a hypothesis test to test the following claims:</p>
 <p>H<sub>0</sub>: The null model <span class="math inline">\(\omega\)</span> is adequate. <span class="math inline">\(\beta_1 = \beta_2 = \ldots = \beta_{p-1} = 0\)</span>.</p>
 <p>H<sub>a</sub>: At least one of the regression coefficients is not zero.</p>
 <p>In the Galapagos example, the <span class="math inline">\(F\)</span>-statistic is <span class="math inline">\(15.699\)</span> and the <span class="math inline">\(p\)</span>-value is given as <span class="math inline">\(6.838e-07\ast\ast\ast\)</span></p>
-<section id="question-8a" class="level3">
-<h3 class="anchored" data-anchor-id="question-8a">Question 8a</h3>
+<section id="question-11a" class="level3">
+<h3 class="anchored" data-anchor-id="question-11a">Question 11a</h3>
 <p>Interpret the meaning of the <span class="math inline">\(p\)</span>-value.</p>
-<section id="solution-to-question-8a" class="level4">
-<h4 class="anchored" data-anchor-id="solution-to-question-8a">Solution to Question 8a</h4>
+<section id="solution-to-question-11a" class="level4">
+<h4 class="anchored" data-anchor-id="solution-to-question-11a">Solution to Question 11a</h4>
 <p><br></p>
 </section>
 </section>
-<section id="question-8b" class="level3">
-<h3 class="anchored" data-anchor-id="question-8b">Question 8b</h3>
+<section id="question-11b" class="level3">
+<h3 class="anchored" data-anchor-id="question-11b">Question 11b</h3>
 <p>If you fail to reject <span class="math inline">\(H_0\)</span>, does this mean there is no relation between the regressors and the response?</p>
-<section id="solution-to-question-8b" class="level4">
-<h4 class="anchored" data-anchor-id="solution-to-question-8b">Solution to Question 8b</h4>
+<section id="solution-to-question-11b" class="level4">
+<h4 class="anchored" data-anchor-id="solution-to-question-11b">Solution to Question 11b</h4>
 <p><br></p>
 </section>
 </section>
-<section id="question-8c" class="level3">
-<h3 class="anchored" data-anchor-id="question-8c">Question 8c</h3>
+<section id="question-11c" class="level3">
+<h3 class="anchored" data-anchor-id="question-11c">Question 11c</h3>
 <p>If you reject <span class="math inline">\(H_0\)</span>, does this mean you have found the best model for <span class="math inline">\(y\)</span>?</p>
-<section id="solution-to-question-8c" class="level4">
-<h4 class="anchored" data-anchor-id="solution-to-question-8c">Solution to Question 8c</h4>
+<section id="solution-to-question-11c" class="level4">
+<h4 class="anchored" data-anchor-id="solution-to-question-11c">Solution to Question 11c</h4>
 <p><br></p>
 </section>
 </section>
@@ -3526,16 +3641,16 @@ F-statistic:  15.7 on 5 and 24 DF,  p-value: 6.838e-07</code></pre>
 <li>Use the previous approach, letting the reduced model be the one without that regressor.</li>
 <li>Use a <span class="math inline">\(t\)</span>-statistic approach.</li>
 </ul>
-<section id="sec-q9" class="level2">
-<h2 class="anchored" data-anchor-id="sec-q9">Question 9</h2>
+<section id="sec-q12" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q12">Question 12</h2>
 <p>Repeat the previous process to test whether the regressor <code>Area</code> is significant (assuming all others are in the model).</p>
 <ul>
 <li>State the hypotheses.</li>
 <li>Compute the <span class="math inline">\(F\)</span>-statistic and <span class="math inline">\(p\)</span>-value.</li>
 <li>State the conclusion in this context.</li>
 </ul>
-<section id="solution-to-question-9" class="level3">
-<h3 class="anchored" data-anchor-id="solution-to-question-9">Solution to Question 9</h3>
+<section id="solution-to-question-12" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-12">Solution to Question 12</h3>
 <p><br></p>
 </section>
 </section>
@@ -3544,33 +3659,33 @@ F-statistic:  15.7 on 5 and 24 DF,  p-value: 6.838e-07</code></pre>
 <p>An alternative approach is to use a <span class="math inline">\(t\)</span>-statistic for testing the hypotheses:</p>
 <p><span class="math display">\[ t_i = \frac{\widehat{\beta}_i-0}{\mbox{se}(\widehat{\beta}_i)}= \frac{\widehat{\beta}_i}{\mbox{se}(\widehat{\beta}_i)}\]</span> using a <span class="math inline">\(t\)</span>-distribution with <span class="math inline">\(\mbox{df}_{\Omega}=n-p\)</span> degrees of freedom.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculation of t-stat</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>beta.area <span class="ot">&lt;-</span> <span class="fu">summary</span>(lmod)<span class="sc">$</span>coeff[<span class="dv">2</span>,<span class="dv">1</span>]</span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>se.area <span class="ot">&lt;-</span> <span class="fu">summary</span>(lmod)<span class="sc">$</span>coeff[<span class="dv">2</span>,<span class="dv">2</span>]</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>(t <span class="ot">&lt;-</span> beta.area<span class="sc">/</span>se.area)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculation of t-stat</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>beta.area <span class="ot">&lt;-</span> <span class="fu">summary</span>(lmod)<span class="sc">$</span>coeff[<span class="dv">2</span>,<span class="dv">1</span>]</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>se.area <span class="ot">&lt;-</span> <span class="fu">summary</span>(lmod)<span class="sc">$</span>coeff[<span class="dv">2</span>,<span class="dv">2</span>]</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>(t <span class="ot">&lt;-</span> beta.area<span class="sc">/</span>se.area)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] -1.067611</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># verifying p-value</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span><span class="fu">pt</span>(t, <span class="fu">df.residual</span>(lmod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># verifying p-value</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="dv">2</span><span class="sc">*</span><span class="fu">pt</span>(t, <span class="fu">df.residual</span>(lmod))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 0.296318</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># matching F-stat</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>t<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># matching F-stat</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>t<span class="sc">^</span><span class="dv">2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 1.139792</code></pre>
 </div>
 </div>
 </section>
-<section id="sec-q10" class="level2">
-<h2 class="anchored" data-anchor-id="sec-q10">Question 10</h2>
+<section id="sec-q13" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q13">Question 13</h2>
 <p>What is the difference between the test being run in the code below and the previous test? Does the test below lead to the same conclusion?</p>
-<section id="solution-to-question-10" class="level3">
-<h3 class="anchored" data-anchor-id="solution-to-question-10">Solution to Question 10</h3>
+<section id="solution-to-question-13" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-13">Solution to Question 13</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare results to test of beta_Area = 0 when no other predictors in model</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Species <span class="sc">~</span> Area, gala))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co"># compare results to test of beta_Area = 0 when no other predictors in model</span></span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">lm</span>(Species <span class="sc">~</span> Area, gala))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -3598,19 +3713,60 @@ F-statistic: 17.29 on 1 and 28 DF,  p-value: 0.0002748</code></pre>
 </section>
 <section id="testing-a-pair-of-regressors" class="level1">
 <h1>Testing a Pair of Regressors</h1>
-<section id="sec-q11" class="level2">
-<h2 class="anchored" data-anchor-id="sec-q11">Question 11</h2>
+<section id="sec-q14" class="level2">
+<h2 class="anchored" data-anchor-id="sec-q14">Question 14</h2>
 <p>Test whether the <code>Area</code> and <code>Adjacent</code> regressor variables should be simultaneously dropped from the model that already includes <code>Elevation</code>, <code>Nearest</code>, and <code>Scruz</code> in the model. Make sure to specify the regressors that are the model when stating H<sub>0</sub> and H<sub>a</sub>.</p>
 <ul>
 <li>State the hypotheses.</li>
 <li>Compute the <span class="math inline">\(F\)</span>-statistic and <span class="math inline">\(p\)</span>-value.</li>
 <li>State the conclusion in this context.</li>
 </ul>
-<section id="solution-to-question-11" class="level3">
-<h3 class="anchored" data-anchor-id="solution-to-question-11">Solution to Question 11</h3>
+<section id="solution-to-question-14" class="level3">
+<h3 class="anchored" data-anchor-id="solution-to-question-14">Solution to Question 14</h3>
 <p><br></p>
 </section>
 </section>
+</section>
+<section id="sec-appendA" class="level1">
+<h1>Appendix A: Summary of Hypothesis Testing</h1>
+<ol type="1">
+<li>State the <span style="color:blue"><strong>hypotheses</strong></span> and identify (from the alternative claim in <span class="math inline">\(H_a\)</span>) if it is a one or two-tailed test.</li>
+</ol>
+<ul>
+<li><span class="math inline">\(H_0\)</span> is the “boring” claim. Express using an equal sign <span class="math inline">\(=\)</span>.</li>
+<li><span class="math inline">\(H_a\)</span> is the claim we want to show is likely true. Use inequality sign (<span class="math inline">\(&gt;\)</span>, <span class="math inline">\(&lt;\)</span>, or <span class="math inline">\(\ne\)</span>).</li>
+<li>State both <span class="math inline">\(H_0\)</span> and <span class="math inline">\(H_a\)</span> in terms of population parameters such as <span class="math inline">\(\mu\)</span> and <span class="math inline">\(p\)</span>.</li>
+</ul>
+<ol start="2" type="1">
+<li>Compute the <span style="color:blue"><strong>test statistic</strong></span>.</li>
+</ol>
+<ul>
+<li>If the observed sample contradicts the null claim, the result is significant.</li>
+<li>A standardized test statistic measures how many SE’s the observed stat is from the null claim.</li>
+<li>A standardized test statistic with a large absolute value is supporting evidence to reject <span class="math inline">\(H_0\)</span>.</li>
+</ul>
+<ol start="3" type="1">
+<li>Using the null distribution, compute the <span style="color:blue"><strong>p-value</strong></span>. The p-value is the probability of getting a sample with a test statistic as or more extreme than the observed sample assuming <span class="math inline">\(H_0\)</span> is true.</li>
+</ol>
+<ul>
+<li>The p-value is the area in one or both tails beyond the test statistic.</li>
+<li>The p-value is a probability, so we have <span class="math inline">\(0 &lt; \mbox{p-value} &lt; 1\)</span>.</li>
+<li>The smaller the p-value, the stronger the evidence to reject <span class="math inline">\(H_0\)</span>.</li>
+</ul>
+<ol start="4" type="1">
+<li>Based on the <span style="color:blue"><strong>significance level</strong></span>, <span class="math inline">\(\alpha\)</span>, make a decision to reject or not reject the null hypothesis</li>
+</ol>
+<ul>
+<li>If p-value <span class="math inline">\(\leq \alpha\)</span>, we reject <span class="math inline">\(H_0\)</span>.</li>
+<li>If p-value <span class="math inline">\(&gt; \alpha\)</span>, we do not reject <span class="math inline">\(H_0\)</span>.</li>
+</ul>
+<ol start="5" type="1">
+<li><span style="color:blue"><strong>Summarize the results</strong></span> in practical terms, <strong>in the context of the example</strong>.</li>
+</ol>
+<ul>
+<li>If we reject <span class="math inline">\(H_0\)</span>, this means there is enough evidence to support the claim in <span class="math inline">\(H_a\)</span>.</li>
+<li>If we do not reject <span class="math inline">\(H_0\)</span>, this means there is not evidence to reject <span class="math inline">\(H_0\)</span> nor support <span class="math inline">\(H_a\)</span>. The test is inconclusive.</li>
+</ul>
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents"><h2 class="anchored quarto-appendix-heading">Reuse</h2><div id="quarto-reuse" class="quarto-appendix-contents"><div>CC BY-NC-SA</div></div></section></div></main>

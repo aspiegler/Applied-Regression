@@ -34,10 +34,17 @@ license: "CC BY-NC-SA"
 #| message: false
 library(tidyverse)
 library(faraway)  # access gala data frame
+library(ellipse)
 ```
 
 
+::: {.callout-note}
+We have not used the `ellipse` package yet this semester. If you have not installed this package, be sure to run the command `install.packages("ellipse")` from the console below and re-run the code cell above.
+:::
+
+
 ```{r}
+# loading Galapagos data
 data(gala)
 head(gala)
 ```
@@ -55,6 +62,68 @@ The data set `gala` contains 30 observations (one for each island in the Galapag
 - `Scruz`: The distance from Santa Cruz Island (km).
 - `Adjacent`: The area of the adjacent island ($\mbox{km}^2$).
 
+# Hypothesis Testing for a Simple Linear Regression
+
+
+## Question 1  {#sec-q1}
+
+Write out a formula for the fitted model based on code and output below.
+
+```{r}
+lmod_area <- lm(Species ~ Area, data = gala)
+summary(lmod_area)
+```
+
+### Solution to Question 1
+
+
+<br>  
+
+## Setting Up The Hypotheses
+
+
+## Question 2 {#sec-q2}
+
+What do you think would be suitable hypothesis to test whether the predictor `Area` should be included?
+
+### Solution to Question 2
+
+<br>  
+
+
+## Calculating the Test Statistic
+
+If the null hypotheses is true, how likely would we be to obtain the observed sample data?
+
+$$t = \frac{\text{observed} - \text{null}}{\text{SE}} = \frac{\widehat{\beta}_1 - 0}{\text{SE}(\widehat{\beta}_1)}.$$ 
+
+
+In regression, the standard error can be approximated by the formula:
+
+$$
+\text{SE}(\widehat{\beta}_1) = \sqrt{ \frac{\sum (\hat{y}_i - y_i)^2 / (n-2)}{\sum (x_i - \bar{x})^2 }}.
+$$
+
+
+- $\frac{\sum (\hat{y}_i - y_i)^2$ is the RSS of the model with `Area` as the only predictor.
+- $n-2$ denotes the degrees of freedom with $2$ being the number of regression coefficients.
+- $\sum (x_i - \bar{x})^2$ is the total sum of the squared deviance in the predictor.
+
+## Question 3 {#sec-q3}
+
+Approximate the standard error for $\widehat{\beta}_1$. Then use this result to compute the test statistic and p-value corresponding to this test.
+
+
+### Solution to Question 3
+
+
+<br>  
+
+# Hypothesis Tests with Multiple Linear Regression
+
+## Question 4  {#sec-q4}
+
+Write out a formula for the fitted model based on code and output below.
 
 ```{r}
 lmod <- lm(Species ~ Area + Elevation + Nearest +
@@ -62,12 +131,7 @@ lmod <- lm(Species ~ Area + Elevation + Nearest +
 summary(lmod)
 ```
 
-## Question 1  {#sec-q1}
-
-
-Write out a formula for the fitted model based on the output above.
-
-### Solution to Question 1
+### Solution to Question 4
 
 
 $$\widehat{\mbox{Species}} = ?? + ?? \mbox{Area} + ?? \mbox{Elevation} + ?? \mbox{Nearest} + ?? \mbox{Scruz} + ?? \mbox{Adjacent}$$
@@ -75,11 +139,11 @@ $$\widehat{\mbox{Species}} = ?? + ?? \mbox{Area} + ?? \mbox{Elevation} + ?? \mbo
 <br>  
 
 
-## Question 2 {#sec-q2}
+## Question 5 {#sec-q5}
 
-Which regressor has the strongest association with the number species on the island?
+Which regressor has the strongest association with the number species on the island? Explain how you determined your answer.
 
-### Solution to Question 2
+### Solution to Question 5
 
 
 <br>  
@@ -91,14 +155,14 @@ Which regressor has the strongest association with the number species on the isl
 How can we decide whether all or some of the regressor variables should be included in our model?
 
 
-- Let $\Omega$ denote the proposed full model.
-- Let $\omega$ denote a simpler model that uses a subset of all regressors.
+- Let $\Omega$ denote the proposed **complete or full model**.
+- Let $\omega$ denote a **simpler model** that uses a subset of all regressors.
 
-## Question 3 {#sec-q3}
+## Question 6 {#sec-q6}
 
 What do you think would be suitable hypothesis to test whether $\Omega$ is a better model than $\omega$?
 
-### Solution to Question 3
+### Solution to Question 6
 
 
 <br>  
@@ -110,6 +174,8 @@ What do you think would be suitable hypothesis to test whether $\Omega$ is a bet
 - If the model $\Omega$  is a much better model than $\omega$, then we prefer $\Omega$.
 - If $\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega}$ is large, then $\Omega$ has a superior fit.
 - How large of a difference is large enough?
+
+## An Initial Test Statistic
 
 $$\mbox{test stat} = \frac{\mbox{fit of observed model} - \mbox{fit of null model}}{\mbox{variability due to sampling}} = \frac{\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega}}{RSS_{\Omega}}.$$
 
@@ -131,6 +197,10 @@ Suppose that model $\Omega$ has $p$ estimated regression coefficients and model 
 $$F =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{RSS_{\Omega}/df_{\Omega}} =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{\hat{\sigma}_{\Omega}^2} \sim F_{p-q,n-p} ,$$
 where $df_{\omega} = n -q$,  $df_{\Omega} = n -p$, and $\hat{\sigma}_{\Omega}^2 = RSS_{\Omega}/df_{\Omega}$.
 
+
+::: {.callout-note}
+We divide each $RSS$ by its degrees of freedom to calculate an **unbiased** estimate of the variance similar to how we divide by $n-1$ when finding an unbiased estimate for the standard deviation. This prevents underestimation.
+:::
 
 Are any of the predictors useful? We compare the full model $\Omega$ given by $\mathbf{y} = \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\epsilon}$ to the null model $\omega$ which is the constant mean model $y = \mu + \epsilon$ which we estimate with $\hat{y} = \bar{y}$.
 
@@ -170,31 +240,31 @@ nullmod <- lm(Species ~ 1, data = gala)
 anova(nullmod, lmod)
 ```
 
-## Question 4 {#sec-q4}
+## Question 7 {#sec-q7}
 
 What is the first line of code above doing?
 
-### Solution to Question 4
+### Solution to Question 7
 
 
 
 <br>  
 
-## Question 5 {#sec-q5}
+## Question 8 {#sec-q8}
 
 Interpret the output from the `anova` function.
 
-### Solution to Question 5
+### Solution to Question 8
 
 
 <br>  
 
-## Question 6 {#sec-q6}
+## Question 9 {#sec-q9}
 
 Arrange the output of the anova function below into an ANOVA table such as the one shown earlier.
 
 
-### Solution to Question 6
+### Solution to Question 9
 
 
 ```{r}
@@ -215,11 +285,11 @@ Replace each ?? with an appropriate value based on output above.
 | Error of $\omega$ | ?? | ?? | | |
 
 
-## Question 7  {#sec-q7}
+## Question 10  {#sec-q10}
 
 Compare these calculations with the `summary` output from earlier.
 
-### Solution to Question 7
+### Solution to Question 10
 
 
 <br>  
@@ -284,7 +354,7 @@ data.frame(f = 0:1000 / 100) %>%
 
 ## Interpreting the Results
 
-## Question 8 {#sec-q8}
+## Question 11 {#sec-q11}
 
 You perform a hypothesis test to test the following claims:
 
@@ -295,32 +365,32 @@ H~a~: At least one of the regression coefficients is not zero.
 In the Galapagos example, the $F$-statistic is $15.699$ and the $p$-value is given as $6.838e-07\ast\ast\ast$
 
 
-### Question 8a 
+### Question 11a 
 
 Interpret the meaning of the $p$-value. 
 
-#### Solution to Question 8a
+#### Solution to Question 11a
 
 
 <br>  
 
 
-### Question 8b
+### Question 11b
 
 If you fail to reject $H_0$, does this mean there is no relation between the regressors and the response?
 
-#### Solution to Question 8b
+#### Solution to Question 11b
 
 
 
 <br>  
 
 
-### Question 8c
+### Question 11c
 
 If you reject $H_0$, does this mean you have found the best model for $y$? 
 
-#### Solution to Question 8c
+#### Solution to Question 11c
 
 
 
@@ -338,7 +408,7 @@ We have two options in this case:
 - Use a $t$-statistic approach.
 
 
-## Question 9 {#sec-q9}
+## Question 12 {#sec-q12}
 
 Repeat the previous process to test whether the regressor `Area` is significant (assuming all others are in the model).
 
@@ -347,7 +417,7 @@ Repeat the previous process to test whether the regressor `Area` is significant 
 - State the conclusion in this context.
 
 
-### Solution to Question 9
+### Solution to Question 12
 
 
 <br>  
@@ -373,11 +443,11 @@ se.area <- summary(lmod)$coeff[2,2]
 t^2
 ```
 
-## Question 10 {#sec-q10}
+## Question 13 {#sec-q13}
 
 What is the difference between the test being run in the code below and the previous test? Does the test below lead to the same conclusion?
 
-### Solution to Question 10
+### Solution to Question 13
 
 
 ```{r}
@@ -392,7 +462,7 @@ summary(lm(Species ~ Area, gala))
 
 # Testing a Pair of Regressors
 
-## Question 11 {#sec-q11}
+## Question 14 {#sec-q14}
 
 Test whether the `Area` and `Adjacent` regressor variables should be simultaneously dropped from the model that already includes `Elevation`, `Nearest`, and `Scruz` in the model.  Make sure to specify the regressors that are the model when stating H~0~ and H~a~.
 
@@ -401,8 +471,37 @@ Test whether the `Area` and `Adjacent` regressor variables should be simultaneou
 - State the conclusion in this context.
 
 
-### Solution to Question 11
+### Solution to Question 14
 
 
 <br>  
 
+# Appendix A: Summary of Hypothesis Testing {#sec-appendA}
+
+1.  State the  [**hypotheses**]{style="color:blue"} and identify (from the alternative claim in $H_a$) if it is a one or two-tailed test.
+
+-   $H_0$ is the “boring” claim. Express using an equal sign $=$.
+-   $H_a$ is the claim we want to show is likely true. Use inequality sign ($>$, $<$, or $\ne$).
+-   State both $H_0$ and $H_a$ in terms of population parameters such as $\mu$ and $p$.
+
+2.  Compute the  [**test statistic**]{style="color:blue"}.
+
+-   If the observed sample contradicts the null claim, the result is significant.
+-   A standardized test statistic measures how many SE's the observed stat is from the null claim.
+-   A standardized test statistic with a large absolute value is supporting evidence to reject $H_0$.
+
+3.  Using the null distribution, compute the  [**p-value**]{style="color:blue"}. The p-value is the probability of getting a sample with a test statistic as or more extreme than the observed sample assuming $H_0$ is true.
+
+-   The p-value is the area in one or both tails beyond the test statistic.
+-   The p-value is a probability, so we have $0 < \mbox{p-value} < 1$.
+-   The smaller the p-value, the stronger the evidence to reject $H_0$.
+
+4.  Based on the  [**significance level**]{style="color:blue"}, $\alpha$, make a decision to reject or not reject the null hypothesis
+
+-   If p-value $\leq \alpha$, we reject $H_0$.
+-   If p-value $> \alpha$, we do not reject $H_0$.
+
+5. [**Summarize the results**]{style="color:blue"} in practical terms, **in the context of the example**.
+
+-   If we reject $H_0$, this means there is enough evidence to support the claim in $H_a$.
+-   If we do not reject $H_0$, this means there is not evidence to reject $H_0$ nor support $H_a$. The test is inconclusive.
