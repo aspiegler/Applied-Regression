@@ -1,0 +1,178 @@
+---
+title: "Homework 7"
+author: 
+  - name: "Enter your name"
+    affiliation: "University of Colorado Denver"
+format: 
+  html:
+    embed-resources: true    
+editor: source
+warning: false
+---
+
+# HW 7: Due Wed, Oct 29 at 2:00 PM
+
+## Instructions:
+
+
+1.  <span style="color:red">Be sure to download and save the file so you are working with your own private copy of the file.</span>
+
+2.  <span style="color:green">After you have copied the Quarto file onto your computer, you can begin editing and saving your work.</span>
+
+**Submit your work electronically as two separate files:**
+
+-   A Quarto markdown file with file extension `.qmd` with all code cells run and relevant output displayed in the document.
+-   After you have completed all questions, render your completed work to an html file.
+-   Submit the html file that is created with file extension `.html`.
+
+Upload both files into the Homework 7 assignment in Canvas before <span style="color:blue">**2 PM on Wed, Oct 29.**</span>
+
+**You must provide supporting work for your all of your answers.**
+
+-   <span style="color:blue">That work will include using R code cells.</span>
+    -   Feel free to insert as much R code as you like.
+    -   When asked, you must explain how the output of a code cell is used to solve the question.
+    -   Code with incomplete interpretation of the output  may not receive full credit.
+    -   Code that involves methods we have not discussed this semester may not receive full credit.
+-   <span style="color:blue">Your work may also involve typing explanations and justifications in text cells.</span>
+    -   Be sure to type up your work/explanation so I can see how you arrived at your answer.
+    -   <span style="color:blue">**When you need to type math expressions, use LaTeX.**</span>
+
+## Important Academic Policies:
+
+
+-   **Be your own work.** Though you may collaborate with others, everyone is responsible for writing up the work in their own way using their own methods. Plagiarism of any form is not tolerated.
+-   **Be complete.** You must provide all work and/or explanations needed to find the solution. Answers with insufficient or incomplete supporting work may lose credit.
+-   **Adhere to the Code of Academic Honesty.**
+-   **Be clearly typed.** Your solution to a question must be clear and typed in complete sentences. 
+
+### <span style="color:blue">Let me know if you need help, and GOOD LUCK!!!</span>
+
+
+# Be Sure to Do the Following Once Completed
+
+---
+
+-   Be sure you have run ALL code cells before saving your work.
+-   Be sure all relevant code output is displayed in Quarto document.
+-   If you used LaTeX, make sure all of the formulas look good when rendering to html.
+-   Then be sure to save the your work as a Quarto document.
+-   Finally, be sure you render your final work to a static `html` that you submit along with your Quarto file in Canvas.
+-   If you preferred to write work on questions 3-6, be sure to submit either a paper copy to me or upload a pdf version of your written work into Canvas along with your other documents.
+
+# Loading Data and Required Packages
+
+Load the `cakes` data set from the `alr4` package. This data set includes data from provides data from a small experiment on baking packaged cake mixes. The data consists of 14 observations with the following variables:
+
+- `block` which is a factor
+- `X1`, baking time in minutes
+- `X2`, baking temperature in degrees F
+- `Y`, palatability score
+
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)  # load tidyverse packages
+library(ellipse)  
+data(cakes, package = "alr4")  # load cakes data frame
+summary(cakes)
+```
+
+
+::: {.callout-note}
+If you have not already installed `tidyverse`, `ellipse`, or `alr4` packages, be sure to first load the package with an `install.packages()` command in the console. Then run the the code cell above to load the packages with the `library()` command.
+:::
+
+
+# Question 1 {#sec-q1}
+
+We begin by considering the following model:
+
+$$Y=\beta_0 + \beta_1 X_1 + \beta_2 X_1^2 + \beta_3 X_2 + \beta_4 X_2^2 + \beta_5 X_1 X_2 + \epsilon.$$
+
+Fit the model above (displaying coefficients from the output on the screen) and write a formula for the fitted model.
+
+
+## Solution to Question 1
+
+
+
+
+After identifying the coefficients above, enter the formula by completing the LaTeX below.
+
+$$\widehat{E}(Y \ | \ X_1, X_2) = ??$$
+
+<br>  
+<br>  
+
+
+# Question 2 {#sec-q2}
+
+Consider the model $Y=\beta_0 + \beta_1 X_1 + \beta_2 X_1^2 + \beta_3 X_2 + \beta_4 X_2^2 + \beta_5 X_1 X_2 + \epsilon.$ Test whether a second-order model is needed, i.e., whether both $\beta_2$ and $\beta_4$ are simultaneously 0.  Be sure to clearly identify the hypotheses, show supporting work and code used to find the $F$-statistic and $p$-value, and finally state the conclusion of the test in the context of this example.
+
+## Solution to Question 2
+
+
+
+<br>  
+<br>  
+
+
+# Question 3 {#sec-q3}
+
+Consider the model $Y=\beta_0 + \beta_1 X_1 + \beta_2 X_1^2 + \beta_3 X_2 + \beta_4 X_2^2 + \beta_5 X_1 X_2 + \epsilon.$. Use a $t$-test for individual coefficients to determine whether the interaction term is needed, i.e., whether $\beta_5$ is 0. Be sure to clearly identify the hypotheses, show supporting work and code used to find the $t$ test statistic and $p$-value, and finally state the conclusion of the test in the context of this example.
+
+## Solution to Question 3
+
+
+
+<br>  
+<br>  
+
+
+# Question 4 {#sec-q4}
+
+Construct a 90% confidence interval for $\beta_2$. Provide the lower and upper bounds of the interval to two decimal places. Then interpret the practical meaning of the interval in the context of this example.
+
+## Solution to Question 4
+
+
+<br>  
+<br>  
+
+
+# Question 5 {#sec-q5}
+
+Suppose you are computing a joint confidence region for two regression coefficients at a 95% confidence level. You also construct two individual confidence intervals for the same parameters at the 95% confidence level (each interval is 95%). Describe the relationship between the individual and joint confidence regions.
+
+## Solution to Question 5
+
+
+<br>  
+<br>  
+
+
+# Question 6 {#sec-q6}
+
+Consider the model $Y=\beta_0 + \beta_1 X_1 + \beta_2 X_1^2 + \beta_3 X_2 + \beta_4 X_2^2 + \beta_5 X_1 X_2 + \epsilon.$ Construct a 95% joint confidence region for $\beta_2$ and $\beta_4$. What are plausible values for $(\beta_2, \beta_4)$?
+
+## Solution to Question 6
+
+
+
+<br>  
+<br>  
+
+# Question 7 {#sec-q7} 
+
+Describe the relationship between parametric and bootstrap confidence intervals.
+
+## Solution to Question 7
+
+
+<br>  
+<br>  
+
+
+
