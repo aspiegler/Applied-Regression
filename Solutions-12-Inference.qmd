@@ -116,10 +116,10 @@ Approximate the standard error for $\widehat{\beta}_1$. Then use this result to 
 
 ```{r}
 # standard error
-n <- length(gala$Species)
-x_bar <- mean(gala$Area)
-top <- deviance(lmod_area) / (n-2)
-bottom <- sum((gala$Area - x_bar)^2)
+n <- length(gala$Species)  # number of observations
+x_bar <- mean(gala$Area)  # mean of the observed predictors
+top <- deviance(lmod_area) / (n-2)  # RSS / (n-2)
+bottom <- sum((gala$Area - x_bar)^2)  # sum (x_i - x-bar)^2
 sqrt(top / bottom)
 ```
 
@@ -137,7 +137,7 @@ $$t = \frac{\widehat{\beta}_1 - 0}{\text{SE}(\widehat{\beta}_1)} = \frac{0.08196
 
 ```{r}
 # compute P-value
-2 * (1 - pt(4.158295, n - 2))
+2 * pt(-4.158295, n - 2)
 ```
 
 
@@ -145,7 +145,7 @@ $$t = \frac{\widehat{\beta}_1 - 0}{\text{SE}(\widehat{\beta}_1)} = \frac{0.08196
 summary(lmod_area)
 ```
 
-Since the p-value $0.00027$ is less than the significance level chosen (5%), the test is statistically significant. We can reject $H_0$ and accept $H_a$. In this context we can say the linear association between `Area` and `Species` is significant, and the slope coefficient corresponding to `Area`. is not equal to zero.
+Since the p-value $0.00027$ is less than the significance level chosen (5%), the test is statistically significant. We can reject $H_0$ and accept $H_a$. In this context we can say the linear association between `Area` and `Species` is significant, and the slope coefficient corresponding to `Area` is not equal to zero.
 
 If we square the $t$ test statistic, we get 
 
@@ -155,6 +155,9 @@ If we square the $t$ test statistic, we get
 
 which is the value of the $F$-statistic stated in the summary output of the linear model.
 
+```{r}
+summary(lmod_area)
+```
 
 # Hypothesis Tests with Multiple Linear Regression
 
@@ -168,6 +171,23 @@ lmod <- lm(Species ~ Area + Elevation + Nearest +
 summary(lmod)
 ```
 
+```{r}
+deviance(lmod)
+```
+
+```{r}
+sum(residuals(lmod)^2)
+```
+
+
+```{r}
+nullmod <- lm(Species ~ 1, data = gala)
+summary(nullmod)
+```
+
+```{r}
+deviance(nullmod)
+```
 
 ### Solution to Question 4
 
@@ -235,6 +255,13 @@ Suppose that model $\Omega$ has $p$ estimated regression coefficients and model 
 $$F =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{RSS_{\Omega}/df_{\Omega}} =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{\hat{\sigma}_{\Omega}^2} \sim F_{p-q,n-p} ,$$
 where $df_{\omega} = n -q$,  $df_{\Omega} = n - p$, and $\hat{\sigma}_{\Omega}^2 = RSS_{\Omega}/df_{\Omega}$.
 
+
+```{r}
+#top <- deviance(nullmod) - deviance(lmod) / (5)
+top <- (deviance(nullmod) - deviance(lmod)) / (5)
+bottom <- deviance(lmod) / 24
+top/bottom
+```
 
 ::: {.callout-note}
 We divide each $RSS$ by its degrees of freedom to calculate an **unbiased** estimate of the variance similar to how we divide by $n-1$ when finding an unbiased estimate for the standard deviation. This prevents underestimation.
