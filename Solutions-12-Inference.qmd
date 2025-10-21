@@ -72,6 +72,14 @@ lmod_area <- lm(Species ~ Area, data = gala)
 summary(lmod_area)
 ```
 
+
+### Solution to Question 1
+
+
+
+$$\widehat{\mbox{Species}} = 63.78286 +  0.08196 \mbox{Area}$$
+
+
 ## Setting Up The Hypotheses
 
 
@@ -96,7 +104,7 @@ Recall the OLS estimate for $\hat{\beta}_1$ is
 $$\hat{\beta}_1 = \frac{\sum (x_i - \bar{x})(y - \bar{y})}{\sum (x_i - \bar{x})^2}.$$
 
 
-In regression, the standard error can be approximated by the formula:
+We can find $\text{SE}(\hat{\beta}_1) = \sqrt{\text{Var}(X)}$ which is given by the formula below:
 
 $$
 \text{SE}(\widehat{\beta}_1) = \sqrt{ \frac{\sum (\hat{y}_i - y_i)^2 / (n-2)}{\sum (x_i - \bar{x})^2 }}.
@@ -233,165 +241,41 @@ What do you think would be suitable hypothesis to test whether $\Omega$ is a bet
 - If $\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega}$ is large, then $\Omega$ has a superior fit.
 - How large of a difference is large enough?
 
+
 ## An Initial Test Statistic
 
 $$\mbox{test stat} = \frac{\mbox{fit of observed model} - \mbox{fit of null model}}{\mbox{variability due to sampling}} = \frac{\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega}}{RSS_{\Omega}}.$$
 
 
-# General $F$ Test for Comparing Two Nested Regression Models:
+## The $F$-Statistic
 
 
-## Set Up Hypotheses
+The [**$F$-statistic**]{style="color:blue"} compare the variance explained by the model to the variance not explained (the residuals). The $F$-statistic is used to test whether the **overall regression model is statistically significant**, not just individual predictors. Recall the following measurements related to a regression model:
 
-H~0~: Model $\omega$ is an adequate model.
-
-H~a~:  Model $\Omega$ is better.
-
-## Compute the Test Statistic
-
-Suppose that model $\Omega$ has $p$ estimated regression coefficients and model $\omega$ has $q$ estimated regression coefficients. Then we use rescaling to get an
-[**F-statistic**]{style="color:blue"} which has [**F-distribution**]{style="color:blue"} under the null hypothesis given by:
-
-$$F =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{RSS_{\Omega}/df_{\Omega}} =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{\hat{\sigma}_{\Omega}^2} \sim F_{p-q,n-p} ,$$
-where $df_{\omega} = n -q$,  $df_{\Omega} = n - p$, and $\hat{\sigma}_{\Omega}^2 = RSS_{\Omega}/df_{\Omega}$.
+- $\mbox{RSS} = \sum (Y_i - \widehat{Y}_i)^2$ is the [**Residual Sum of Squares (RSS)**]{style="color:blue"}.
+- RSS measures the variability in our response that **is NOT explained by our model**.
 
 
-```{r}
-#top <- deviance(nullmod) - deviance(lmod) / (5)
-top <- (deviance(nullmod) - deviance(lmod)) / (5)
-bottom <- deviance(lmod) / 24
-top/bottom
-```
+Suppose that model $\Omega$ has $p$ estimated regression coefficients and model $\omega$ has $q$ estimated regression coefficients. In other words, model $\Omega$ considers adding $p-q$ predictors to simpler model $\omega$.
+
+- $\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega}$ is the additional variance in the response that was not explained by $\omega$ (simpler model) but is explained by $\Omega$ (complete model).
+- Dividing by $df_{\omega}-df_{\Omega} = (n - q) - (n - p) = p-q$ averages the change in the RSS per additional regressor added.
+- The denominator $RSS_{\Omega}/df_{\Omega} = RSS_{\Omega}/(n-p)$ is the mean (per regressor) of the remaining unexplained variance.
+
+$$F =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{RSS_{\Omega}/df_{\Omega}} =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{\hat{\sigma}_{\Omega}^2} \sim F_{p-q,n-p} .$$
+
+
+The $F$-statistic is the ratio that compares the variance in the response explained by the complete model $\Omega$ to the variance not explained by the complete model. A **large $F$-statistic** indicates the **model's predictors are jointly useful** in explaining the response variable. 
+
 
 ::: {.callout-note}
-We divide each $RSS$ by its degrees of freedom to calculate an **unbiased** estimate of the variance similar to how we divide by $n-1$ when finding an unbiased estimate for the standard deviation. This prevents underestimation.
+We divide each $RSS$ by its degrees of freedom to calculate an **unbiased** estimate of the mean variance similar to how we divide by $n-1$ when finding an unbiased estimate for the standard deviation. This prevents underestimation.
 :::
 
-Are any of the predictors useful? We compare the full model $\Omega$ given by $\mathbf{y} = \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\epsilon}$ to the null model $\omega$ which is the constant mean model $y = \mu + \epsilon$ which we estimate with $\hat{y} = \bar{y}$.
 
+# Compute the p-value
 
-- Set up the hypotheses:
-
-  - $H_0$: The null model $\omega$ is adequate.  $\beta_1 = \beta_2 = \ldots = \beta_{p-1} = 0$.
-  - $H_a$: At least one of the regression coefficients is not zero.
-
-- Calculate the $F$-statistic setting $q=1$.
-
-$$F =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{RSS_{\Omega}/df_{\Omega}} =  \frac{(\mbox{TSS} - \mbox{RSS})/(p-1)}{RSS/(n-p)} = \frac{\mbox{SS}_{\rm reg}/(p-1)}{RSS/(n-p)}.$$
-
-- Calculate the $p$-value using $F_{p-q,n-p}$ where $\mbox{df}_1 = p-q$ is the number of additional regressors in $\Omega$ and $\mbox{df}_2=n-p=\mbox{df}_{\Omega}$ (setting $q=1$). 
-
-
-```{r}
-#| echo: false
-#| eval: false
-# Use pf() for areas under F dist
-1 - pf(15.7, 5, 24)
-```
-
-
-# Analysis of Variation (ANOVA) Table
-
-The information above is often presented in an [**analysis of variation (ANOVA) table**]{style="color:blue"} which is convenient for summarizing and organizing the various ingredients in the $F$-statistic. Below is a typical ANOVA table when $q=1$.
-
-| Source | Deg. of Freedom | Sum of Squares | Mean Square | F |
-|--------|-----------------|----------------|-------------|----|
-| Regression | $p-1$ | $\mbox{SS}_{\rm reg}$ | $\mbox{SS}_{\rm reg}/(p-1)$ | $F$ |
-| Residual | $n-p$ | RSS | $\mbox{RSS}/(n-p)$  | |
-| Total | $n-1$ | TSS | | |
-
-- **Source**: The source of the variation in the data.
-- **Regression**: The variability due to the variable of interest (which is `Area` in this example). Sometimes, the variable is a factor and this row is labeled **Treatment** or **Between**. 
-- **Residuals**: The unexplained random error (of the full model $\Omega$). Sometimes when the variable of interest is a factor, the row heading is labeled as **Within** to make it clear that the row concerns the variation within the groups.
-- **Total**: The total variation in the data from the null (constant mean) model $\omega$.
-
-
-## Comparing with Fit of Null Model
-
-```{r}
-nullmod <- lm(Species ~ 1, data = gala) 
-anova(nullmod, lmod)
-```
-
-## Question 7 {#sec-q7}
-
-What is the first line of code above doing?
-
-### Solution to Question 7
-
-It is creating the null model which is our model $\omega$ if we are testing all regressors. This is the constant mean model $y = \beta_0 + \epsilon = \mu + \epsilon$.
-
-## Question 8 {#sec-q8}
-
-Interpret the output from the `anova` function.
-
-### Solution to Question 8
-
-We see the $F$-statistic is $15.699$ which has a $p$-value $=6.838 \times 10^{-7}$ which is extremely small. We see that our test is statistically significant, and we have evidence to support the alternative hypothesis that at least one of the regression coefficients is not zero, though we cannot state specifically which regressor coefficient(s) are likely to be nonzero.
-
-## Question 9 {#sec-q9}
-
-Arrange the output of the anova function below into an ANOVA table such as the one shown earlier.
-
-
-### Solution to Question 9
-
-
-```{r}
-(ss <- 381081-89231) # SS_{reg}
-(mean.ss <- ss/5) #regression mean sum squares
-(mean.rss <- 89231/24) #residual mean sum squares
-(fstat <- mean.ss/mean.rss)
-```
-
-
-
-Replace each ?? with an appropriate value based on output above.
-
-
-| Source | Deg. of Freedom | Sum of Squares | Mean Square | F | 
-|--------|-----------------|----------------|-------------|---|
-| Variability due to `Area` | $5$ | $291850$ | $58370$ | $15.69948$ |
-| Error of $\Omega$ | $24$ | $89231$ | $3717.958$ | |
-| Error of $\omega$ | $29$ | $381081$ | | |
-
-
-## Question 10  {#sec-q10}
-
-Compare these calculations with the `summary` output from earlier.
-
-### Solution to Question 10
-
-
-They match!
-
-
-## Verifying the Output Again
-
-```{r}
-# Compute the sum of squares
-(rss0 <- deviance(nullmod)) # RSS of null (TSS)
-(rss <- deviance(lmod)) # RSS of proposed model
-
-# Compute the degrees of freedom
-(df0 <- df.residual(nullmod)) # df of null model
-(df <- df.residual(lmod)) #  df of proposed model
-
-# Compute the F-statistic
-(f <- ((rss0 - rss)/(df0 - df))/(rss/df)) # F-stat
-
-# Compute the P-value with pf
-# pf(q, df1, df2) computes area to left of q
-# This is a right-tail test (so 1-pf)
-1 - pf(f, df1 = df0 - df, df2 = df) # P-value
-```
-
-## Compare with Summary of `lm`
-
-```{r}
-summary(lmod)
-```
-
+If we assume $H_0$ is true, the $F$-statistic follows an $F$-distribution with degrees of freedom $p-q$ and $n-p$. 
 
 ## Visualizing the F-dist
 
@@ -418,56 +302,195 @@ data.frame(f = 0:1000 / 100) %>%
 ```
 
 - If $\mbox{df}_1 = p-1$ is constant and we increase $\mbox{df}_2 = \mbox{df}_{\Omega} = n-p$, the center hump is centered around the same $F$ value, but there is more area in the hump and less in the right tail.
-  - Same number of predictors but more observations has less variability!
-
 - If $\mbox{df}_2 = n-p$ is constant and we increase $\mbox{df}_1 = \mbox{df}_{\Omega} = p-1$, the center hump shifts to the right and there is more area concentrated near the peak and less in the tail to the right.
 
 
-## Interpreting the Results
+Let `f_star` denote the $F$-statistic associated to our regression models, then we have
+
+```
+df1 <- p-q  # number of added predictors
+df2 <- n-p  # degrees of freedom of complete model
+1 - pf(f_star, df1, df2)  # area in upper tail
+```
+
+::: {.callout-note}
+The $F$-statistic and $p$-value are computed when constructing a linear model with the `lm()` function in R. Both are provided in the `summary()` of an `lm` object. Thus, we typically just run the `lm()` command in R to obtain these values.
+:::
+
+# Make A Conclusion
+
+Let $\alpha$ denote the [**significance level**]{style="color:blue"} of the test which is chosen by the researcher. By default, we use $\alpha = 0.05$. 
+
+- If $p$-value $\leq \alpha$, the test is statistically significant.
+  - We can reject $H_0$ and have significant evidence that $H_a$ is true.
+  - The full model $\Omega$ is better than the simpler model $\omega$.
+
+- If $p$-value $> \alpha$, the test is NOT statistically significant.
+  - We fail to reject (or accept $H_0$) and cannot say anything about the claim in $H_a$.
+  - The test is inconclusive.
+  - We cannot be sure whether or not $\omega$ or $\Omega$ is a better model.
+  - In which case, we typically use the simpler model $\omega$.
+
+
+
+# Example Are Any Predictors Useful?
+
+To see if any of the predictors in a possible model are useful, we compare the full model $\Omega$ given by $\mathbf{y} = \mathbf{X} \boldsymbol{\beta} + \boldsymbol{\epsilon}$ to the null model $\omega$ which is the constant mean model $\mathbf{y} = \mu_Y + \boldsymbol{\epsilon}$ which we estimate with $\hat{y} = \bar{y}$.
+
+
+## Question 7: Set up the hypotheses {#sec-q7}
+
+Set up the hypotheses to see whether or not the full model in [Question 4](#sec-q4) is better model than the null model.
+
+### Solution to Question 7
+
+- $H_0$: The null model $\omega$ is adequate.  $\beta_1 = \beta_2 = \ldots = \beta_{p-1} = 0$.
+- $H_a$: At least one of the regression coefficients is not zero.
+
+
+## Question 8:  Measure Significance {#sec-q8}
+
+Using the model from [Question 4](#sec-q4), identify the $F$-statistic and $p$-value for this test. 
+
+*Bonus: Try to calculate the $F$-statistic using the formula above to confirm.*
+
+### Solution to Question 8:
+
+```{r}
+summary(lmod)
+```
+
+The $F$-statistic is $15.7$ which has a $p$-value of $0.0000006838$. 
+
+#### Confirming the `lm()` Output
+
+The simpler model $\omega$ is now the null model with $q=1$.
+
+
+```{r}
+nullmod <- lm(Species ~ 1, data = gala)
+summary(nullmod)
+```
+
+Since $\omega$ is the null model, in this case we have $\text{RSS}_{\omega} = TSS$ and $\text{TSS} - \text{RSS}_{\Omega} = SS_{\rm reg}$.
+
+$$F =  \frac{(\mbox{RSS}_{\omega} - \mbox{RSS}_{\Omega})/(df_{\omega}-df_{\Omega})}{RSS_{\Omega}/df_{\Omega}} =  \frac{(\mbox{TSS} - \mbox{RSS}_{\Omega})/(p-1)}{\mbox{RSS}_{\Omega} /(n-p)} = \frac{\mbox{SS}_{\rm reg}/(p-1)}{\text{RSS}/(n-p)}.$$
+
+
+```{r}
+rss_cm <- deviance(lmod)  # RSS of complete model
+tss <- deviance(nullmod)  # RSS of null model is called the TSS
+ss_reg <- tss - rss_cm
+n <- nrow(gala)  # number of observations in data
+q <- 1  # null model has 1 regressor (intercept)
+p <- 6  # complete model has 6 possible regressors
+top_null <- ss_reg / (p - q)
+bot_null <- rss_cm / (n - p)
+(f_null <- top_null / bot_null)
+```
+
+The $F$-statistic is $15.69941$. Finally, we compute the $p$-value using $p-q=5$ and $n-p = 24$ degrees of freedom.
+
+```{r}
+1 - pf(f_null, p-q, n-p)
+```
+
+The $p$-value is $0.000000684$
+
+
+## Question 9:  Make a conclusion (if possible) {#sec-q9}
+
+Based on the previous results, state a formal conclusion of this test (if there is one). Then summary the conclusion in the context of this example.
+
+### Solution to Question 9
+
+Since the $p$-value $= 0.0000006838$ is less than any significance level that would be chosen, we can reject $H_0$ and we have significant evidence that $H_a$ is true. This means the regression model with predictors `Area`, `Elevation`, `Nearest`, `Scruz`, and `Adjacent` is a better model than the null model which would predict the mean number of species for every observation, no matter the values of `Area`, `Elevation`, `Nearest`, `Scruz`, and `Adjacent`.
+
+
+# Analysis of Variation (ANOVA) Table
+
+The information above is often presented in an [**analysis of variation (ANOVA) table**]{style="color:blue"} which is convenient for summarizing and organizing the various ingredients in the $F$-statistic. Below is a typical ANOVA table when comparing a full model $\Omega$ with $p$ regressors to a simpler model $\omega$ with $q$ regressors.
+
+
+| Source | Deg. of Freedom | Sum of Squares | Mean Square | F |
+|--------|-----------------|----------------|-------------|---|
+| Regression | $p-q$ | $\text{RSS}_{\omega} - \text{RSS}_{\Omega}$  | $(\text{RSS}_{\omega} - \text{RSS}_{\Omega}) / (p-q)$ | $F$-stat |
+| Residuals | $n-p$ | $\text{RSS}_{\Omega}$ | $\text{RSS}_{\Omega} / (n-p)$ | |
+| Total | $n-q$ | $\text{RSS}_{\Omega}$ | | |
+
+
+- **Regression**: The variance that is explained by the additional variable(s) of interest in $\Omega$ that are not included in $\omega$.
+- **Residuals**: The variance that is not explained by the complete model $\Omega$. This is the $\text{RSS}_{\Omega}$.
+- **Total**: The variation that is unexplained by the simpler model $\omega$.
+
+There is the `anova()` function in R can be used compute components of the $F$-statistic corresponding to a test for a regression model. The command `anova(simple_lmod, complete_lmod)` gives an ANOVA table with the following organization.
+
+
+| Source | Res.Df  | RSS | Df | Sum of Sq | F | Pr( > F) |
+|--------|---------|-----|----|-----------|---|----------|
+| 1 (simple model, $\omega$) | $n-q$ | $\text{RSS}_{\omega}$ |  |  |  |  |
+| 2 (complete model, $\Omega$) | $n-p$ | $\text{RSS}_{\Omega}$ | $p-q$  | $\text{RSS}_{\omega} - \text{RSS}_{\Omega}$ | $F$-stat | $p$-value |
+
+
+## Question 10 {#sec-q10} 
+
+In questions 7-9 we performed a hypothesis test to compare the full model (include all 5 predictors stored in `lmod`) to the null model (intercept only stored in `nullmod`). Play around with the code below to fill in the ANOVA table provided below.
+
+```{r}
+nullmod <- lm(Species ~ 1, data = gala)
+```
+
+
+```{r}
+deviance(lmod)
+deviance(nullmod)
+deviance(nullmod) - deviance(lmod)
+n <- nrow(gala)  # number of observations
+p <- 6  # 6 regressors in full model
+q <- 1  # 1 regressor in null model
+```
+
+
+### Solution to Question 10
+
+
+```{r}
+top_q10 <- (deviance(nullmod) - deviance(lmod)) / (p-q)
+bot_q10 <- deviance(lmod) / (n - p)
+f_q10 <- top_q10 / bot_q10
+top_q10
+bot_q10
+f_q10
+```
+
+
+
+| Source | Deg. of Freedom | Sum of Squares | Mean Square | F | 
+|--------|-----------------|----------------|-------------|---|
+| Regression | $5$ | $291850$ | $58370$ | $15.69941$ |
+| Residuals | $24$ | $89231$ | $3717.974$ | |
+| Total | $29$ | $381081.4$ | | |
+
+
 
 ## Question 11 {#sec-q11}
 
-You perform a hypothesis test to test the following claims:
-
-H~0~: The null model $\omega$ is adequate.  $\beta_1 = \beta_2 = \ldots = \beta_{p-1} = 0$.
-
-H~a~: At least one of the regression coefficients is not zero.
-
-In the Galapagos example, the $F$-statistic is $15.699$ and the $p$-value is given as $6.838e-07\ast\ast\ast$
+Run the code cell below to generate an ANOVA table in R and compare with the table you created in the previous question. Then run the second code cell to compare with the summary output of the complete model, `lmod`.
 
 
-### Question 11a 
+```{r}
+anova(nullmod, lmod)
+```
 
-Interpret the meaning of the $p$-value. 
-
-#### Solution to Question 11a
-
-
-There is an extremely slim chance (essentially $0\%$) that would would observe so much of the variability in the response explained by model $\Omega$ compared to $\omega$ if $\Omega$ was just as good of a model as $\omega$.
+```{r}
+summary(lmod)
+```
 
 
-### Question 11b
+### Solution to Question 11
 
-If you fail to reject $H_0$, does this mean there is no relation between the regressors and the response?
 
-#### Solution to Question 11b
-
-No, it means the relation is not likely to be linear, but there certainly could another (nonlinear) relation besides a linear relation between the predictors and response.**
-
-Not significant may also imply there is not enough data to confidently conclude a regressor helps describe the mean response.
-
-### Question 11c
-
-If you reject $H_0$, does this mean you have found the best model for $y$? 
-
-#### Solution to Question 11c
-
-Even if we conclude H~a~, we’re not sure that model $\Omega$ is the best model, it is simply preferable to model $\omega$.
-
-- Not all regressors may be necessary.
-- Additional regressors may improve the model further.
-
-The F test for a regression relationship is just the beginning of analysis!
+Everything looks consistent!
 
 
 # Testing a Single Regressor
@@ -491,6 +514,7 @@ Repeat the previous process to test whether the regressor `Area` is significant 
 
 
 ### Solution to Question 12
+
 
 #### Hypotheses
 
@@ -544,7 +568,15 @@ t^2
 
 What is the difference between the test being run in the code below and the previous test? Does the test below lead to the same conclusion?
 
+
+```{r}
+# compare results to test of beta_Area = 0 when no other predictors in model
+summary(lm(Species ~ Area, gala))
+```
+
+
 ### Solution to Question 13
+
 
 The test below is comparing the model with one regressor (`Area`) compared to the null (constant mean) model. We are not considering any other predictors.
 
@@ -552,11 +584,6 @@ The test below is comparing the model with one regressor (`Area`) compared to th
 
 - $H_a: \beta_1 \neq 0$
 
-
-```{r}
-# compare results to test of beta_Area = 0 when no other predictors in model
-summary(lm(Species ~ Area, gala))
-```
 
 According to the test above, it seems that the regression coefficient for `Area` is statistically significant and we do have evidence to support the claim that $\beta_{\rm Area} \ne 0$. This contradicts the previous test. Perhaps it is the other predictors in the full model that have an effect on `Area` that in turn is related to a change in the response. Thus `Area` may be a confounding variable and the other predictors may be responsible for this response in both `Area` and `Species`
 
@@ -573,6 +600,7 @@ Test whether the `Area` and `Adjacent` regressor variables should be simultaneou
 
 
 ### Solution to Question 14
+
 
 #### Hypotheses
 
@@ -594,6 +622,358 @@ The $F$-statistic is $F=9.2874$ with corresponding $p$-value $=0.0.0013$.
 #### Conclusion in this context.
 
 The $p$-value $<0.001$ which is extremely small (less than just about any significance level that would be chosen). The test is statistically significant. There is very strong evidence that the regression model for `Species` that includes predictors `Area` and `Adjacent` is preferable to the model without both of these terms. We have evidence that at least one of $\beta_{\rm Area}$ and/or $\beta_{\rm Adjacent}$ are nonzero.
+
+
+# Confidence Intervals
+
+An alternative way of expressing the uncertainty in an estimate for a population parameter is through [**confidence intervals (CIs)**]{style="color:blue"}. A confidence interval interval is an interval estimate with an associated confidence level corresponding to the success rate.
+
+
+## Example: Confidence Interval for Mean
+
+Suppose we want to find a 95% confidence interval to estimate the average weight (in pounds) of all Komodo dragons. We have a sample of $n=8$ Komodo dragons whose sample mean weight is $\bar{x} = 155.5$ pounds with a sample standard deviation of $s = 22.55153$ pounds.
+
+```{r}
+dragon_wt <- c(145, 178, 142, 139, 160, 190, 168, 122)  # load sample of weights  
+(wt_mean <- mean(dragon_wt))
+(wt_sd <- sd(dragon_wt))
+wt_n <- length(dragon_wt)
+```
+
+- A reasonable **point estimate** is $\mu \approx \bar{x} = 155.5$.
+- Another person with a slightly different sample we have a slightly different estimate.
+- Let's build in a margin of error into our estimate to account for the variability due to the randomness of sampling.
+
+A corresponding $t$-distribution confidence interval is given by
+
+$${\large \overline{X} - {\color{red}{t_{n-1}^{\alpha/2}}} \cdot \frac{s}{\sqrt{n}} < \mu < \overline{X} + {\color{red}{t_{n-1}^{\alpha/2}}} \cdot \frac{s}{\sqrt{n}}},$$
+
+where the area under the $t$-distribution with $n-1$ degrees of freedom between ${\color{red}{\pm t_{\alpha/2}}}$ is equal to the confidence level.
+
+
+```{r}
+se_wt <- wt_sd / sqrt(n)  # estimate for standard error of x-bar
+```
+
+
+```{r}
+df_wt <- 8 - 1  # n - 1 degrees of freedom
+(t_star <- qt(0.025, df_wt))  # exclude lower 2.5%
+```
+
+
+```{r}
+(moe_wt <- abs(t_star) * se_wt)
+(lower_wt <- wt_mean - moe_wt)
+(upper_wt <- wt_mean + moe_wt)
+```
+
+A 95% confidence interval for the mean weight of all Komodo dragons is therefore $155.5 \pm 9.74$ pounds or
+
+$$145.76 \text{ pounds} < \mu < 165.24 \text{ pounds}.$$
+
+### Interpreting a 95% Confidence Interval
+
+There is a 95% chance the interval from $145.76$ to $165.24$ pounds contains the actual mean weight of all adult Komodo dragons.
+
+- The interval is used to estimate a population parameter. In this case, the mean of ALL adult Komodo dragons.
+- We should indicate the odds of success.
+- We should attach the uncertainty to the interval we constructed (which is random).
+- We should NOT attach the uncertainty to the parameter we are estimating (which is not random, it is fixed).
+
+
+## Confidence Intervals for Regression Coefficients
+
+To construct a confidence interval for a regression coefficient with confidence level $CL = 1 - \alpha$, we have:
+
+$$\widehat{\beta}_j \ \pm \  {\color{red}{t_{n-p}^{\alpha/2}}} \ \ \mbox{SE}(\widehat{\beta}_j).$$
+
+The resulting interval has a given odds of success (confidence level) for containing the actual value of the regression coefficient.
+
+
+## Question 15 {#sec-q15}
+
+Use the output from the code below to constructing a 95% confidence interval for the `Area` slope coefficient $\beta_{\rm Area}$ (assuming all 4 other predictors in the model). Interpret the practical meaning of the interval.
+
+```{r}
+lmod <- lm(Species ~ Area + Elevation + Nearest + Scruz + Adjacent, data = gala)
+summary(lmod)
+```
+
+
+### Solution to Question 15
+
+
+```{r}
+n_gala <- nrow(gala)  # number of observations
+p <- 6  # number of regressors (includes intercept)
+tstar <- qt(0.025, n_gala - 6)  # Find value of t_{n-p}
+point_est_area <- -0.023938 
+se_beta_area <- 0.022422
+(cutoffs_beta_area <- point_est_area + c(-1,1) * tstar * se_beta_area)
+```
+
+
+There is a 95% chance the interval from $-0.0702$ to $0.0223$  contains the actual value of $\beta_{\rm Area}$.
+
+::: {.callout-note}
+Notice the 95% confidence interval for $\beta_{\rm Area}$ contains the value $0$. This means $0$ is a plausible value for $\beta_{\rm Area}$, and the linear relation between `Species` and `Area` in this model is not statistically significant at a 5% significance level. This is consistent with the analysis of the p-value $0.296$.
+:::
+
+## Question 16 {#sec-q16}
+
+Use the summary output from the code above to similarly construct a 95% confidence interval for the `Elevation` slope coefficient (assuming all 4 other predictors in the model). Interpret the practical meaning of the interval.
+
+
+### Solution to Question 16
+
+```{r}
+point_est_elav <- 0.319465
+se_beta_elav <- 0.053663
+(cutoffs_beta_elav <- point_est_elav + c(-1,1) * tstar * se_beta_elav)
+```
+
+
+There is a 95% chance the interval from $0.2087$ to $0.4302$ contains the actual value of $\beta_{\rm Elevation}$.
+
+::: {.callout-note}
+Notice the 95% confidence interval for $\beta_{\rm Elevation}$ does NOT contain the value $0$. This means $0$ is NOT a plausible value for $\beta_{\rm Elevation}$, and the linear relation between `Species` and `Elevation` in this model is statistically significant at the 5% significance level. This is consistent with the analysis of the p-value `3.82e-06`.
+:::
+
+## Finding Confidence Intervals for All Regressors
+
+```{r}
+confint(lmod)
+```
+
+
+
+# Confidence Regions
+
+When analyzing more than one coefficient at a time, we can use confidence intervals, or we can construct [**confidence regions**]{style="color:blue"}:
+
+- A confidence region is the same thing as a CI, except that it may have more than one dimension.
+- A confidence region provides us with a region of plausible values of our target parameter(s).  
+
+
+
+```{r}
+#library(ellipse) # required package to draw confidence region
+
+# construct 95% joint confidence intervals for beta_area and beta_adjacent.
+plot(ellipse(lmod, c(2, 6)), type="l", ylim = c(-0.13,0))
+
+# Plot the origin and the center point
+points(c(0,coef(lmod)[2]),c(0, coef(lmod)[6]), col = c("red", "blue"), pch = c(19,19))
+
+# add vertical and horizontal lines for individual confidence intervals
+abline(v = confint(lmod)[2,], lty = 2) # plots vertical lines
+abline(h = confint(lmod)[6,], lty = 2) # plots horizontal lines
+```
+
+
+## Question 17 {#sec-q17}
+
+Based on the confidence region above, is it plausible that $\beta_{\rm Area} = \beta_{\rm Adjacent}=0$?  Why or why not?
+
+
+### Solution to Question 17
+
+
+No. The red point at $(0,0)$ is not inside the ellipse, thus these values are not simultaneously plausible.
+
+<br>  
+<br>  
+
+## Question 18 {#sec-q18}
+
+Based on the confidence region above, is it plausible that $\beta_{\rm Area}= -0.06$ and $\beta_{\rm Adjacent}=-0.045$?  Why or why not?
+
+### Solution to Question 18
+
+No. The red point at $(-0.06, -0.045)$ is not inside the ellipse, thus these values are not simultaneously plausible.
+
+
+## Reading Confidence Region Plots
+
+- **Any point that lies within** the $100(1- \alpha)\%$ confidence region for $\beta_i,\beta_j, \ldots, \beta_k$ represents values of $c_i,c_j, \ldots ,c_k$ for which the associated **null hypothesis would not be rejected at significance level $\alpha$**.
+- **Any point outside of the confidence region** represents values of $c_i, c_j, \ldots ,c_k$ for which the associated **null hypothesis would be rejected**.
+- Both the horizontal width and vertical width of the joint confidence region is wider than the widths of the individual confidence intervals.
+- The overall area of the joint region is smaller than the area of the intersection between the two individual confidence regions.
+  - This is because the estimated regression parameters are positively correlated.
+- If the lines of the individual confidence regions were tangential to the joint region, then the individual CIs would be jointly correct (their confidence level would be at least 95%).
+- It is possible to make different conclusions when using individual confidence regions in comparison with the joint confidence regions!
+ - **The joint confidence regions should be preferred**
+- We must be cautious about how we interpret univariate hypothesis tests or confidence intervals because the same conclusions may not be jointly true!
+
+
+# Bootstrap Confidence Intervals
+
+The $F$ and $t$-based confidence regions and intervals we have described depend on assumptions:
+
+- In linear regression, the errors are assumed to be normal.
+- In estimating a population mean, if $n < 30$, the underlying population is assumed to be symmetric.
+
+- In general, **parametric CI's** assume we know the sampling distribution of the statistic that estimates our target parameter. 
+- How would we approximate the sampling distribution of a statistic using simulated data if we do not know the true error distribution?
+
+**We can use the bootstrap method to produce a confidence interval for our regression coefficients when error distribution is unknown or non-normal.**
+
+
+## Bootstrap Process for Komodo Dragon Weights
+
+1. Generate a bootstrap resample (same size as original sample) by sampling with replacement from the original sample `dragon_wt`. 
+
+
+```{r}
+dragon_wt <- c(145, 178, 142, 139, 160, 190, 168, 122)  # observed sample
+(boot_dragon <- sample(dragon_wt, size = 8, replace = TRUE)) # bootstrap resample
+```
+
+2. 	Compute the relevant statistic (mean in this case) of the bootstrap resample.
+
+```{r}
+mean(boot_dragon) 
+```
+
+3.	Repeat steps 1-2 many times (10,000 times will suffice)
+
+```{r}
+set.seed(123)
+N <- 10000  # set the number of bootstrap samples to be generated
+boot_dist <- numeric(N)  # place to store bootstrap statistics
+n_wt <- length(dragon_wt)
+
+for (i in 1:N){
+  temp_dragon <- sample(dragon_wt, size = n_wt, replace = TRUE)  # generate bootstrap resample
+  boot_dist[i] <- mean(temp_dragon)
+}
+```
+
+4. Choose the the interval containing the middle 95% of the bootstrap resamples as the 95% bootstrap percentile confidence interval.
+
+```{r}
+(dragon_boot_cut <- quantile(boot_dist, probs = c(0.025, 0.975)))
+```
+
+
+A 95% bootstrap percentile confidence interval is from $141.125$ to $170.125$ pounds.
+
+
+## Comparing with Parametric Confidence Intervals
+
+Using parametric methods, we earlier obtains a 95% confidence interval for the mean weight of all Komodo dragons from
+$145.76$ to $165.24$ pounds.
+
+## Visualizing Bootstrap Confidence Intervals
+
+```{r}
+# plot density for bootstrap dist for sample mean weight
+plot(density(boot_dist), xlab = "Mean Weight", main = "")
+title("Bootstrap distribution for Mean Weight")
+abline(v = c(141.125, 170.125), lty = 2)  # plot CI
+```
+
+## Bootstrap Process for Regression Coefficients
+
+1. Generate a bootstrap resample $\boldsymbol\epsilon^{\ast}$ by sampling with replacement from $\hat{\epsilon}_1, \hat{\epsilon}_2, \ldots , \hat{\epsilon}_n$.
+
+```{r}
+resids <- residuals(lmod)  # observed residuals
+as.vector(resids)
+```
+
+```{r}
+n_resids <- length(resids)  # size of each sample
+boot_resids <- sample(resids, size = n_resids, replace = TRUE) # bootstrap resample
+as.vector(boot_resids)
+```
+
+2. Form $\mathbf{y}^{\ast} =X \boldsymbol{\hat{\beta}} + \boldsymbol\epsilon^{\ast}$ for fixed $X$ and using the $\boldsymbol{\hat{\beta}}$ from the fitted model of the original data
+
+```{r}
+new_y <- fitted(lmod) + boot_resids
+```
+
+3. 	Compute $\boldsymbol{\hat{\beta}}^{\ast}$ from $(\mathbf{X},\mathbf{y}^{\ast})$.
+
+```{r}
+boot_model <- lm(new_y ~ Area + Elevation + Nearest + Scruz + Adjacent, data = gala)
+coef(boot_model)
+coef(lmod)
+```
+
+4.	Repeat steps 1-3 many times (10000 times will suffice)
+
+```{r}
+set.seed(123)  # fixes random seed for consistent output
+N <- 10000  # number of bootstrap samples to be generated
+resids <- residuals(lmod)  # observed residuals
+n_resids <- length(resids)  # number of observed residuals
+
+# initially empty matrix with N rows and 6 columns
+coefmat <- matrix(NA, N, 6)  # matrix where we will store results
+
+preds <- fitted(lmod)  # fitted values
+for (i in 1:N){
+  boot_y <- preds + sample(resids, size = n_resids, replace = TRUE) # randomly assign errors
+  bmod <- lm(boot_y ~ Area + Elevation + Nearest + Scruz + Adjacent, data = gala)
+  coefmat[i,] <- coef(bmod)
+}
+```
+
+5. Estimate the sampling distribution of the estimated coefficients using the bootstrap distribution of the estimated coefficients from the bootstrapped data sets.
+
+```{r}
+colnames(coefmat) <- c("Intercept", colnames(gala[,3:7])) # rename columns of coefmat
+coefmat <- data.frame(coefmat) # convert to data frame
+
+# construct 95% CIs for each coefficients using the apply function
+cis <- apply(coefmat, 2, # 2 means apply to each column of coefmat
+             quantile, probs = c(.025, .975))  
+cis
+```
+
+## Comparing with Parametric Confidence Intervals
+
+
+```{r}
+confint(lmod)
+```
+
+## Visualizing Bootstrap Confidence Intervals
+
+
+```{r}
+plot(density(coefmat$Area), xlab = "Area", main = "") # plot density
+title("Bootstrap distribution for betahat_Area") #title
+abline(v = c(-0.06216773, 0.01836816), lty = 2) # plot CI
+```
+
+```{r}
+# same thing for Adjacent
+plot(density(coefmat$Adjacent), xlab = "Adjacent", main = "") # plot density
+title("Bootstrap distribution for betahat_Adjacent") #title
+abline(v = c(-0.10542995, -0.04009888), lty = 2) # plot CI
+```
+
+```{r}
+#library(ggplot2) # same plots using ggplot2
+ggplot(coefmat, aes(x = Area)) + 
+  geom_density() + 
+  geom_vline(xintercept = c(-0.06216773, 0.01836816), lty = 2) + 
+  theme_bw()
+
+ggplot(coefmat, aes(x = Adjacent)) + 
+  geom_density() + 
+  geom_vline(xintercept = c(-0.10542995, -0.04009888), lty = 2) + 
+  theme_bw()
+```
+
+
+- Both densities are roughly symmetric and normal, though this is not always the case.
+- Bootstrap methods can be used for hypothesis testing, but permutation-based methods are generally preferred.  
+- There are other (more complex) methods for constructing bootstrap confidence intervals for the coefficients.
 
 
 # Appendix A: Summary of Hypothesis Testing {#sec-appendA}
@@ -626,6 +1006,5 @@ The $p$-value $<0.001$ which is extremely small (less than just about any signif
 -   If we reject $H_0$, this means there is enough evidence to support the claim in $H_a$.
 -   If we do not reject $H_0$, this means there is not evidence to reject $H_0$ nor support $H_a$. The test is inconclusive.
 
-# Appendix B: Deriving the Standard Error
 
 
