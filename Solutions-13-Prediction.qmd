@@ -388,8 +388,8 @@ An additional source of variation is not accounted for in the previous intervals
 
 We do our best to find a good model given the available data, but there will always be substantial model uncertainty.
 
-- [Parametric uncertainty]{style:"color:blue"} is accounted for using the methods we have learned.
-- [Model uncertainty]{style:"color:blue"} is much harder to quantify.
+- [Parametric uncertainty]{style="color:blue"} is accounted for using the methods we have learned.
+- [Model uncertainty]{style="color:blue"} is much harder to quantify.
 
 # What Can Go Wrong With Predictions?
 
