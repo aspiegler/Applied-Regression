@@ -1,0 +1,578 @@
+---
+title: "Solutions 13: Prediction"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+editor: source
+#execute:
+#  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+
+## Additional Reading
+
+
+- [Sections 6.6 to 6.8 Linear Model Inference and Prediction](https://jfrench.github.io/LinearRegression/inference.html#prediction-mean-response-versus-new-response) from *A Progressive Introduction to Linear Models*
+- Chapter 5 of *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/Q7wgCRrz))
+
+
+
+# Loading Required Packages and Data
+
+
+```{r}
+#| message: false
+library(tidyverse)
+library(janitor)
+```
+
+The [Vehicle CO2 Emissions Dataset](https://www.kaggle.com/datasets/brsahan/vehicle-co2-emissions-dataset) we use in this module was downloaded from [Kaggle](https://www.kaggle.com/datasets). Kaggle is an online community platform for data scientists. 
+
+> This dataset contains information on vehicle specifications, fuel consumption, and CO2 emissions, collected to analyze the environmental impact of vehicles and predict their CO2 emissions using regression models.
+
+```{r}
+co2 <- read_csv("https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Data/co2.csv")
+```
+
+```{r}
+glimpse(co2)
+```
+
+## Question 1 {#sec-q1}
+
+What data cleaning/wrangling would you perform before beginning your analysis?
+
+
+### Solution to Question 1
+
+Answers vary. In the code below, we rename variables and store categorical variables as factors.
+
+
+## Clean Data
+
+
+```{r}
+co2_temp <- co2 |> 
+  # rename columns
+  clean_names() |>
+  rename(class = vehicle_class,
+         engine_size = engine_size_l,
+         fuel_cons_city = fuel_consumption_city_l_100_km,
+         fuel_cons_hwy = fuel_consumption_hwy_l_100_km,
+         fuel_cons_comb = fuel_consumption_comb_l_100_km,
+         fuel_cons_comb_mpg = fuel_consumption_comb_mpg, 
+         co2_em = co2_emissions_g_km) |>
+  # store categorical as factors
+  mutate(across(c(make, model, class, transmission, fuel_type), as.factor))
+```
+
+```{r}
+summary(co2_temp)
+```
+
+
+## Potential Variables of Interest
+
+
+- `co2_em`: Grams of carbon dioxide emissions per kilometer (g/km) is the **response variable**.
+- `engine_size`: Engine displacement volume in liters.
+- `cylinders`: Number of cylinders in the engine.
+- `fuel_cons_city`, `fuel_cons_hwy`, and `fuel_cons_comb`: Fuel efficiency measured in liters per 100 kilometers.
+- `fuel_cons_comb_mpg`: Fuel efficiency measured in miles per gallon.
+
+
+```{r}
+# extract numeric variables
+co2_temp <- co2_temp[, -c(1:3, 6:7)]  # drop factors
+```
+
+
+## Question 2 {#sec-q2}
+
+Do you see any potential issues regressing carbon dioxide emissions `co2_em` on of the numeric variables remaining listed above?
+
+
+### Solution to Question 2
+
+
+Yes, several of the predictors are correlated with each other. The variables  `fuel_cons_city`, `fuel_cons_hwy`, and  `fuel_cons_comb` seem possibly collinear. The variables `fuel_cons_comb` and  `fuel_cons_comb_mpg` are related by a (non-linear) formula for the unit conversion. 
+
+<br>  
+<br>  
+
+```{r}
+#| eval: false
+# scatter plot matrix
+pairs(co2_temp)
+```
+
+
+## Question 3 {#sec-q3}
+
+Which regressors would you remove from the model for predicting `co2_em`?
+
+
+### Solution to Question 3
+
+Variables `fuel_cons_comb` and  `fuel_cons_comb_mpg` are both measuring combined fuel efficiency, just in different units. We choose `fuel_cons_comb` since it has a linear relation with the response `co2_em` (see `pairs()` output above) while `fuel_cons_comb_mpg` has a non-linear relation with `co2_em`. If we include `fuel_cons_comb` in our model, then we should exclude `fuel_cons_city` and `fuel_cons_hwy` to avoid collinearity.
+
+
+```{r}
+co2_final <- co2_temp[,-c(3:4, 6)]
+```
+
+
+```{r}
+#| eval: false
+pairs(co2_final)
+```
+
+```{r}
+cor(co2_final)
+```
+
+# Fitting a Multiple Linear Regression Model
+
+
+```{r}
+lmod <- lm(co2_em ~ ., data = co2_final)
+summary(lmod)
+```
+
+We have the model
+
+$$\widehat{\texttt{co2\_em}} = 51.2 + 5.5 (\texttt{engine\_size}) + 6.5 (\texttt{cylinders}) + 13.3 (\texttt{fuel\_cons\_comb})$$
+
+# Predicting CO2 Emissions
+
+## Question 4 {#sec-q4}
+
+What would the CO2 emissions (in g/km) for a car that whose engine size is 2 liters, has 4 cylinders, and has fuel efficiency $8.5$ liters per 100 kilometers?
+
+
+::: {.calloue-note}
+The first entry `1` in the vector is a place holder for the intercept in the model.
+:::
+
+```{r}
+# vector of given values of regressors
+x0 <- c(1, 2, 4, 8.5)
+```
+
+
+### Solution to Question 4
+
+
+```{r}
+# compute predicted value
+beta_hat <- coef(lmod)  # coefficients of model
+(co2_hat <- sum(coef(lmod) * x0))
+```
+
+
+```{r}
+# the first observed value in co2_final has same values
+# compare the predicted value to the first observed value of co2_em
+co2_final[1, "co2_em"]  
+```
+
+
+## A Vector Equation for Predictions
+
+Given a set of regressor values,
+$$\mathbf{x}_0=(1,x_{0,1},…,x_{0,p-1} )^T=\begin{pmatrix} 1 \\ x_{0,1} \\ \vdots \\ x_{0,p-1} \end{pmatrix},$$
+the predicted value for the associated response is $\widehat{y}_0 = \mathbf{x}_0^T \widehat{\beta}$.
+
+- For example, we found that $\widehat{y}_0 = 200.8919$ grams of CO2 per km.
+- However, we shouldn't state that all such car models have exactly the same CO2 emissions.
+- Different car models with the same characteristics will have **about the same CO2 emissions**.
+- **How can we account for this variability when giving our prediction?**
+
+## Types of Predictions
+
+The uncertainty associated with our prediction depends on the type of inference desired.
+
+First, we can **consider a specific car model** that has the characteristics $\mathbf{x}_0$ and we would like to predict the CO2 emissions for this car model. The **actual CO2 emissions** of this car model is 
+
+$$y_0 = \mathbf{x}_0^T \boldsymbol\beta + \epsilon = 196 \text{ g/km}.$$
+
+The **predicted CO2 emissions of one such car model** is 
+
+$$\widehat{y}_0 = \mathbf{x}_0^T \widehat{\boldsymbol\beta} =200.9 \text{ g/km}$$
+
+with some variability as a result of $\text{Var}(\epsilon) = \sigma^2$, the variance of $\epsilon$. 
+
+
+Secondly, we could ask **what is the average CO2 emissions of ALL car models with characteristics $\mathbf{x}_0$?**. 
+
+The **predicted mean CO2 emissions** 
+
+$$\widehat{E}( \texttt{co2\_em} | \mathbb{X} = \mathbf{x}_0) = \widehat{y}_0 = \mathbf{x}_0^T \widehat{\boldsymbol\beta} =200.9,$$
+
+but in this case, we only need to take the variance of the $\widehat{\boldsymbol\beta}$.
+
+We are mostly interested in making predictions of the first type listed above, called a [**prediction of a future value**]{style="color:blue"}. The second case is called a [**prediction of the mean response**]{style="color:blue"} is less commonly of interest.
+
+
+## Question 5 {#sec-q5}
+
+Using properties of variance and underlying assumptions of our model, find the variance of $\widehat{y}_0 = \mathbf{x}_0^T \widehat{\boldsymbol\beta}$.
+
+
+### Solution to Question 5
+
+$$\mbox{Var}(\widehat{y}_0) = \mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta})=\mathbf{x}_0^T(X^T X)^{-1}\mathbf{x}_0 \sigma^2.$$
+
+# Prediction Intervals
+
+The **point estimate** for $y_0$ is given by $\widehat{y}_0 = \mathbf{x}_0^T \widehat{\boldsymbol\beta}$. See the [Appendix](#sec-append-pred) for a derivation of the variance of the error in the prediction, which results in
+
+$$\mbox{Var}(y_0-\widehat{y}_0) = (1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0) \sigma^2  \quad \text{or} \quad \mbox{sd}(y_0-\widehat{y}_0) = \sigma \ \sqrt{1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0)} .$$
+
+
+
+Since we typically do not know the value of $\mbox{Var}(\epsilon) = \sigma^2$:
+
+- We use the unbiased estimator $\widehat{\sigma}^2 = \frac{\mbox{RSS}}{n-p}$ instead. 
+- We use a $t$-distribution with $n-p$ degrees of freedom instead of a normal distribution.
+
+Thus, a $100(1-\alpha)\%$ **prediction interval** is a confidence interval is
+
+
+$$\widehat{y}_0 \pm t_{n-p}^{\alpha/2} \ \ \widehat{\sigma} \ \sqrt{1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0}.$$
+
+::: {.callout-caution}
+We typically use the term **confidence interval** to refer to an interval estimate for a **parameter** whose value is fixed, but unknown. However, in this instance, we are using an interval to estimate an unknown $y_0$ that is a **random variable**. For this reason, it is more accurate to refer to interval above as a **prediction interval** instead of a confidence interval.
+:::
+
+# Confidence Intervals
+
+The **point estimate** for $y_0$ is still given by $\widehat{y}_0 = \mathbf{x}_0^T \widehat{\boldsymbol\beta}$. See the [Appendix](#sec-append-conf) for a derivation of the variance of the error in the prediction, which results in
+
+$$\mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) = \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2 \quad \mbox{or} \quad \mbox{sd} (\mathbf{x}_0^T \widehat{\boldsymbol\beta}) = \sigma \ \sqrt{\mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0} .$$
+
+
+Since we typically do not know the value of $\mbox{Var}(\epsilon) = \sigma^2$:
+
+- We use the unbiased estimator $\widehat{\sigma}^2 = \frac{\mbox{RSS}}{n-p}$ instead. 
+- We use a $t$-distribution with $n-p$ degrees of freedom instead of a normal distribution.
+
+Thus, a $100(1-\alpha)\%$ **confidence interval** for the mean response is 
+
+
+$$\widehat{y}_0 \pm t_{n-p}^{\alpha/2} \ \ \widehat{\sigma}  \ \sqrt{\mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0}.$$
+
+
+# Interpreting Prediction and Confidence Intervals
+
+**To interpret a 95% prediction interval for $y_0$**: We say there is a 95% chance that a future value falls within this interval.
+
+**To interpret a 95% confidence interval for a parameter**: We say the interval has a 95% chance of containing the actual value of the parameter. We are careful to attach the uncertainty to interval estimate (which is random) and not the parameter we are estimating (which is fixed).
+
+
+# Example: Prediction Interval for the Phorde Median
+
+Let's consider a fictional car manufacturer Phorde that has recently released a new model called Median that has median values as its values for each of the regressors in the model. 
+
+```{r}
+x <- model.matrix(lmod) # all observed values stored in X 
+(xmm <- apply(x, 2, median)) # 2 indicates find median value of each column
+```
+
+## Question 6 {#sec-q6}
+
+
+Using the median values stored in `xmm`, predict the Phorde Median's CO2 emissions.
+
+### Solution to Question 6
+
+
+```{r}
+(ymm <- sum(xmm*coef(lmod)))
+```
+
+## Using `predict()` Function
+
+Below is another approach for making future predictions using our model with the `predict` function.
+
+```{r}
+# xmm is stored in a (column) vector
+# take transpose to create a data frame with one row
+phorde_median <- data.frame(t(xmm))
+predict(lmod, new = phorde_median)
+```
+
+
+We can add the `interval` option to the `predict` function to construct both types of predictions we mentioned earlier:
+
+1. What are the CO2 emissions for the Phorde Median? (just one individual car model)?
+2. What are the mean CO2 emissions for all car models that have the same characteristics as the Phorde Median?
+
+```{r}
+predict(lmod, new = phorde_median, interval = "prediction") # question 1
+predict(lmod, new = phorde_median, interval = "confidence") # question 2
+```
+
+## Question 7 {#sec-q7}
+
+Give a practical interpretation of each interval estimate above in the context of this example.
+
+### Solution to Question 7
+
+
+- There is a 95% chance that a Phorde Median's CO2 emissions is between $207.3453$ and $287.10449$ grams of CO2 per km.
+- There is a 95% chance that the interval from $246.6073$ g/km to $247.8424$ g/km contains the mean CO2 emissions of all car models that have the same characteristics as the Phorde Median. Such information may be useful too!
+
+
+## Question 8 {#sec-q8}
+
+
+Explain why it makes sense that the 95% prediction interval is much wider than the 95% confidence interval?
+
+
+### Solution to Question 8
+
+When estimating the mean of all such car models with certain characteristics we can be more confident compared to making a prediction for just one car model.
+
+
+# Extrapolation
+
+[**Extrapolation**]{style="color:blue"} is making statistical inference outside the range of the observed data.
+
+## Question 9 {#sec-q9}
+
+
+Values for engine size, cylinders and combined fuel efficiency for a fictional car model named the Soobahroo 95 are stored in the vector `x95` in the code cell below.
+
+```{r}
+(x95 <- apply(x, 2, function(x) quantile(x, 0.95))) # computes 95th percentile of each column
+```
+
+Use the `predict()` function to find 95% prediction and confidence intervals for the Soobahroo 95. Then describe how the widths of the intervals for the Soobahroo 95 compare to the widths of the interval estimates for the Phorde Median.
+
+
+### Solution to Question 9
+
+
+```{r}
+soobahroo_95 <- data.frame(t(x95)) 
+predict(lmod, new=soobahroo_95, interval = "prediction") 
+predict(lmod, new=soobahroo_95, interval = "confidence") 
+```
+
+As we move away from the observed data:
+
+- Prediction intervals become wider .
+- Confidence intervals also become wider.
+- The widths of the confidence and prediction intervals are closer to each other (since there are less individuals collectively with these characteristics).
+- Prediction interval is only slightly wider than the confidence interval.
+  - The uncertainty of the prediction error depends on the new error $\epsilon$ in the individual prediction.
+  - The uncertainty of the confidence interval is due to the estimate for $\boldsymbol\beta$, which is the same for typical and exceptional observations.
+
+
+# Sources of Uncertainty
+
+An additional source of variation is not accounted for in the previous intervals: 
+
+- Are we sure that our model is correct?
+
+We do our best to find a good model given the available data, but there will always be substantial model uncertainty.
+
+- [Parametric uncertainty]{style:"color:blue"} is accounted for using the methods we have learned.
+- [Model uncertainty]{style:"color:blue"} is much harder to quantify.
+
+# What Can Go Wrong With Predictions?
+
+- **Bad model**: The statistician does a poor job of modeling the data.
+- **Quantitative extrapolation**: We try to predict outcomes for cases with predictor values much different from what we see in the data.  
+  - This is a practical problem in assessing the risk from low exposure to substances that are dangerous in high quantities - consider second-hand tobacco smoke, asbestos, and radon
+- **Qualitative extrapolation**: We try to predict outcomes for observations that come from a different population. 
+  - We used the CO2 emissions for SUV's to predict CO2 emissions for sedan's.
+  - We prefer experimental data to observational data, but sometimes experience from the laboratory does not transfer to real life.
+- **Overconfidence due to overtraining**
+  - Data analysts search for a model that fits their observed data very closely, but the fitted model may not be appropriate for new data.
+  - This can lead to unrealistically small $\widehat{\sigma}$.
+- **Black swans**: Sometimes errors can appear to be normally distributed because you haven't seen enough data to be aware of extremes.
+  - This is of particular concern in financial applications where stock prices are characterized by mostly small changes (normally distributed) but with infrequent large changes (usually falls).
+
+## Question 10: Teen Gambling Example {#sec-q10}
+
+Consider the teen gambling data set `teengamb` in the `faraway` R package which is a data frame with 47 rows and 5 columns that stores information from survey conducted to study teenage gambling in Britain. 
+
+```{r}
+data(teengamb, package = "faraway") #load data
+```
+
+
+- `sex`: Sex assigned at birth, `0`=male, `1`=female
+- `status`: Socioeconomic status score based on parents' occupation
+- `income`: Income of the teen in pounds per week
+- `verbal`: verbal score in words out of 12 correctly defined
+- `gamble`: expenditure on gambling in pounds per year
+
+
+```{r}
+glimpse(teengamb)
+```
+
+Below is some code whose output will be useful in answer the questions that follow.
+
+```{r}
+# find average of predictor values
+(male_ave_temp <- apply(teengamb[teengamb$sex == 0, ], 2, mean))
+(female_ave_temp <- apply(teengamb[teengamb$sex == 1, ], 2, mean))
+
+# convert these vectors to data.frames
+male_ave <- as.data.frame(t(male_ave_temp))
+female_ave <- as.data.frame(t(female_ave_temp))
+```
+
+```{r}
+# find 0.05 quantiles for each column of predictors
+(male_05_temp <- apply(teengamb[teengamb$sex == 0, ], 2, 
+                       quantile, prob = 0.05))
+(female_05_temp <- apply(teengamb[teengamb$sex == 1, ], 2, 
+                         quantile, prob = 0.05))
+
+male_05 <- as.data.frame(t(male_05_temp))
+female_05 <- as.data.frame(t(female_05_temp))
+```
+
+
+- Regress `gamble` on all the other variables in the `teengamb` data set.   
+- Construct a 95% confidence intervals and prediction intervals for the response using the mean regressor values for males and females, separately.
+- Construct a	98% confidence intervals and prediction intervals for the response using the $0.05$ quantile of the regressor values for males and females, separately.
+
+
+### Solution to Question 10
+
+#### Solution: Fitting the Model
+
+```{r}
+# part (a)
+# fit model regressing gamble on all predictors
+gamb_lmod <- lm(gamble ~ sex + status + income + verbal, data = teengamb)
+```
+
+
+#### Solution: 95% Intervals for Mean Regressors
+
+
+```{r}
+# confidence int for mean of male w/ average values
+predict(gamb_lmod, new = male_ave, interval = "confidence")
+
+# confidence int for mean of female w/ average values
+predict(gamb_lmod, new = female_ave, interval = "confidence")
+
+# prediction int for actual response of male w/ average values 
+predict(gamb_lmod, new = male_ave, interval = "prediction")
+
+# prediction in for actual response of female w/ average values
+predict(gamb_lmod, new = female_ave, interval = "prediction")
+```
+  
+
+#### Solution: 98% Intervals for Mean $0.05$ Quantiles
+
+
+```{r}
+# confidence int for mean of male w/ .05 quantiles
+predict(gamb_lmod, new = male_05, interval = "confidence", level = 0.98)
+
+# confidence int for mean of female w/ .05 quantiles
+predict(gamb_lmod, new = female_05, interval = "confidence", level = 0.98)
+
+# prediction int for actual response of male w/ .05 quantiles
+predict(gamb_lmod, new = male_05, interval = "prediction", level = 0.98)
+
+# prediction int for actual response of female w/ .05 quantiles
+predict(gamb_lmod, new = female_05, interval = "prediction", level = 0.98)
+```
+
+# Appendix A: Standard Errors {#sec-appenda}
+
+
+## Prediction Interval Standard Error {#sec-append-pred}
+
+Taking the variance of a difference of two random variables (which we do not assume are independent), we have
+
+$$\mbox{Var}(y_0-\widehat{y}_0) = \mbox{Var}(y_0) + \mbox{Var}(\widehat{y}_0) - 2 \mbox{Cov}(y_0, \widehat{y}_0)$$ 
+
+We have $\mbox{Cov}(y_0, \widehat{y}_0)=0$ because $y_0$ and $\widehat{y}_0$ are independent. They are independent because $\widehat{y}_0$ is estimated using $y_1, \ldots , y_n$ and $y_0$ is a new observation independent of them. Thus, 
+
+$$\mbox{Var}(y_0-\widehat{y}_0) = \mbox{Var}(y_0) +\mbox{Var}(\widehat{y}_0).$$ 
+
+Since $\mathbf{x}_0^T \boldsymbol{\beta}$ is a constant, we have
+
+$$\mbox{Var} (y_0) = \mbox{Var} (\mathbf{x}_0^T \boldsymbol\beta + \epsilon) = \mbox{Var} (\epsilon) = \sigma^2 .$$
+Taking the variance of the predicted value, we have
+
+$$\mbox{Var} (\widehat{y}_0) = \mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) = \mathbf{x}_0^T \mbox{Var} (\widehat{\boldsymbol\beta}) \mathbf{x}_0.$$
+
+We have previously shown
+
+$$\mbox{Var} (\widehat{\boldsymbol\beta}) = \mbox{Var} ( (X^T X)^{-1} X^T \mathbf{y}) = (X^TX)^{-1} \sigma^2.$$
+
+Thus, we have 
+
+$$\mbox{Var} (\widehat{y}_0) = \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2 ,$$
+
+which finally gives
+
+$$\mbox{Var}(y_0-\widehat{y}_0) = \mbox{Var}(y_0) + \mbox{Var}(\widehat{y}_0) = \sigma^2 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2 .$$
+
+We can simplify and summarize the result above as:
+
+$$\mbox{Var}(y_0-\widehat{y}_0) = (1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0) \sigma^2  \quad \text{or} \quad \mbox{sd}(y_0-\widehat{y}_0) = \sigma \ \sqrt{1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0)} .$$
+
+
+## Confidence Interval Standard Error
+
+We want to determine how much variability is the estimate for the mean response $\widehat{E}( y | \mathbb{X} = \mathbf{x}_0) = \mathbf{x}_0^T \widehat{\boldsymbol\beta}$. We have
+
+$$\mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) = \mathbf{x}_0^T \mbox{Var}(\widehat{\boldsymbol\beta})\mathbf{x}_0 .$$
+
+Again, recall we have previously shown
+
+$$\mbox{Var} (\widehat{\boldsymbol\beta}) = \mbox{Var} ( (X^T X)^{-1} X^T \mathbf{y}) = (X^TX)^{-1} \sigma^2,$$
+
+which gives
+
+$$\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) = \mathbf{x}_0^T\mbox{Var}\big((X^TX)^{-1} \mathbf{y}^TX\big)\mathbf{x}_0.$$
+
+We pull multiplication by the constant matrix $(X^TX)^{-1}$ on the left inside the variance out, and use properties of transpose and inverse of matrix products:
+
+$$\begin{align}
+\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( \mathbf{y}^TX\big) \big( (X^TX)^{-1} \big)^T \mathbf{x}_0 \\
+&= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)(XX^T)^{-1}\mathbf{x}_0 .
+\end{align}$$
+
+Next pull multiplication by the constant matrix $X^T$ on the left inside the variance out, and use properties of transpose and inverse of matrix products:
+
+$$\begin{align}
+\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &= \mathbf{x}_0^T(X^TX)^{-1} X^T\mbox{Var}\big( \mathbf{y}\big) X(XX^T)^{-1}\mathbf{x}_0 
+\end{align}$$
+
+Finally, let $\sigma^2 = \mbox{Var}\big( \boldsymbol{\epsilon}\big)$, and we use matrix arithmetic to simplify:
+
+
+$$\begin{align}
+\mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) 
+&= \mathbf{x}_0^T(X^TX)^{-1}X^T \mbox{Var}\big( \mathbf{y}\big)X(XX^T)^{-1}\mathbf{x}_0 \\
+&= \mathbf{x}_0^T(X^TX)^{-1}X^T \sigma^2 X(XX^T)^{-1}\mathbf{x}_0\\
+&= \mathbf{x}_0^T(X^TX)^{-1}(X^T X)(XX^T)^{-1}\mathbf{x}_0 \sigma^2\\
+&=\mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2.
+\end{align}$$
+
+
