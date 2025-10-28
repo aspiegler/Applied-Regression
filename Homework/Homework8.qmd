@@ -1,0 +1,219 @@
+---
+title: "Solutions Homework 8"
+author: 
+  - name: "Enter your name"
+    affiliation: "University of Colorado Denver"
+format: 
+  html:
+    embed-resources: true    
+editor: source
+warning: false
+---
+
+# HW 8: Due Wed, November 5 at 2:00 PM
+
+## Instructions:
+
+
+1.  <span style="color:red">Be sure to download and save the file so you are working with your own private copy of the file.</span>
+
+2.  <span style="color:green">After you have copied the Quarto file onto your computer, you can begin editing and saving your work.</span>
+
+**Submit your work electronically as two separate files:**
+
+-   A Quarto markdown file with file extension `.qmd` with all code cells run and relevant output displayed in the document.
+-   After you have completed all questions, render your completed work to an html file.
+-   Submit the html file that is created with file extension `.html`.
+
+Upload both files into the Homework 8 assignment in Canvas before <span style="color:blue">**2 PM on Wed, November 5.**</span>
+
+**You must provide supporting work for your all of your answers.**
+
+-   <span style="color:blue">That work will include using R code cells.</span>
+    -   Feel free to insert as much R code as you like.
+    -   When asked, you must explain how the output of a code cell is used to solve the question.
+    -   Code with incomplete interpretation of the output  may not receive full credit.
+    -   Code that involves methods we have not discussed this semester may not receive full credit.
+-   <span style="color:blue">Your work may also involve typing explanations and justifications in text cells.</span>
+    -   Be sure to type up your work/explanation so I can see how you arrived at your answer.
+    -   <span style="color:blue">**When you need to type math expressions, use LaTeX.**</span>
+
+## Important Academic Policies:
+
+
+-   **Be your own work.** Though you may collaborate with others, everyone is responsible for writing up the work in their own way using their own methods. Plagiarism of any form is not tolerated.
+-   **Be complete.** You must provide all work and/or explanations needed to find the solution. Answers with insufficient or incomplete supporting work may lose credit.
+-   **Adhere to the Code of Academic Honesty.**
+-   **Be clearly typed.** Your solution to a question must be clear and typed in complete sentences. 
+
+### <span style="color:blue">Let me know if you need help, and GOOD LUCK!!!</span>
+
+
+# Be Sure to Do the Following Once Completed
+
+---
+
+-   Be sure you have run ALL code cells before saving your work.
+-   Be sure all relevant code output is displayed in Quarto document.
+-   If you used LaTeX, make sure all of the formulas look good when rendering to html.
+-   Then be sure to save the your work as a Quarto document.
+-   Finally, be sure you render your final work to a static `html` that you submit along with your Quarto file in Canvas.
+-   If you preferred to write work on questions 3-6, be sure to submit either a paper copy to me or upload a pdf version of your written work into Canvas along with your other documents.
+
+# Loading Data and Required Packages
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+```
+
+Load the `prostate` data set from the `faraway` package. The data are from a study of 97 men with prostate cancer who were due to receive a radical prostatectomy. More details can be found by running `?faraway::prostate` in the R Console. The variables in the data set include:
+
+- `lcavol`: log(cancer volume). Cancer volume has units $\text{cm}^3$.
+- `lweight`: log(prostate weight). Prostate weight has units grams.
+- `age`: Subject age (years)
+- `lbph`: log(benign prostatic hyperplasia amount). BPH is graded on a scale from 0 to 35.
+- `svi`: Seminal vesicle invasion indicates the extent of cancer spread (0 no spread to 1 high spread).
+- `lcp`: log(capsular penetration). Capsular penetration has units of mm.
+- `gleason`: Gleason score which is a value from 2 to 10.
+- `pgg45`: Percentage Gleason scores 4 or 5.
+- `lpsa`: log(prostate specific antigen). PSA has units ng/mL. This is the response variable.
+
+::: {.callout-note}
+As usual in statistics, we use log() to indicate the natural log (not log base 10).
+:::
+
+```{r}
+data(prostate, package = "faraway")
+```
+
+
+We will consider the relationship between the response `lpsa` and several of the other variables in the data set.
+
+
+# Question 1 
+
+## Question 1a
+
+Fit a linear model regressing `lpsa` on `lcavol`, `lweight`, `svi`.
+Summarize the fitted model using the `summary` function.
+
+### Solution to Question 1a
+
+
+<br>  
+<br>  
+
+
+## Question 1b
+
+Write the equation for the fitted model.
+
+### Solution to Question 1b
+
+
+<br>  
+<br>  
+
+
+# Question 2
+
+Use the `apply` function to compute the sample means of each variable in the `prostate` data set. Provide the sample mean of each variable in `prostate` to two decimal places.
+
+::: {.callout-tip}
+See a tutorial on `apply` functions at <https://www.datacamp.com/tutorial/r-tutorial-apply-family> for help.
+:::
+
+
+## Solution to Question 2
+
+
+
+<br>  
+<br>  
+
+
+# Question 3
+
+Consider the linear model regressing `lpsa` on `lcavol`, `lweight`, `svi`.
+Estimate the mean value of `lpsa` when `lcavol`, `lweight`, and `svi` are fixed at
+the average of their observed values.
+
+
+## Solution to Question 3
+
+<br>  
+<br>  
+
+
+
+# Question 4
+
+Consider the linear model regressing `lpsa` on `lcavol`, `lweight`, `svi`.
+Construct a 90% confidence interval for the mean value of `lpsa` when `lcavol`, `lweight`, and `svi` are fixed at the average of their observed values.
+
+## Solution to Question 4
+
+
+<br>  
+<br>  
+
+
+# Question 5
+
+Use the `apply` function to compute the $0.25$ quantile of each variable in the `prostate` data set. Provide the quantile of each variable in `prostate` to two decimal places.
+
+## Solution to Question 5
+
+<br>  
+<br>  
+
+
+
+# Question 6
+
+Consider the linear model regressing `lpsa` on `lcavol`, `lweight`, `svi`.
+Predict the `lpsa` value for a new individual with `lcavol`, `lweight`, and `svi` fixed at the $0.25$ quantiles of their observed values.
+
+## Solution to Question 6
+
+<br>  
+<br>  
+
+
+# Question 7 
+
+Consider the linear model regressing `lpsa` on `lcavol`, `lweight`, `svi`.
+Construct a 80% prediction interval for the `lpsa` value for a new individual with `lcavol`, `lweight`, and `svi` are fixed at the $0.25$ quantiles of their observed values.
+
+## Solution to Question 7
+
+<br>  
+<br>  
+
+
+# Question 8
+
+Assuming relevant considerations are identical (same fitted model, level, regressor values, etc), which interval do you expect to be wider: a confidence interval for the mean response or a prediction interval for a new response?
+
+## Solution to Question 8
+
+<br>  
+<br>  
+
+
+
+# Question 9
+
+Assume you are estimating the mean response for a fixed confidence level (say 95%). Would you expect the confidence interval to be wider when the regressor values are fixed at their sample mean or at 1% of their observed values? Why?
+
+
+## Solution to Question 9
+
+<br>  
+<br>  
+
+
+
+
