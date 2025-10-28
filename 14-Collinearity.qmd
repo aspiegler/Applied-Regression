@@ -1,5 +1,5 @@
 ---
-title: "Solutions 14: Collinearity"
+title: "Module 14: Collinearity"
 author: 
   - name: "Adam Spiegler"
     affiliation: "University of Colorado Denver"
@@ -69,8 +69,8 @@ Does $R^2$ value of the model seem consistent with the p-values for each coeffic
 ### Solution to Question 1
 
 
-The $R^2$ value is $0.69$ which is indicates a good fit, however, none of the individual predictors is significant.
-
+<br>  
+<br>  
 
 ## Question 2 {#sec-q2}
 
@@ -80,18 +80,9 @@ What are some methods we have use to check for correlations between regressors?
 ### Solution to Question 2
 
 
-```{r}
-# examine pairwise correlation of predictors
-# We exclude hipcenter since its the response
-pairs(seatpos[,-9])
-```
+<br>  
+<br>  
 
-
-```{r}
-# examine pairwise correlation
-# again we exclude the response hipcenter
-round(cor(seatpos[,-9]), 3)
-```
 
 ## Question 3 {#sec-q3}
 
@@ -100,11 +91,9 @@ Do you see any large pairwise correlations? Do these make practical sense in thi
 ### Solution to Question 3
 
 
-It seems there are lots of correlations between regressors which makes sense. For example somebody's `HtShoes` and `Ht` should be very extremely related to each other.
+<br>  
+<br>  
 
-```{r}
-round(cor(seatpos)[,3:8], 2)
-```
 
 # Collinearity
 
@@ -137,17 +126,10 @@ Comment on the changes to the coefficients from Model 1 and Model 2.
 
 ### Solution to Question 4
 
-We get a large change in the estimated regression coefficients! However, $R^2$ and standard error of the two models is mostly unchanged. So with some slight error in the response variable, we get a very different model, that seems to fit just as well (judging by $R^2$ and standard error at least).
+<br>  
+<br>  
 
 
-Collinearity leads to imprecise estimates of $\beta$.  
-
-- The signs of the coefficients can be the opposite of what intuition about the effect of the predictors might suggest.
-- The standard errors become inflated so it may be difficult to detect significant regression coefficients.
-- The fit becomes very sensitive to measurement errors.
-  - Small changes in $y$ can lead to large changes in $\hat{\boldsymbol\beta}$.
-  
-  
 
 # Methods for Detecting Collinearity
 
@@ -188,7 +170,8 @@ summary(lm(Age  ~ Weight + HtShoes + Ht + Seated + Arm + Thigh + Leg, data = sea
 
 ### Solution to Question 5
 
-We have $R_{\rm \texttt{HtShoes}}^2 = 0.9967$ and $R_{\rm \texttt{Age}}^2 = 0.4995$. This means `HtShoes` is heavily correlated with the other predictors in the model while `Age` is less correlated with the other predictors. We would not gain much new information about `hipscenter` by adding `HtShoes` to a model that already contains all of the predictors. 
+<br>  
+<br>  
 
 
 ## The Variance Inflation Factor (VIF)
@@ -226,15 +209,11 @@ Using the output from [Question 5](#sec-q5), compute the VIF for `HtShoes` and `
 
 ### Solution to Question 6
 
-We have
 
-```{r}
-1 / (1 - 0.9967)  # VIF for HtShoes
-1 / (1 - 0.4995)  # VIF for Age
-```
+<br>  
+<br>  
 
 
-$$\mbox{VIF}_{\rm HtShoes} =  303.0303 \quad \mbox{and} \quad \mbox{VIF}_{\rm Age} =  1.998002.$$
 ### Compute VIF with `vif()`
 
 Using the `vif()` function in the `car` package, we can compute the VIF's of all regressors.
@@ -251,9 +230,10 @@ vif(lmod1)  # calculate the vifs
 
 ### Solution to Question 7
 
-- The variables `HtShoes` and `Ht` are definitely extremely problematic (this makes practical sense).
 
-- The variables `Seated` and `Leg` also have VIF's that indicate they may have problems with collinearity.
+<br>  
+<br>  
+
 
 
 ### Interpreting VIF
@@ -275,20 +255,9 @@ vif(lmod1)
 ### Solution to Question 8
 
 
-```{r}
-# fit a new model with HtShoes removed 
-# remove other variables as needed
-lmod2 <- lm(hipcenter ~ Age + Weight + Ht + Seated + Arm + Thigh + Leg, data = seatpos)
-summary(lmod2) 
-summary(lmod1)
-vif(lmod2)
-```
+<br>  
+<br>  
 
-:::{.callout-note}
-
-The VIF is not appropriate for assessing collinearity for sets of related regressors like dummy-variable regressors or polynomial regressors. The **generalized VIF** should be used in these cases.
-
-:::
 
 
 ## Examine the Eigenvalues of $X^TX$.
@@ -400,102 +369,16 @@ Based condition indices and the variance decomposition proportions in the output
 
 ### Solution to Question 9
 
-First, note we see that `HtShoes`, `Ht`, `Seated`, `Arm` and `Leg` are involved in the linear dependency of the regressors. Earlier (based on VIF) we determined the variables `HtShoes`, `Ht`,  `Seated`, and `Leg` had problems with collinearity.
 
-Since Row 9 has the highest condition index, we first look at row 9. There are two variables `HtShoes` and `Ht` with VP's that exceeds $0.50$. `HtShoes` is the greatest, so we remove that first. We continue to iteratively remove regressors and recompute condition indices until the problem is fixed.
+<br>  
+<br>  
 
-
-
-
-## Dropping Regressors from our model
-
-
-```{r}
-# Lets first remove HtShoes
-lmod3 <- update(lmod1, . ~ . - HtShoes)
-summary(lmod3)
-# recheck condition indices
-eigprop(lmod3)
-```
-
-
-
-```{r}
-# Next remove Seated (Ht is easier to measure?) 
-lmod4 <- update(lmod3, . ~ . - Seated)
-summary(lmod4)
-# recheck condition indices
-eigprop(lmod4)
-```
-
-
-```{r}
-# Next remove Leg
-lmod5 <- update(lmod4, . ~ . - Leg)
-summary(lmod5)
-# recheck condition indices
-eigprop(lmod5)
-```
-
-
-```{r}
-# Next remove Arm
-lmod6 <- update(lmod5, . ~ . - Arm)
-summary(lmod6)
-# recheck condition indices
-eigprop(lmod6)
-```
-
-```{r}
-# Next remove Weight
-lmod7 <- update(lmod6, . ~ . - Weight)
-summary(lmod7)
-# recheck condition indices
-eigprop(lmod7)
-```
-
-```{r}
-# Next remove Thigh (Ht easier to measure)
-lmod8 <- update(lmod7, . ~ . - Thigh)
-summary(lmod8)
-# recheck condition indices
-eigprop(lmod8)
-```
-
-```{r}
-# model with scaled regressors
-x8 <- model.matrix(lmod8) 
-lam8 <- eigen(t(x8) %*% x8) 
-(kappa8 <- round(sqrt(lam8$val[1]/lam8$val), 3))
-```
-
-
-
-# Wrap-Up
-
-Notice that the $R^2$ for the simpler model is $0.66$, which is very close to the $R^2$ of $0.687$ for the original model, but with 6 fewer predictors!
 
 
 **You should assess collinearity right after exploratory data analysis and before variable selection.**
 
 - If your regressors are collinear, then all the subsequent inference is suspect and none of the diagnostics require you to fit a model first.
 - It is better to remove collinear variables first, then proceed with analysis.  
-## Why Not Remove `Ht`?
-
-If we remove `Ht`, we are left with just one predictor in the model, `Age`. The $R^2$ value decreases from $0.66$ to $0.0421$. This is not a good model. Moreover, the two predictors `Ht` and `Age` have no clear association with each other, thus including `Ht` does help explain much more of the variability in the response and avoids any issues of correlation with  `Age`.
-
-
-```{r}
-# Next remove Thigh (Ht easier to measure)
-lmod9 <- update(lmod8, . ~ . - Ht)
-summary(lmod9)
-```
-
-```{r}
-plot(Ht ~ Age, data = seatpos)
-```
-
-
 
 ## Question 10 {#sec-q10}
 
@@ -504,10 +387,10 @@ What methods can be utilized to look for and fix problems with collinearity?
 
 ### Solution to Question 10
 
-1. Examine the correlation matrix.
-2. Regress one predictor on all others and look at the value of $R_j^2$.
-3. The variance inflation factor. A VIF above 5 or 10 indicates a problem with collinearity.
-4. Variance decomposition proportions. A variable is involved in the linear dependency if its proportion over the rows with large condition indices is more than 50%.
+
+<br>  
+<br>  
+
 
 
 
