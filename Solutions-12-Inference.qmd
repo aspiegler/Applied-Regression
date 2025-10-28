@@ -652,7 +652,7 @@ where the area under the $t$-distribution with $n-1$ degrees of freedom between 
 
 
 ```{r}
-se_wt <- wt_sd / sqrt(n)  # estimate for standard error of x-bar
+se_wt <- wt_sd / sqrt(wt_n)  # estimate for standard error of x-bar
 ```
 
 
@@ -668,9 +668,9 @@ df_wt <- 8 - 1  # n - 1 degrees of freedom
 (upper_wt <- wt_mean + moe_wt)
 ```
 
-A 95% confidence interval for the mean weight of all Komodo dragons is therefore $155.5 \pm 9.74$ pounds or
+A 95% confidence interval for the mean weight of all Komodo dragons is therefore $155.5 \pm 18.85$ pounds or
 
-$$145.76 \text{ pounds} < \mu < 165.24 \text{ pounds}.$$
+$$136.65 \text{ pounds} < \mu < 174.35 \text{ pounds}.$$
 
 ### Interpreting a 95% Confidence Interval
 

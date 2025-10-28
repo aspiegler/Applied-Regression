@@ -4100,7 +4100,7 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <p><span class="math display">\[{\large \overline{X} - {\color{red}{t_{n-1}^{\alpha/2}}} \cdot \frac{s}{\sqrt{n}} &lt; \mu &lt; \overline{X} + {\color{red}{t_{n-1}^{\alpha/2}}} \cdot \frac{s}{\sqrt{n}}},\]</span></p>
 <p>where the area under the <span class="math inline">\(t\)</span>-distribution with <span class="math inline">\(n-1\)</span> degrees of freedom between <span class="math inline">\({\color{red}{\pm t_{\alpha/2}}}\)</span> is equal to the confidence level.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>se_wt <span class="ot">&lt;-</span> wt_sd <span class="sc">/</span> <span class="fu">sqrt</span>(n)  <span class="co"># estimate for standard error of x-bar</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>se_wt <span class="ot">&lt;-</span> wt_sd <span class="sc">/</span> <span class="fu">sqrt</span>(wt_n)  <span class="co"># estimate for standard error of x-bar</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>df_wt <span class="ot">&lt;-</span> <span class="dv">8</span> <span class="sc">-</span> <span class="dv">1</span>  <span class="co"># n - 1 degrees of freedom</span></span>
@@ -4112,19 +4112,19 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 <div class="cell">
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>(moe_wt <span class="ot">&lt;-</span> <span class="fu">abs</span>(t_star) <span class="sc">*</span> se_wt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 9.735931</code></pre>
+<pre><code>[1] 18.85355</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>(lower_wt <span class="ot">&lt;-</span> wt_mean <span class="sc">-</span> moe_wt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 145.7641</code></pre>
+<pre><code>[1] 136.6465</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb83"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>(upper_wt <span class="ot">&lt;-</span> wt_mean <span class="sc">+</span> moe_wt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 165.2359</code></pre>
+<pre><code>[1] 174.3535</code></pre>
 </div>
 </div>
-<p>A 95% confidence interval for the mean weight of all Komodo dragons is therefore <span class="math inline">\(155.5 \pm 9.74\)</span> pounds or</p>
-<p><span class="math display">\[145.76 \text{ pounds} &lt; \mu &lt; 165.24 \text{ pounds}.\]</span></p>
+<p>A 95% confidence interval for the mean weight of all Komodo dragons is therefore <span class="math inline">\(155.5 \pm 18.85\)</span> pounds or</p>
+<p><span class="math display">\[136.65 \text{ pounds} &lt; \mu &lt; 174.35 \text{ pounds}.\]</span></p>
 <section id="interpreting-a-95-confidence-interval" class="level3">
 <h3 class="anchored" data-anchor-id="interpreting-a-95-confidence-interval">Interpreting a 95% Confidence Interval</h3>
 <p>There is a 95% chance the interval from <span class="math inline">\(145.76\)</span> to <span class="math inline">\(165.24\)</span> pounds contains the actual mean weight of all adult Komodo dragons.</p>
@@ -4325,7 +4325,7 @@ Adjacent     -0.1113362 -0.03827344</code></pre>
 <div class="sourceCode cell-code" id="cb94"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>dragon_wt <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">145</span>, <span class="dv">178</span>, <span class="dv">142</span>, <span class="dv">139</span>, <span class="dv">160</span>, <span class="dv">190</span>, <span class="dv">168</span>, <span class="dv">122</span>)  <span class="co"># observed sample</span></span>
 <span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>(boot_dragon <span class="ot">&lt;-</span> <span class="fu">sample</span>(dragon_wt, <span class="at">size =</span> <span class="dv">8</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>)) <span class="co"># bootstrap resample</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 142 122 178 145 122 139 190 142</code></pre>
+<pre><code>[1] 160 190 190 139 139 168 190 139</code></pre>
 </div>
 </div>
 <ol start="2" type="1">
@@ -4334,7 +4334,7 @@ Adjacent     -0.1113362 -0.03827344</code></pre>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb96"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(boot_dragon) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 147.5</code></pre>
+<pre><code>[1] 164.375</code></pre>
 </div>
 </div>
 <ol start="3" type="1">
