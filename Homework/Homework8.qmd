@@ -1,5 +1,5 @@
 ---
-title: "Solutions Homework 8"
+title: "Homework 8"
 author: 
   - name: "Enter your name"
     affiliation: "University of Colorado Denver"

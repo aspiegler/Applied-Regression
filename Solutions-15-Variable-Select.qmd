@@ -88,12 +88,14 @@ What metrics/methods have we used to compare models thus far?
 - $R^2$ values.
 - Looking for collinearity
 
-# Testing-Based Procedures
+# Variable Selection
 
-There are two aspects to variable selection:
+Two aspects to variable selection are:
 
-- The strategy used to search for the "optimal" model.
-- The criterion used to compare models.
+- The *strategy* used to search for the "optimal" model.
+- The *criterion* used to compare models.
+
+# Strategies
 
 ## Backward Elimination
 
@@ -179,13 +181,11 @@ We must respect hierarchy in models when it is naturally present.
   - For the model $y=\beta_0+\beta_1 X+\beta_2 X^2+\epsilon$, the maximum/minimum value can occur anywhere along the real line (depending on what the data suggest).
 - If we fit the model $y=\beta_0+\beta_1 X+\beta_2 X^2+\epsilon$ and $\beta_1$ is not significant, it would NOT make sense to remove $X$ from the model but still keep $X^2$.
 
-# Criterion-Based Procedures
+# Akaike’s Information Criterion (AIC)
 
 [**Akaike’s Information Criterion (AIC)**]{style="color:blue"} and the [**Bayesian Information Criterion (BIC)**]{style="color:blue"} are two information-based criteria for variable selection.
 
-## Akaike’s Information Criterion (AIC)
-
-Let $\mathcal{M}$ is denote the model. We have
+First we will take a look at AIC. Let $\mathcal{M}$ is denote the model. We have
 
 $$\mbox{AIC}(\mathcal{M})=-2L(\mathcal{M})+2p_{\mathcal{M}},$$ 
 
@@ -206,7 +206,7 @@ where:
 - $\mbox{RSS}_{\mathcal{M}}$ is the RSS of model $\mathcal{M}$. 
 
 
-### Interpreting AIC
+## Interpreting AIC
 
 The formula for AIC is derived from a metric that can be used to measure how far a model is from the "true" model.
 
@@ -221,7 +221,6 @@ The formula for AIC is derived from a metric that can be used to measure how far
 - We choose the model the **minimizes the AIC**.
 
 # Exhaustive Model Searches
-
 
 ## The `step()` Function`
 
@@ -238,42 +237,52 @@ In `base` R, we can use the function `step(object, scope, direction = "both")` t
 
 Use the `step()` function to select variables that minimize the AIC using each of backward, forward, and stepwise methods. Do the methods choose the same set of variables to include in the model?
 
+
 ### Solution to Question 4
 
 #### Backward Elimination
 
 ```{r}
 # default direction is backward
-step(lmod)
+back_elim <- step(lmod)
+#step(lmod, trace = FALSE)  # for condensed output
 ```
 
 $$\widehat{\texttt{Life.Exp}} = 71.03 +  0.000050 \ \texttt{pop} - 0.3 \ \texttt{Murder} + 0.047 \ \texttt{HS.Grad}  - 0.006 \  \texttt{Frost}$$
 
 
-#### Forward Elimination
+#### Forward Selection
 
-
+::: {.callout-tip}
+Run the code cell below to generate output for the null model (intercept only). This is `object` you will begin with and consider adding all possible variables from the `scope` which is the full model we have stored in `lmod`).
+:::
 
 ```{r}
+# useful when performing forward selection
 nullmod <- lm(Life.Exp ~ 1, data = statedata)
-step(object = nullmod, scope = formula(lmod), direction = "forward", )
+```
+
+
+```{r}
+forw_select <- step(object = nullmod, 
+                    scope = formula(lmod), 
+                    direction = "forward")
 ```
 
 
 $$\widehat{\texttt{Life.Exp}} = 71.03 +  0.000050 \ \texttt{pop} - 0.3 \ \texttt{Murder} + 0.047 \ \texttt{HS.Grad}  - 0.006 \  \texttt{Frost}$$
 
-### Stepwise Regression
+#### Stepwise Regression
 
 
 ```{r}
-# more concise code
-step(lmod, direction = "both")
+# object is full model
+step_reg <- step(lmod, 
+                 direction = "both",
+                 trace = "FALSE")  # for more concise output
+step_reg  # display output
 ```
 
-```{r}
-# we can start with a null or partial model
-step(object = nullmod, scope = formula(lmod), direction = "both", trace = FALSE )
-```
 
 $$\widehat{\texttt{Life.Exp}} = 71.03 +  0.000050 \ \texttt{pop} - 0.3 \ \texttt{Murder} + 0.047 \ \texttt{HS.Grad}  - 0.006 \  \texttt{Frost}$$
 
@@ -285,22 +294,35 @@ $$\widehat{\texttt{Life.Exp}} = 71.03 +  0.000050 \ \texttt{pop} - 0.3 \ \texttt
 - Stepwise: `population`, `Murder`, `HS.Grad` and `Frost`.
 
 
+### Extracting AIC from a `step` Object
+
+
+```{r}
+step_reg$anova
+```
+
+
+```{r}
+step_reg$anova$AIC
+```
+
+
 ## The `regsubsets` Function from `leaps` 
 
 The `leaps` package searches all possible combinations of predictors. 
 
 - For each value of $p$ (number of predictors), it finds the variables that give the minimum RSS.
 - For each value of $p$, the model that minimizes the RSS will have the smallest AIC, BIC, adjusted $R_a^2$, and Mallow’s $C_p$ (we'll discuss these soon).
-- By default, `regsubsets` only goes up to $p=9$.  You have to set `nvmax = j`, where $j$ is the number of regressors you want to consider.
+- By default, `regsubsets` goes up to $p=8$.  You have to set `nvmax = j`, where $j$ is the number of regressors you want to consider.
 
 
 ```{r}
 # may need to install.package the first time
 #library(leaps) # you need to load package every time you want to use it
 
-# model selection by exhaustive search
 best <- regsubsets(Life.Exp ~ ., data = statedata)
-best_sum <- summary(best) # summarize model that minimizes RSS for each p
+best_sum <- summary(best) # summarize model with min RSS for each p
+#best_sum  # display summary
 best_sum$which # nicer output
 ```
 
@@ -320,6 +342,7 @@ Interpret the output from the code above. Is this consistent with the model we o
 
 ### Computing the AIC with `regsubsets`
 
+Run the code cell below to see elements can be extracted from `summary` output of `regsubsets`.
 
 ```{r}
 # What output is stored after running regsubsets
@@ -327,12 +350,16 @@ summary(best_sum)
 ```
 
 ```{r}
-n <- nrow(statedata) #number observation n=50
+n <- nrow(statedata) # number observation n = 50
 rss <- best_sum$rss # rss calculated for each model
 
-# Compute AIC using the formula
-AIC <- n * log(rss/n) + (2:8)*2  # we start at 2 since include intercept in all
-plot(AIC ~ I(1:7), ylab = "AIC", xlab = "Number of Predictors", pch = 16)
+# compute AIC using the formula
+AIC <- n * log(rss/n) + (2:8)*2  # going from p=2 to p=8 regressors
+
+plot(AIC ~ I(1:7), 
+     ylab = "AIC", 
+     xlab = "Number of Predictors",
+     pch = 16)
 ```
 
 
@@ -346,7 +373,7 @@ Interpret the output from the AIC plot above. What is the best model according t
 - From earlier, we noted that if we build a model with 4 predictors, the model with the smallest RSS will be the model that includes `Murder`, `HS.Grad`, `Frost`, and `Population` (and the intercept).
 
 
-## Bayesian Information Criterion (BIC)
+# Bayesian Information Criterion (BIC)
 
 The Bayesian Information Criterion (BIC) is another criteria that is often and is almost the same as AIC.
 
@@ -362,8 +389,9 @@ $$BIC(\mathcal{M})=-2L(\mathcal{M})+\log{(n)}p_{\mathcal{M}}.$$
 - BIC has assigns a harsher penalty for adding more regressors.
 - **We choose the model the minimizes the BIC**.
 
+
 ```{r}
-(BIC <- best_sum$bic) # Exactly values from rs summary
+(BIC <- best_sum$bic)  # bic from summary
 #(BIC2 <- n * log(rss/n) + log(n)* (2:8))  # Using the formula
 #BIC - BIC2 # The two differ by a constant
 plot(BIC ~ I(1:7), ylab = "BIC", xlab = "Number of Predictors", pch = 16)
@@ -403,7 +431,12 @@ $$\mbox{BIC}(\mathcal{M})= n\log{(\mbox{RSS}_{\mathcal{M}}/n)} + \log{(n)} p_{\m
 - As $p_{\mathcal{M}}$ goes up, there is a penalty for making things more complicated.
   - BIC assigns a bigger penalty for adding more predictors, so it will slightly favor simple models to complex models (compared to AIC).
 - The constant $c$ is the same for all models created from the same data, so it can be ignored.
-- **We choose the model the minimizes the AIC and/or BIC**.
+
+We have used the following functions:
+
+- `step()` from `base` R to perform forward, backward, stepwise methods for minimizing AIC.
+- `regsubsets()` from the `leaps` package picks a subset of all predictors that minimizes RSS.
+- `subsets()` from the `car` package creates plots of `regsubsets` objects.
 
 
 # Adjusted $R^2$
@@ -423,8 +456,8 @@ $$R_a^2=1- \frac{\mbox{RSS}_\mathcal{M}/(n-p_\mathcal{M})}{\mbox{TSS}/(n-1)} = 1
 ## Computing the Adjusted $R^2$
 
 ```{r}
-#summary(lmod) #gives R^2 for full model
-(adjr <- best_sum$adjr) #pulls R_a^2 from regsubsets for each subset
+#summary(lmod)  # gives R^2 for full model
+(adjr <- best_sum$adjr)  # extracts R_a^2 from regsubsets
 ```
 
 ```{r}
@@ -803,11 +836,5 @@ $$
 
 We have a critical value at $\lambda = \frac{\sum x_i}{n} = \bar{x}$ which is the value of $\lambda$ that maximizes the likelihood function. If we assume the sample was randomly selected from an exponential distribution, then given the observed data, the most likely value for $\lambda$ is $\bar{x}$. This makes practical sense since if $X \sim \mbox{Exp}(\lambda)$, $E(X) = \mu = \lambda$.
 
-## Pros of Using MLE's to Estimate Population Parameters
-
-- MLE's give estimates that make practical sense (see example above).
-- **Consistency**: As the sample size gets larger and larger, MLE's converge to the actual value of the parameter.
-- **Normality**: As we get more data, MLE's converge to a normal distribution.
-- **Efficiency**: They have the smallest possible variance for a consistent estimator.
 
 
