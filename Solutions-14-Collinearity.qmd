@@ -299,7 +299,7 @@ Eigenvalues provide a measure of joint variability among a set of explanatory va
 Let $\lambda_1 \leq \lambda_2 \leq \ldots \leq \lambda_p$ be the eigenvalues of the regressors (including the intercept) ordered from largest to smallest.
 
 - For observational data, when there is a **wide range in the eigenvalues**, this indicates there is a **potential problem with collinearity**.
-- When the [**condition number**]{style="color"blue"} $\kappa= \sqrt{\frac{\lambda_1}{\lambda_p}} \geq 30$ then **there is a potential problem with collinearity**.
+- When the [**condition number**]{style="color:blue"} $\kappa= \sqrt{\frac{\lambda_1}{\lambda_p}} \geq 30$ then **there is a potential problem with collinearity**.
 
 
 ```{r}
@@ -378,7 +378,7 @@ round(lam_sc$val, 6)  # eigenvalues of scaled model
 
 - Look for any condition index greater than or equal to $30$.
 - If one is identified, look across its row and find any VP that exceeds $0.50$. 
-A condition index greater than or equal to 30 coupled with a VP greater than or equal to 0.50 indicates a collinearity or multicollinearity issue that should be analyzed further. 
+A condition index greater than or equal to $30$ coupled with a VP greater than or equal to $0.50$ indicates a collinearity or multicollinearity issue that should be analyzed further. 
 
 ::: {.callout-note}
 If you have not installed the `mctest` package, in the console run the command `install.packages("mctest")`. Then run the command `library(mctest)` to load the package. 
@@ -480,6 +480,7 @@ Notice that the $R^2$ for the simpler model is $0.66$, which is very close to th
 
 - If your regressors are collinear, then all the subsequent inference is suspect and none of the diagnostics require you to fit a model first.
 - It is better to remove collinear variables first, then proceed with analysis.  
+
 ## Why Not Remove `Ht`?
 
 If we remove `Ht`, we are left with just one predictor in the model, `Age`. The $R^2$ value decreases from $0.66$ to $0.0421$. This is not a good model. Moreover, the two predictors `Ht` and `Age` have no clear association with each other, thus including `Ht` does help explain much more of the variability in the response and avoids any issues of correlation with  `Age`.

@@ -3463,7 +3463,7 @@ F-statistic: 4.277 on 7 and 30 DF,  p-value: 0.002206</code></pre>
 <p>Let <span class="math inline">\(\lambda_1 \leq \lambda_2 \leq \ldots \leq \lambda_p\)</span> be the eigenvalues of the regressors (including the intercept) ordered from largest to smallest.</p>
 <ul>
 <li>For observational data, when there is a <strong>wide range in the eigenvalues</strong>, this indicates there is a <strong>potential problem with collinearity</strong>.</li>
-<li>When the [<strong>condition number</strong>]{style=“color”blue”} <span class="math inline">\(\kappa= \sqrt{\frac{\lambda_1}{\lambda_p}} \geq 30\)</span> then <strong>there is a potential problem with collinearity</strong>.</li>
+<li>When the <span style="color:blue"><strong>condition number</strong></span> <span class="math inline">\(\kappa= \sqrt{\frac{\lambda_1}{\lambda_p}} \geq 30\)</span> then <strong>there is a potential problem with collinearity</strong>.</li>
 </ul>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># model matrix off all observed regressors values</span></span>
@@ -3560,7 +3560,7 @@ F-statistic: 4.277 on 7 and 30 DF,  p-value: 0.002206</code></pre>
 <p><span style="&quot;color:blue"><strong>Variance decomposition proportions</strong></span> (or variance proportion, VP) can be examined to determine the regressors that are leading to large condition indices. Larger variance decomposition proportions (VP’s) suggest a greater proportion of a variable’s variance is accounted for by other regressors.To determine whether sufficient multicollinearity is present to warrant concern:</p>
 <ul>
 <li>Look for any condition index greater than or equal to <span class="math inline">\(30\)</span>.</li>
-<li>If one is identified, look across its row and find any VP that exceeds <span class="math inline">\(0.50\)</span>. A condition index greater than or equal to 30 coupled with a VP greater than or equal to 0.50 indicates a collinearity or multicollinearity issue that should be analyzed further.</li>
+<li>If one is identified, look across its row and find any VP that exceeds <span class="math inline">\(0.50\)</span>. A condition index greater than or equal to <span class="math inline">\(30\)</span> coupled with a VP greater than or equal to <span class="math inline">\(0.50\)</span> indicates a collinearity or multicollinearity issue that should be analyzed further.</li>
 </ul>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
