@@ -441,7 +441,7 @@ We have used the following functions:
 
 # Adjusted $R^2$
 
-The [**adjusted $R^2$**]{style="color:blue"} is another criterion that penalizes for the number of parameters in the model. Adjusted $R^2$, $R_a^2$** is a better criterion for assessing model fit than $R^2$. 
+The [**adjusted $R^2$**]{style="color:blue"} is another criterion that penalizes for the number of parameters in the model. Adjusted $R^2$, ${\color{blue}{R_{a}^2}}$ is a better criterion for assessing model fit than $R^2$. 
 
 For model $\mathcal{M}$ with $p_{\mathcal{M}}$ regression coefficients, 
 
