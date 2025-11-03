@@ -422,7 +422,7 @@ $$R_a^2=1- \frac{\mbox{RSS}_\mathcal{M}/(n-p_\mathcal{M})}{\mbox{TSS}/(n-1)} = 1
 ```
 
 ```{r}
-p <- 2:8  # number of regressors (including intercept)
+p <- 1:7  # number of predictors (excluding intercept)
 plot(adjr ~ p, ylab = expression({R^2}[a]), 
      xlab = "Number of Predictors", pch = 16)
 ```
