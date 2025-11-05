@@ -1,0 +1,333 @@
+---
+title: "Solutions Homework 9"
+author: 
+  - name: "Enter your name"
+    affiliation: "University of Colorado Denver"
+format: 
+  html:
+    embed-resources: true    
+editor: source
+warning: false
+---
+
+# HW 9: Due Wed, November 12 at 2:00 PM
+
+## Instructions:
+
+
+1.  <span style="color:red">Be sure to download and save the file so you are working with your own private copy of the file.</span>
+
+2.  <span style="color:green">After you have copied the Quarto file onto your computer, you can begin editing and saving your work.</span>
+
+**Submit your work electronically as two separate files:**
+
+-   A Quarto markdown file with file extension `.qmd` with all code cells run and relevant output displayed in the document.
+-   After you have completed all questions, render your completed work to an html file.
+-   Submit the html file that is created with file extension `.html`.
+
+Upload both files into the Homework 9 assignment in Canvas before <span style="color:blue">**2 PM on Wed, November 12.**</span>
+
+**You must provide supporting work for your all of your answers.**
+
+-   <span style="color:blue">That work will include using R code cells.</span>
+    -   Feel free to insert as much R code as you like.
+    -   When asked, you must explain how the output of a code cell is used to solve the question.
+    -   Code with incomplete interpretation of the output  may not receive full credit.
+    -   Code that involves methods we have not discussed this semester may not receive full credit.
+-   <span style="color:blue">Your work may also involve typing explanations and justifications in text cells.</span>
+    -   Be sure to type up your work/explanation so I can see how you arrived at your answer.
+    -   <span style="color:blue">**When you need to type math expressions, use LaTeX.**</span>
+
+## Important Academic Policies:
+
+
+-   **Be your own work.** Though you may collaborate with others, everyone is responsible for writing up the work in their own way using their own methods. Plagiarism of any form is not tolerated.
+-   **Be complete.** You must provide all work and/or explanations needed to find the solution. Answers with insufficient or incomplete supporting work may lose credit.
+-   **Adhere to the Code of Academic Honesty.**
+-   **Be clearly typed.** Your solution to a question must be clear and typed in complete sentences. 
+
+### <span style="color:blue">Let me know if you need help, and GOOD LUCK!!!</span>
+
+
+# Be Sure to Do the Following Once Completed
+
+---
+
+-   Be sure you have run ALL code cells before saving your work.
+-   Be sure all relevant code output is displayed in Quarto document.
+-   If you used LaTeX, make sure all of the formulas look good when rendering to html.
+-   Then be sure to save the your work as a Quarto document.
+-   Finally, be sure you render your final work to a static `html` that you submit along with your Quarto file in Canvas.
+-   If you preferred to write work on questions 3-6, be sure to submit either a paper copy to me or upload a pdf version of your written work into Canvas along with your other documents.
+
+# Loading Data and Required Packages
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(car)  # for vif and subset
+library(mctest)  # for eigprop
+library(leaps)  # for regsubsets
+```
+
+
+In questions 1-6, you will use Longley's Economic Regression Data is stored in the data frame `Employed`. Run the command `?longley` to learn about the data, and then answer the questions. In question 7, you'll use the `prostate` data frame from the `faraway` package. For now, we summarize the `longley` data frame that you'll use in the first 6 questions.
+
+
+```{r}
+summary(longley)
+```
+
+
+# Question 1 {#sec-q1}
+
+
+Fit a linear model regressing `Employed` on all other variables in the data set.
+Summarize the fitted model using the `summary` function. Based on the output, write a formula for the fitted model.
+
+
+## Solution to Question 1
+
+
+```{r}
+# use code cell to generate model
+
+```
+
+Round values in the formula as needed. 
+
+$\widehat{\mathtt{Employed}} = ?? + ?? \mathtt{GNP.deflator} + ?? \mathtt{GNP} + ??\mathtt{Unemployed} + ?? \mathtt{Armed.Forces} + ?? \mathtt{Population} + ?? \mathtt{Year}$.
+
+
+# Question 2 {#sec-q2}
+
+Do any of the variables in the model seem to have inflated standard errors (standard errors several orders of magnitude larger than the more regularly-sized standard errors)? If so, which ones?
+
+## Solution to Question 2
+
+
+
+<br>  
+<br>  
+
+# Question 3 {#sec-q3}
+
+Compute the VIF values of each regressor in the linear model using the `vif()` function from the `car` package, regressing `Employed` on all other variables in the data set. Provide code and the corresponding output that displays the VIF values of each variable. Based on the output, how many of the regressors are potentially related to a collinearity problem? How do you know? Be sure to indicate the threshold used in determining your answer.
+
+## Solution to Question 3
+
+
+```{r}
+#library(car)  # likely already loaded
+
+
+```
+
+
+**Interpret output:**
+
+
+<br>  
+<br>  
+
+# Question 4 {#sec-q4}
+
+Consider the linear model regressing `Employed` on all other variables in the data set. Compute the condition indices and variance decomposition proportions (VP) of each variable. Provide the relevant R code and output.
+
+Based on the output, how many condition indices suggest a collinearity problem? How do you know? Be sure to indicate the threshold used in determining your answer.
+
+
+## Solution to Question 4
+
+
+```{r}
+#library(mctest)  # likely already loaded
+
+```
+
+**Interpret output:**
+
+
+<br>  
+<br>  
+
+
+# Question 5 {#sec-q5}
+
+Based on the output in your solution to [Question 4](#sec-q4), which variables has a problematic linear relationship with the `intercept` eigenvalue in row 7? How do you know? Be sure to indicate the threshold used in determining your answer.
+
+## Solution to Question 5
+
+
+<br>  
+<br>  
+
+
+# Question 6 {#sec-q6}
+
+Use the condition indices and variance decomposition proportions to systematically remove the regressors that seem to be causing a problem with collinearity. When there is a choice, in this exercise, **always remove the regressor with the largest variance decomposition proportion** (but never the `intercept`), ignoring other practical considerations. Base your decision entirely on variance decomposition proportion (VP). Do this until there is no evidence of collinearity. Which regressors remain in the final in the model that no longer has evidence of a collinearity problem? Show code to support your work, and add explanations to indicate how you used the code output to determine your answer.
+
+
+## Solution to Question 6
+
+- First remove ?? since ??.
+
+
+```{r}
+#| eval: false
+# remove the variable named above
+#library(mctest)  # likely already loaded
+lmod2 <- update(??) 
+eigprop(??)  # recheck
+```
+
+- Next, remove ?? since ??.
+
+```{r}
+#| eval: false
+lmod3 <- update(??) 
+eigprop(??)  # recheck
+```
+
+- And continue on until you are done checking for collinearity.
+
+
+<br>  
+<br>  
+
+# Question 7  {#sec-q7}
+
+Use the `prostate` dataset from the `faraway` package to answer the parts of Question 7. You will consider the relationship with `lpsa` as the response and the other variables as predictors. 
+
+```{r}
+data(prostate, package = "faraway")
+summary(prostate)
+```
+
+Implement the following variable selection methods to determine the *best* model
+
+(a) Backward elimination using $p$-value. 
+
+(b) Using AIC with forward selection using `step()`.
+
+(c) Using `regsubests()` from the `leaps` package and the adjusted $R^2$.
+
+(d) Using `regsubests()` from the `leaps` package and Mallow’s $C_p$. 
+
+(e) Summarize the results (which variables are included as regressors) for each method in the table provided at the end of this question.
+
+## Solution to Question 7a
+
+Using backward elimination with $p$-value as the selection criterion. Show supporting work.
+
+
+```{r}
+#| eval: false
+# create initial, full model and check summary output
+fullmod <- lm(??)
+summary(fullmod)
+```
+
+- First we remove the variable `enter_variable_name` since ...
+
+
+```{r}
+#| eval: false
+# code cell for removing variable to update model 
+new_mod1 <- update(??) 
+summary(??)  # recheck
+```
+
+
+- Next we remove the variable `enter_variable_name` since ...
+
+
+```{r}
+#| eval: false
+# code cell for removing next variable to update model 
+new_mod2 <- update(??) 
+summary(??)  # recheck
+```
+
+- And so on.
+
+**The final model has regressors ...**
+
+
+
+## Solution to Question 7b
+
+Using `step()` for forward selection using AIC as the criterion.
+
+
+```{r}
+#library(leaps)  # likely already loaded
+
+```
+
+
+**The final model has regressors ...**
+
+
+## Solution to Question 7c
+
+Using `regsubsets` with $R_a^2$, adjusted $R^2$, as the criterion.
+
+
+```{r}
+#library(leaps)  # likely already loaded
+
+```
+
+
+**The final model has regressors ...**
+
+	
+
+Optional (not graded): Include a plot of $R_a^2$ values as a function of $p$ (number of regressors) using the `subsets()` function from the `car` package.
+
+
+```{r}
+# create a plot of adjusted R^2
+
+```
+
+
+
+## Solution to Question 7d
+
+Using `regsubsets` with Mallow’s $C_p$ as the criterion.
+
+
+```{r}
+#library(leaps)  # likely already loaded
+
+```
+
+
+**The final model has the regressors ...**
+
+
+Optional (not graded): Include a plot of $C_p$ values as a function of $p$ (number of regressors) using the `subsets()` function from the `car` package.
+
+
+```{r}
+# create a plot of adjusted C_p
+
+```
+
+
+
+## Solution to Question 7e
+
+Summarize your results. Replace the **Regressors** placeholders in the table below with the variables you ultimately decided to include in your model when applying each of the methods/criteria below. You do not need to list the intercept as it should be included in all models.
+
+| approach | variables retained |
+|----------|--------------------|
+| Backward elimination with $p$-values | **Regressors** |
+| Forward selection with AIC using  `step()`	| **Regressors** |
+| Adjusted $R^2$ using `regsubsets`	| **Regressors** |
+| Mallow’s $C_p$ using `regsubsets`	| **Regressors** |
+
+

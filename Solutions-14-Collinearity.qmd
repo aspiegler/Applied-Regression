@@ -296,7 +296,7 @@ The VIF is not appropriate for assessing collinearity for sets of related regres
 
 Eigenvalues provide a measure of joint variability among a set of explanatory variables. Eigenvalues of $X^TX$ close to $0$ indicate high multicollinearity because they correspond to near-linear dependencies among the predictor variables. An eigenvalue of $0$ would denote perfect multicollinearity and a singular matrix $X$.
 
-Let $\lambda_1 \leq \lambda_2 \leq \ldots \leq \lambda_p$ be the eigenvalues of the regressors (including the intercept) ordered from largest to smallest.
+Let $\lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_p$ be the eigenvalues of the regressors (including the intercept) ordered from largest to smallest.
 
 - For observational data, when there is a **wide range in the eigenvalues**, this indicates there is a **potential problem with collinearity**.
 - When the [**condition number**]{style="color:blue"} $\kappa= \sqrt{\frac{\lambda_1}{\lambda_p}} \geq 30$ then **there is a potential problem with collinearity**.
