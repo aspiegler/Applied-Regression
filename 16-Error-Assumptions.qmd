@@ -738,26 +738,3 @@ Perform regression diagnostics on this model to answer the following questions.
 
 
 
------
-
-
-# We Stopped Here Monday?
-
------
-
-
-```{r}
-# plot of residuals versus fitted values
-residualPlot(lmod, quadratic = FALSE) # We do not want to draw the quad reg
-
-# plot of residuals versus fitted values
-plot(lmod, which = 1) 
-
-# plot sqrt absolute value of residuals vs fitted values
-plot(sqrt(abs(residuals(lmod))) ~ fitted(lmod), xlab = "fitted", 
-     ylab= expression(sqrt(hat(epsilon)))) 
-
-# plot of Standardized residuals versus fitted values
-plot(lmod, which = 3) 
-```
-
