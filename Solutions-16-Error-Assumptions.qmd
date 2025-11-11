@@ -411,6 +411,8 @@ In base R, we can use commands `qqnorm()` and `qqline()`.
 qqnorm(residuals(lmod), ylab = "Residuals")
 qqline(residuals(lmod))  # adds reference line to plot
 ```
+
+
 ### Using `which = 2` Along with `lm` output
 
 We can plot the residuals from the summary output we stored in `lmod`. This will produce a q-q plot for the **standardized residuals**, along with a helpful reference line.
@@ -434,8 +436,8 @@ qqPlot(lmod)
 
 If the marked points are:
 
-- **Flatter than the line**, there is less data than we'd have if normal
-- **Steeper than the line**, there is more data than we'd have if normal.
+- **Flatter than the line**, there is more data than we'd have if normal.
+- **Steeper than the line**, there is less data than we'd have if normal.
 
 
 ## Question 7 {#sec-q7}

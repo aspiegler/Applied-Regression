@@ -171,7 +171,7 @@ Does the normality assumption of the error seem to be satisfied? Support your an
 
 # MATH 5387 students only: Question 3
 
-For the `divusa` data in the `faraway` package, fit a model with `divorce` as the response and the other variables, except `year` as predictors. Check for serial (time) correlation. Support your answer with **BOTH plot(s) and explanation(s)** to justify your answer.
+For the `divusa` data in the `faraway` package, fit a model with `divorce` as the response and the other variables, except `year` as predictors. Check for serial correlation. Support your answer with **BOTH plot(s) and explanation(s)** to justify your answer.
 
 
 ```{r}

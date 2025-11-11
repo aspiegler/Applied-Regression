@@ -414,8 +414,8 @@ qqPlot(lmod)
 
 If the marked points are:
 
-- **Flatter than the line**, there is less data than we'd have if normal
-- **Steeper than the line**, there is more data than we'd have if normal.
+- **Flatter than the line**, there is more data than we'd have if normal.
+- **Steeper than the line**, there is less data than we'd have if normal.
 
 
 ## Question 7 {#sec-q7}
