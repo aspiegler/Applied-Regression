@@ -1,0 +1,228 @@
+---
+title: "Homework 10"
+author: 
+  - name: "Enter your name"
+    affiliation: "University of Colorado Denver"
+format: 
+  html:
+    embed-resources: true    
+editor: source
+warning: false
+---
+
+# HW 10 (Last One!): Due Wed, November 19 at 2:00 PM
+
+## Instructions:
+
+
+1.  <span style="color:red">Be sure to download and save the file so you are working with your own private copy of the file.</span>
+
+2.  <span style="color:green">After you have copied the Quarto file onto your computer, you can begin editing and saving your work.</span>
+
+**Submit your work electronically as two separate files:**
+
+-   A Quarto markdown file with file extension `.qmd` with all code cells run and relevant output displayed in the document.
+-   After you have completed all questions, render your completed work to an html file.
+-   Submit the html file that is created with file extension `.html`.
+
+Upload both files into the Homework 10 assignment in Canvas before <span style="color:blue">**2 PM on Wed, November 19.**</span>
+
+**You must provide supporting work for your all of your answers.**
+
+-   <span style="color:blue">That work will include using R code cells.</span>
+    -   Feel free to insert as much R code as you like.
+    -   When asked, you must explain how the output of a code cell is used to solve the question.
+    -   Code with incomplete interpretation of the output  may not receive full credit.
+    -   Code that involves methods we have not discussed this semester may not receive full credit.
+-   <span style="color:blue">Your work may also involve typing explanations and justifications in text cells.</span>
+    -   Be sure to type up your work/explanation so I can see how you arrived at your answer.
+    -   <span style="color:blue">**When you need to type math expressions, use LaTeX.**</span>
+
+## Important Academic Policies:
+
+
+-   **Be your own work.** Though you may collaborate with others, everyone is responsible for writing up the work in their own way using their own methods. Plagiarism of any form is not tolerated.
+-   **Be complete.** You must provide all work and/or explanations needed to find the solution. Answers with insufficient or incomplete supporting work may lose credit.
+-   **Adhere to the Code of Academic Honesty.**
+-   **Be clearly typed.** Your solution to a question must be clear and typed in complete sentences. 
+
+### <span style="color:blue">Let me know if you need help, and GOOD LUCK!!!</span>
+
+
+# Be Sure to Do the Following Once Completed
+
+---
+
+-   Be sure you have run ALL code cells before saving your work.
+-   Be sure all relevant code output is displayed in Quarto document.
+-   If you used LaTeX, make sure all of the formulas look good when rendering to html.
+-   Then be sure to save the your work as a Quarto document.
+-   Finally, be sure you render your final work to a static `html` that you submit along with your Quarto file in Canvas.
+-   If you preferred to write work on questions 3-6, be sure to submit either a paper copy to me or upload a pdf version of your written work into Canvas along with your other documents.
+
+# Loading Data and Required Packages
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(car)
+library(faraway)
+library(lmtest)
+```
+
+
+# Question 1
+
+Using the `teengamb` dataset, fit a model with `gamble` as the response and all other variables as predictors. Perform regression diagnostics on this model to answer the following questions. Display any plots that are relevant. Do not provide any plots about which you have nothing to say.
+
+```{r}
+data(teengamb, package = "faraway")
+```
+
+## Question 1a
+
+Fit the linear model.
+
+
+### Solution to Question 1a
+
+
+<br>  
+<br>  
+
+## Question 1b
+
+Does the mean zero assumption seem to be satisfied? Support your answer with **BOTH plot(s) and explanation(s)** to justify your answer.
+
+### Solution to Question 1b
+
+
+<br>  
+<br>  
+
+
+## Question 1c
+
+Does the constant variance assumption seem to be satisfied? Support your answer with **BOTH plot(s) and explanation(s)** to justify your answer.
+
+
+### Solution to Question 1c
+
+<br>  
+<br>  
+
+
+## Question 1d
+
+Does the normality assumption of the error seem to be satisfied? Support your answer with **BOTH plot(s) and explanation(s)** to justify your answer.
+
+
+### Solution to Question 1d
+
+
+<br>  
+<br>  
+
+# Question 2
+
+Using the `swiss` dataset (in the datasets library, so you should be able to access this data frame without needing to load any additional packages), fit a model with `Fertility` as the response and the other variables as predictors. Perform regression diagnostics on this model to answer the following questions. Display any plots that are relevant. Do not provide any plots about which you have nothing to say.
+
+## Question 2a
+
+Fit the linear model.
+
+
+### Solution to Question 2a
+
+<br>  
+<br>  
+
+
+## Question 2b
+
+Does the mean zero assumption seem to be satisfied? Support your answer with **BOTH plot(s) and explanation(s)** to justify your answer.
+
+### Solution to Question 2b
+
+<br>  
+<br>  
+
+
+## Question 2c
+
+Does the constant variance assumption seem to be satisfied? Support your answer with **BOTH plot(s) and explanation(s)** to justify your answer.
+
+### Solution to Question 2c
+
+<br>  
+<br>  
+
+
+## Question 2d
+
+Does the normality assumption of the error seem to be satisfied? Support your answer with **BOTH plot(s) and explanation(s)** to justify your answer.
+
+### Solution to Question 2d
+
+<br>  
+<br>  
+
+
+# MATH 5387 students only: Question 3
+
+For the `divusa` data in the `faraway` package, fit a model with `divorce` as the response and the other variables, except `year` as predictors. Check for serial (time) correlation. Support your answer with **BOTH plot(s) and explanation(s)** to justify your answer.
+
+
+```{r}
+data(divusa, package = "faraway")
+```
+
+## Solution to Question 3
+
+
+<br>  
+<br>  
+
+
+-------
+
+# Appendix Data Info
+
+
+## Teenage Gambling for Question 1
+
+The `teengamb` data in the `faraway` package has 47 observations and 5 variables based on a survey that was conducted to study teenage gambling in Britain.
+
+- `sex`: $0=$ male and $1=$ female
+- `status`: Socioeconomic status score based on parents' occupation
+- `income`: In pounds per week
+- `verbal`: verbal score in words out of 12 correctly defined
+- `gamble`: expenditure on gambling in pounds per year
+
+## Swiss Fertility and Socioeconomic Indicators Dataset for Question 2
+
+Standardized fertility measure and socio-economic indicators for each of 47 French-speaking provinces of Switzerland at about 1888.
+
+- `Fertility`: Ig, a common standardized fertility measure
+- `Agriculture`: % of males involved in agriculture as occupation
+- `Examination`: % draftees receiving highest mark on army examination
+- `Education`: % education beyond primary school for draftees
+- `Catholic`: % catholic
+- `Infant.Mortality`: live births who live less than 1 year
+
+All variables but `Fertility` give proportions of the population.
+
+## Divorce in the USA 1920-1996 for Question 3
+
+Divorce rates in the USA from 1920-1996. A data frame with 77 observations on the following 7 variables:
+
+- `year`: the year from 1920-1996
+- `divorce`: divorce per 1000 women aged 15 or more
+- `unemployed`: unemployment rate
+- `femlab`: percent female participation in labor force aged 16+
+- `marriage`: marriages per 1000 unmarried women aged 16+
+- `birth`: births per 1000 women aged 15-44
+- `military`: military personnel per 1000 population
+
+
