@@ -38,10 +38,7 @@ license: "CC BY-NC-SA"
 #| message: false
 library(tidyverse)
 library(lmtest)  # to access dwtest
-#library(alr4)
 library(car)  # for residualPlots and qqPlot
-#library(leaps)  # to access regsubets function
-#library(caret)  # functions for model training 
 ```
 
 
@@ -394,6 +391,53 @@ align = "lcr")
 ```
 
 
+-----
+
+# We Stopped Here Monday
+
+-----
+
+```{r}
+#| message: false
+library(tidyverse)
+library(lmtest)  # to access dwtest
+library(car)  # for residualPlots and qqPlot
+```
+
+The dataset `savings` in the `faraway` package contains savings data from 50 different countries. The variables in the dataset are: 
+
+- `sr` is the savings rate, personal saving divided by disposable income.
+- `pop15` is the percent of the population under age of 15.
+- `pop75` is the percent of the population over age of 75.
+- `dpi` is the per-capita disposable income in dollars.
+- `ddpi` is the percent growth rate of dpi.
+
+
+```{r}
+data(savings, package = "faraway") # load data
+lmod <- lm(sr ~ ., data = savings) #fit full model
+```
+
+
+```{r}
+# plot of residuals versus fitted values
+residualPlot(lmod, quadratic = FALSE, smooth = TRUE) 
+
+# Another plot of residuals versus fitted values
+plot(lmod, which = 1) 
+
+# plot of residuals versus regressors
+residualPlots(lmod, 
+              quadratic = FALSE,  # don't compare with quad model
+              fitted = FALSE,  # do NOT plot residuals vs fitted
+              smooth = TRUE,  # include a smoother
+              tests = FALSE)  # turn off summary output
+
+# plot of Standardized residuals versus fitted values
+plot(lmod, which = 3) 
+```
+
+
 ## Creating Q-Q Plots in R
 
 Each point $(z_i, \hat{\epsilon}_i)$ in the plot corresponds to an observation in the data.
@@ -430,6 +474,8 @@ The `qqPlot` function from the `car` package is Q-Q plot for the **studentized r
 # requires car package
 qqPlot(lmod) 
 ```
+
+
 
 
 ## Interpreting Q-Q Plots
@@ -866,26 +912,5 @@ residualPlot(lmod3_region2, quadratic = FALSE, groups = "region")
 
 
 
------
 
-
-# We Stopped Here Monday?
-
------
-
-
-```{r}
-# plot of residuals versus fitted values
-residualPlot(lmod, quadratic = FALSE) # We do not want to draw the quad reg
-
-# plot of residuals versus fitted values
-plot(lmod, which = 1) 
-
-# plot sqrt absolute value of residuals vs fitted values
-plot(sqrt(abs(residuals(lmod))) ~ fitted(lmod), xlab = "fitted", 
-     ylab= expression(sqrt(hat(epsilon)))) 
-
-# plot of Standardized residuals versus fitted values
-plot(lmod, which = 3) 
-```
 

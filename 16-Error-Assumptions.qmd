@@ -38,10 +38,7 @@ license: "CC BY-NC-SA"
 #| message: false
 library(tidyverse)
 library(lmtest)  # to access dwtest
-#library(alr4)
 library(car)  # for residualPlots and qqPlot
-#library(leaps)  # to access regsubets function
-#library(caret)  # functions for model training 
 ```
 
 
@@ -607,7 +604,7 @@ The test can be implemented in the `lmtest` package.
 dwtest(lmod2, alternative = "greater")  # note greater is the default
 ```
 
-## Question 11{#sec-q11}
+## Question 11 {#sec-q11}
 
 Interpret the result of this test in the previous code cell in practical terms.
 
