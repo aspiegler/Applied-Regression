@@ -3144,10 +3144,7 @@ vertical-align: -.125em;
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lmtest)  <span class="co"># to access dwtest</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">#library(alr4)</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)  <span class="co"># for residualPlots and qqPlot</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#library(leaps)  # to access regsubets function</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#library(caret)  # functions for model training </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)  <span class="co"># for residualPlots and qqPlot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="standard-assumptions-revisited" class="level1">
@@ -3880,8 +3877,8 @@ F-statistic: 15.47 on 8 and 136 DF,  p-value: 5.028e-16</code></pre>
 <p>Run the code cell below to plot successive pairs of residuals. Interpret the plot. How does this confirm a positive serial correlation?</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="fu">nobs</span>(lmod2)</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">tail</span>(<span class="fu">residuals</span>(lmod2), n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">~</span>      <span class="co"># extracts (e_1, e_2, ..., e_49)</span></span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">head</span>(<span class="fu">residuals</span>(lmod2), n <span class="sc">-</span> <span class="dv">1</span>),      <span class="co"># extracts (e_2, e_3, ..., e_50)</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">tail</span>(<span class="fu">residuals</span>(lmod2), n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">~</span>      <span class="co"># extracts (e_2, e_3, ..., e_50)</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">head</span>(<span class="fu">residuals</span>(lmod2), n <span class="sc">-</span> <span class="dv">1</span>),      <span class="co"># extracts (e_1, e_2, ..., e_49)</span></span>
 <span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="fu">expression</span>(<span class="fu">hat</span>(epsilon)[i]),</span>
 <span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span><span class="fu">expression</span>(<span class="fu">hat</span>(epsilon)[i<span class="sc">+</span><span class="dv">1</span>]))</span>
 <span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a><span class="fu">abline</span>(<span class="at">h=</span> <span class="dv">0</span> , <span class="at">v =</span> <span class="dv">0</span>, <span class="at">col =</span> <span class="fu">grey</span>(<span class="fl">0.75</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3898,10 +3895,10 @@ F-statistic: 15.47 on 8 and 136 DF,  p-value: 5.028e-16</code></pre>
 <section id="the-durbin-watson-test-for-uncorrelated-errors" class="level2">
 <h2 class="anchored" data-anchor-id="the-durbin-watson-test-for-uncorrelated-errors">The Durbin-Watson Test for Uncorrelated Errors</h2>
 <p>A formal test for serial correlation between residuals can be performed using the <strong>Durbin-Watson test</strong>.</p>
-<p>Let <span class="math inline">\(\rho\)</span> denote the temporal correlation between residuals. The hypotheses are:</p>
+<p>Let <span class="math inline">\(\rho\)</span> denote the serial correlation between residuals. The hypotheses are:</p>
 <ul>
 <li><span class="math inline">\(H_0\)</span>: The residuals are uncorrelated, <span class="math inline">\(\rho = 0\)</span>.</li>
-<li><span class="math inline">\(H_a\)</span>: The residuals are related in some way (<span class="math inline">\(\rho = 0\)</span>, <span class="math inline">\(\rho &gt; 0\)</span>, or <span class="math inline">\(\rho &lt; 0\)</span>).</li>
+<li><span class="math inline">\(H_a\)</span>: The residuals are related in some way (<span class="math inline">\(\rho \ne 0\)</span>, <span class="math inline">\(\rho &gt; 0\)</span>, or <span class="math inline">\(\rho &lt; 0\)</span>).</li>
 </ul>
 <p>The test statistic is:</p>
 <p><span class="math display">\[DW = \frac{\sum_{i=2}^n(\hat{\epsilon}_i - \hat{\epsilon}_{i-1})^2}{\sum_{i=1}^n \hat{\epsilon}_i^2}\]</span></p>

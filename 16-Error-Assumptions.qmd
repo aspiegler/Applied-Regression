@@ -571,8 +571,8 @@ Run the code cell below to plot successive pairs of residuals. Interpret the plo
 
 ```{r}
 n <- nobs(lmod2)
-plot(tail(residuals(lmod2), n - 1) ~      # extracts (e_1, e_2, ..., e_49)
-      head(residuals(lmod2), n - 1),      # extracts (e_2, e_3, ..., e_50)
+plot(tail(residuals(lmod2), n - 1) ~      # extracts (e_2, e_3, ..., e_50)
+      head(residuals(lmod2), n - 1),      # extracts (e_1, e_2, ..., e_49)
      xlab = expression(hat(epsilon)[i]),
      ylab =expression(hat(epsilon)[i+1]))
 abline(h= 0 , v = 0, col = grey(0.75))
@@ -588,10 +588,10 @@ abline(h= 0 , v = 0, col = grey(0.75))
 A formal test for serial correlation between residuals can be performed using the **Durbin-Watson test**.  
 
 
-Let $\rho$ denote the temporal correlation between residuals. The hypotheses are:
+Let $\rho$ denote the serial correlation between residuals. The hypotheses are:
 
 - $H_0$: The residuals are uncorrelated, $\rho = 0$.
-- $H_a$: The residuals are related in some way ($\rho = 0$, $\rho > 0$, or $\rho < 0$).
+- $H_a$: The residuals are related in some way ($\rho \ne 0$, $\rho > 0$, or $\rho < 0$).
 
 The test statistic is:
 
