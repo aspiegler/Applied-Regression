@@ -516,7 +516,7 @@ abline(0,1) # plots line y=x
 
 ```{r}
 subsets(best, statistic = "cp", legend = FALSE)
-abline(0,1) 
+abline(1,1)  # use line C_p = p + 1 since here intercept not included in p 
 ```
 
 ## Question 8  {#sec-q8}
