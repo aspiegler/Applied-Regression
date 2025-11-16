@@ -1,0 +1,707 @@
+---
+title: "Module 17: Unusual Observations"
+author: 
+  - name: "Adam Spiegler"
+    affiliation: "University of Colorado Denver"
+format:
+  html:
+    toc: true
+    toc-location: left
+    toc-depth: 2
+    toc-expand: 1
+    embed-resources: true
+editor: source
+#execute:
+#  eval: false
+title-block-banner: true
+warning: false
+license: "CC BY-NC-SA"
+---
+
+
+## Additional Reading
+
+
+- Chapter 14 of  *Linear Regression Models: Applications in R* ([link to library ebook](https://go.exlibris.link/Q7wgCRrz))
+
+- Sections 9.4 and 9.5 of *Applied Linear Regression* ([link to library ebook](https://go.exlibris.link/69jsQwWW))
+
+# Loading Required Packages and Data
+
+
+```{r}
+#| message: false
+library(tidyverse)
+library(faraway)
+library(car)
+```
+
+
+# Introduction
+
+An implicit assumption made when fitting a regression model is that **all observations should be equally reliable and have approximately equal role** in determining the regression results and in influencing conclusions.
+
+- A [**leverage point**]{style="color:blue"} is an observation that is unusual in the predictor space.
+- An [**outlier**]{style="color:blue"} is an observation whose response does not match the pattern of the fitted model.
+- An [**influential observation**]{style="color:blue"} is one that causes a substantial change in the fitted model based on its inclusion or deletion from the model.
+- An influential observation is usually either a leverage point, an outlier, or a combination of the two.  
+
+
+![Influential Observations](https://raw.githubusercontent.com/aspiegler/Applied-Regression/main/Images/17-outlier-leverage.png)
+
+
+Influential observations result from a number of sources. For example:
+
+- They may be due to errors in measurement or due to errors in data entry.
+  - We can check the data for coding errors.
+- We may randomly select an unusual or unlikely observation during data collection. 
+  - We should not remove these observations without further investigation.
+
+# Leverage Points
+
+The [**leverage (or hat) values**]{style="color:blue"} are the diagonal elements of the hat matrix $H=X(X^T X)^{-1} X^T$.  The $i^{\text{th}}$ diagonal position of the hat matrix, $h_{ii}$, is the $i^{\text{th}}$ leverage (or hat) value. 
+
+
+## Computing the Hat Matrix and Leverage Values
+
+```{r}
+data(savings, package = "faraway") # load data
+lmod <- lm(sr ~ ., data = savings) #fit full model
+faraway::sumary(lmod)  # truncated summary output
+```
+
+Here we construct the hat matrix $H=X(X^T X)^{-1} X^T$
+
+```{r}
+X <- model.matrix(lmod)
+hat_mat <- X %*% solve(t(X) %*% X) %*% t(X)
+round(head(hat_mat[1:6,1:6]), 4)  # first 6 rows/cols
+```
+
+There is a built-in `base` R function `hatvalues()` which does this as well.
+
+```{r}
+h <- hatvalues(lmod)
+h[1:6]
+```
+
+## Interpreting Leverage Values
+
+The predicted response $\hat{y}_i$ for observation $i$ can be written as a linear combination of the observed responses, $y_i$, using the hat matrix, $\hat{\mathbf{y}} = H \mathbf{y}$:
+
+$$\hat{y}_i = h_{i1} y_1 +  h_{i2} y_2 + \ldots + {\color{blue}{h_{ii} y_i}} + \ldots + h_{in} y_n.$$
+
+The $i^{\text{th}}$ leverage value, $h_{ii}$, measures the influence observed response $y_i$ has on the predicted value $\hat{y}_i$. Using derivatives, we have:
+
+$$h_{ii} = \frac{\partial \hat{y}_i}{\partial y_i}.$$
+
+- If $h_{ii}$ is small (close to 0), then the observed response plays a small role. 
+- If $h_{ii}$ is small (close to 1), then the observed response plays a large role. 
+- We have $\sum h_{ii} = p$, the number of regression coefficients (including intercept).
+
+
+```{r}
+# using hat values as weights
+t(hat_mat[1, ]) %*% savings$sr  # 1st row of H dot obs response
+fitted(lmod)[1]  # predicted value of observation 1
+```
+
+```{r}
+# sum of hat values is p
+sum(h)
+```
+
+
+:::{.callout-tip}
+See the [Appendix](#sec-append) for proofs of properties that $0 \leq h_{ii} \leq 1$ and $\sum h_{ii} = p$.
+:::
+
+## Identifying Influential Points
+
+Common criteria for identifying influential points using leverage values are any values exceeding $\frac{3p}{n}$ or $\frac{2p}{n}$ should be scrutinized as an influential observation where $p$ is the number of regression coefficients (including the intercept) and $n$ is the number of observations.
+
+
+## Question 1 {#sec-q1}
+
+Determine whether there are any influential observations in the `savings` model.
+
+### Solution to Question 1
+
+
+
+<br>  
+<br>  
+
+
+## Half-Normal Plots
+
+A [**half-normal plot**]{style="color:blue"} of the leverage values can be used to identify observations with unusually high leverage. A half-normal plot is a modified Q-Q plot that compares the sorted hat values against the quantiles of a [half-normal distribution](https://distribution-explorer.github.io/continuous/halfnormal.html).
+
+
+The steps are to producing a half-normal plot for $x_1, \ldots , x_n$ are:
+
+1. Sort the data:  $h_{\lbrack 1 \rbrack} \leq h_{\lbrack 2 \rbrack} \leq \ldots \leq h_{\lbrack n \rbrack}$.
+
+```{r}
+h_sort <- sort(h)  # sort hatvalues
+```
+
+2. Compute $u_i = F^{-1} \left(\frac{n+i}{2n+1} \right)$, where $F$ denotes the CDF of $N(0,1)$.
+
+```{r}
+# compute half-normal quantiles
+u <- numeric(50)
+
+for (i in 1:50) {
+  u[i] <- qnorm( (50 + i) / (2*50 + 1) )
+}
+
+head(round(u, 4))  # u_1, u_2, ... , u_6
+tail(round(u, 4))  # u_45, u_46, ... u_50
+```
+
+
+3. Plot $h_{\lbrack i \rbrack}$  versus $u_i$.
+
+
+```{r}
+plot(h_sort ~ u)  # half-normal plot
+```
+
+
+
+The leverage points are the points in the plot that diverge substantially from the rest of the data.
+
+- If the half-normal plot is approximately a straight line of points, then there are no leverage points.
+- **If the half-normal plot is curved (looks like a hockey stick), then the points on the curvy part (the bendy part of the stick) are leverage points.**
+
+
+The `halfnorm()` function from the `faraway` package generates a half-normal plot.
+
+
+```{r}
+# library(faraway)
+countries <- row.names(savings)  # label with country name 
+halfnorm(h, nlab = 2, labs = countries, ylab = "leverage")
+```
+
+### Example With No Leverage Points
+
+
+```{r}
+#| echo: false
+data(state)
+statedata <- data.frame(state.x77, row.names = state.abb)
+names.state <- row.names(statedata)
+lmod2 <- lm(Employed ~ ., data = longley)
+h2 <- hatvalues(lmod2)
+halfnorm(h2, nlab = 2, labs = names.state, ylab = "leverage")
+```
+
+## Index Plots
+
+An [**index plot**]{style="color:blue"} of the leverage values can also be used to identify leverage points.  
+
+- An index plot plots the statistic of an observation versus its observation number.
+- You want to focus on observations where the statistics are large or small relative to the other values.
+
+The `infIndexPlot()` function from the `car` package generates index plots related to many influence-related statistics (such as leverage value).
+
+
+```{r}
+#| warning: false
+#library(car)
+infIndexPlot(lmod, vars = "hat")
+```
+
+
+# Identifying outliers
+
+An [**outlier**]{style="color:blue"} is a point that does not fit the current model.
+
+- An outlier is context specific!  An outlier for one model may not be an outlier for a different model.
+
+
+## Leave-One-Out Statistics
+
+[**Leave-one-out statistics**]{style="color:blue"} are statistics computed from the model fitted without the $i^{\text{th}}$ observation. We use the subscript $(i)$ means that these statistics were estimated for the model fitted without the $i^{\text{th}}$ observation.
+
+
+- $\widehat{\boldsymbol\beta}_{(i)}$ is the vector of leave-one-out estimated coefficients.
+- $\widehat{y}_{(i)}$ is the leave-one-out fitted value for the $i^{\text{th}}$ observation.
+- $\widehat{\epsilon}_{(i)} = y_{(i)} - \widehat{y}_{(i)}$ is the leave-one-out residual for the $i^{\text{th}}$ observation.
+- $\widehat{\sigma}_{(i)}$ is the leave-one-out estimate of the standard deviation of the leave-one-out error.  
+  - $\displaystyle \widehat{\sigma}_{(i)} = \sqrt{\frac{\text{RSS}_{(i)} }{n-p-1}}$
+
+
+```{r}
+# Zambia is observation 46
+loo_data <- savings[-46,]
+loo_mod <- lm(sr ~ ., data = loo_data)
+faraway::sumary(loo_mod)
+```
+
+If the [**leave-one-out residual**]{style="color:blue"} (deleted residual) $\widehat{\epsilon}_{(i)}$ is "large", then observation $i$ is an outlier.
+
+```{r}
+zambia_df <- as.data.frame(savings[46,])
+(res_zambia <- savings[46,1] - predict(loo_mod, new = zambia_df))
+```
+
+
+::: {.callout-note}
+The OLS residuals may not be suitable for identifying outliers since truly influential observations will pull the fitted model close to themselves, making the residual smaller.
+:::
+
+When deciding how "large" does a leave-one-out residual, $\widehat{\epsilon}_{(i)}$, need to be for the observation to be an outlier, the answer as usual is *it depends* on how large the residuals of leave-one-out model are overall.
+
+
+```{r}
+# loo residuals for other observations
+head(sort(round(residuals(loo_mod),4)), 3)  # most negative residuals
+tail(sort(round(residuals(loo_mod),4)), 3)  # most positive residuals
+```
+
+## Question 2 {#sec-q2}
+
+The leave-one-out residual for Zambia is $\widehat{\epsilon}_{(\rm{Zambia})} = 10.42134$. Based on the output from the previous code cell, comment on whether or not that is a "large" leave-one-out residual.
+
+
+### Solution to Question 2
+
+
+
+<br>  
+<br>  
+
+
+## Studentized Residuals
+
+A [**studentized residual**]{style="color:blue"} is obtained when we scale a raw residual by an estimate for its standard error. When the error assumptions are satisfied, studentized residuals are a better judge of the potential size of an outlier.
+
+A studentized residual is also called a [**jackknife** or **cross-validation residual**]{style="color:blue"} and is given by:
+
+$$t_{(i)} = \frac{\widehat{\epsilon}_i}{\widehat{\sigma}_{(i)} \sqrt{1-h_{ii}}}  \sim t_{n-p-1} \qquad \text{where} \qquad \widehat{\sigma}_{(i)} = \sqrt{\frac{\text{RSS}_{(i)}}{n-p-1}}$$
+
+
+```{r}
+# studentized residual for Zambia
+#sig <- sqrt(sum(residuals(loo_mod)^2) / (50 - 5 - 1))
+sig <- summary(loo_mod)$sigma
+residuals(lmod)[46]/(sig * sqrt( 1 - h[46]))
+```
+
+
+
+### Computing Studentized Residuals
+
+
+```{r}
+# obtain studentized residuals
+stud <- rstudent(lmod)
+
+# largest magnitude studentized residual
+(max_stud <- max(abs(stud)))
+```
+
+
+### Plotting Studentized Residuals
+
+
+```{r}
+#library(car)
+residualPlot(lmod, quadratic = FALSE, type = "rstudent") # against fitted
+```
+
+
+```{r}
+plot(lmod, which = 3)
+```
+
+
+```{r}
+#| warning: false
+#library(car)
+infIndexPlot(lmod, vars = "Studentized")
+```
+
+## Testing for Outliers
+
+
+### Types of Errors and the Significance Level
+
+There are two possible errors in a hypothesis test:
+
+- A [**Type I Error**]{style="color:blue"} occurs if we incorrectly reject H~0~ (false positive).
+- A [**Type II Error**]{style="color:blue"} occurs if we incorrectly fail to reject H~0~ (false negative).
+- The [**significance level**]{style="color:blue"} of a hypothesis test is therefore the largest value of ${\color{blue} \alpha}$ we find acceptable for the probability for a Type I error.
+
+We can test each observation separately:
+
+- We test at the 5% significance level:
+  - H~0~: Observation 1 is not an outlier.
+  - H~a~: Observation 1 is an outlier.
+
+- Then we perform another test at the 5% significance level.
+  - H~0~: Observation 2 is not an outlier.
+  - H~a~: Observation 2 is an outlier.
+
+
+Or, we can test for multiple observations at the same time.
+
+- H~0~: Neither observation 1 nor observation 2 are outliers.
+- H~a~: Observation 1 or observation 2 is an outlier.
+
+## Question 3 {#sec-q3}
+
+What is the maximum value for the probability of making a Type I Error if the results of the two individual tests are significant.
+
+### Solution to Question 3
+
+
+
+<br>  
+<br>  
+
+
+### Bonferonni correction
+
+Suppose we want a level $\alpha$ test for $n$ tests, i.e., we want P(no type I errors in n tests)$=1-\alpha$.  
+
+$$\begin{align}
+\mbox{P(no type I errors in all n tests)} &= P \left( \cap_{i=1}^n(\mbox{no type I error in test i}) \right)\\
+&= 1 - P \left( \cup_{i=1}^n(\mbox{there IS type I error in test i}) \right)\\
+& \geq 1 - \sum_{i=1}^n P(\mbox{there IS type I error in test i})\\
+&= 1 - n\alpha
+\end{align}$$
+
+To get an overall level $\alpha$ test, we should use the level $\alpha/n$ in each of the individual tests.
+
+- This approach is known as the [**Bonferonni correction**]{style="color:blue"}, and is used in many contexts to make proper simultaneous inference.
+- The Bonferonni correction is a very conservative method.
+  - It doesn’t reject H~0~ as often as it should.
+  - It gets more conservative as $n$ gets larger.
+
+A observation is considered an outlier if $|t_i| \geq t_{n-p-1}^{\frac{\alpha}{2n}}$.
+
+
+### Computing Bonferonni Critical Values
+
+```{r}
+n_sav <- nrow(X)
+p_sav <- ncol(X)
+max_stud # maximum studentized residual from earlier
+qt(1 - .05/(50*2), df = n_sav - p_sav - 1) # critical value
+```
+
+## Question 4 {#sec-q4}
+
+Based on the output above, does this model have any outliers?
+
+### Solution to Question 4
+
+
+
+<br>  
+<br>  
+
+
+### Computing Bonferonni p-Values with outlierTest Function
+
+
+```{r}
+# perform outlier check using Bonferroni correction
+outlierTest(lmod)
+```
+
+
+### Index Plots of Bonferroni p-values
+
+
+```{r}
+infIndexPlot(lmod, vars = "Bonf")
+```
+
+
+## Caution With Outliers:
+
+- Two or more outliers next to each other can "hide" each other.
+- If we fit a new model (on all data), we may get different or no outliers.
+- If the error distribution is nonnormal, it is very reasonable to get large residuals.
+- Individual outliers are less of a problem in larger data sets because they are not likely to have a large leverage.
+  - It is still good to identify the outliers.
+  - They probably won’t be an issue unless they occur in clusters.
+
+
+# Influential Observations
+
+Influential observations may be outliers, leverage points, or both outliers and leverage points. **leave-one-out residuals**, $\widehat{\boldsymbol\epsilon}_{(i)} = y_i-\widehat{y}_{(i)}$, are one measure of influence.  We'll explore some others.
+
+## Change in Regression Coefficients, DFBETA
+
+- ${\color{blue}{\mbox{DFBETA}_i=\widehat{\boldsymbol\beta} - \widehat{\boldsymbol\beta}_{(i)}}}$ is the difference in the estimated coefficients when leaving out the $i^{\text{th}}$ observation.
+- It is a $p$-dimensional vector indicating how the estimated coefficients change when the $i^{\text{th}}$ observation is removed from the data.
+- [**DFBETAS**]{style="color:blue"} is the DFBETA values divided by the leave-one-out estimate of the coefficient standard errors.
+
+
+## Question 5 {#sec-q5}
+
+How does the model fit change when we remove Libya from the data? Which coefficients seem most influenced?
+
+```{r}
+lmod2 <- lm(sr ~ ., data = savings, subset = (countries != "Libya"))
+compareCoefs(lmod, lmod2)  # requires car package
+```
+
+### Solution to Question 5
+
+
+
+<br>  
+<br>  
+
+
+### Ploting DFBETA and DFBETAs 
+
+
+An index plot of the DFBETA statistics can be useful for assessing the direct impact of an observation on the estimated coefficients.
+
+```{r}
+#library(car) # required package loaded earlier
+#dfbetaPlots(lmod, id.n = 3, lab = countries) # Not standardized
+dfbetasPlots(lmod, id.n = 3, lab = countries) # Standardized
+```
+
+
+## Cook's Distance
+
+The [**Cook’s distance**]{style:"color:blue"} is a popular inferential tool because it reduces influence information to a single value for each observation.
+
+The Cook’s distance for the $i^{\text{th}}$ observation is
+
+$$D_i=\frac{(\widehat{\mathbf{y}} - \widehat{\mathbf{y}}_{(i)})^T(\widehat{\mathbf{y}} - \widehat{\mathbf{y}}_{(i)})}{p \widehat{\sigma}^2} = \frac{1}{p} r_i^2 \frac{h_{ii}}{1-h_{ii}}$$
+
+where $r_i$ the **standardized residual** or observation $i$ (has mean 0 and variance 1):
+
+$$r_i = \frac{y_i - \widehat{y}_i}{\widehat{\sigma}(1-h_i)}.$$
+
+Notice that the statistic considers both:
+
+- The standardized residual (measurement of outlier).
+- The leverage (as measured by the hat value $h_{ii}$).
+- The combination of the two leads to a potentially influential value.
+
+### Interpreting Cook's Distance
+
+- Larger values of Cook’s Distance indicate more influence on the regression results.
+- Recommended criteria for identifying influential observations with Cook’s Distance are: 
+  - $D \geq  0.5$ may be influential.
+  - $D \geq 1$ likely to be influential.
+  - If it stands out (in index plot or half-normal plot), it very likely influential regardless of the value.
+  - $D \geq \dfrac{4}{n-p}$ or $D \geq 2 \sqrt{p/n}$ are other criteria that takes into account the size of the sample and number of regressors.
+
+For the savings model, we have $n=50$, $p=5$. We can use $D \geq 0.089$ or $D \geq 0.632$ as other criteria.
+
+
+### Computing and Plotting Cook's Distance
+
+- Cook’s distance values can be obtained using the `cooks.distance() ` function.
+- A half-normal plot of the Cook’s distances can be used to identify influential observation in the same way we used it for leverage values.
+
+
+```{r}
+cook <- cooks.distance(lmod)
+halfnorm(cook, n = 3, labs = countries, ylab = "Cook's distances")
+```
+
+
+- An index plot of the Cook’s distances can be used to identify influential observations.
+
+```{r}
+#| warning: false
+infIndexPlot(lmod, var = "Cook", id = list(n = 3))
+```
+
+
+## Influence Plots
+
+An [**influence plot**]{style="color:blue"} plots the studentized residuals versus the leverage values.
+
+- The `influencePlot()` function from `car` can be used to create this.
+- Look for observations that have unusually large residuals, leverage values, and especially both.
+
+
+## Question 6 {#sec-q6}
+
+Run the code chunk below to create an influence plot for the full savings model. Based on the influence plot, which observations should be investigated further as potential influential obeservations? What criteria did you use?
+
+
+```{r}
+influencePlot(lmod) # studentized residuals vs leverage
+```
+
+
+### Solution to Question 6
+
+
+
+<br>  
+<br>  
+
+
+```{r}
+plot(lmod, which = 5) # standardized residuals vs leverage
+#abline(h = c(-2,2), v = c(0.2, 0.3), lwd = 0.5, lty = 3)
+```
+
+
+- Contours for Cook's distance are used instead of sizing the points.
+  - Any points beyond these contours are considered an influential observation.
+  - Points inside those contours may still be influential.
+- There are no dashed horizontal or vertical reference lines, but we can add them.
+
+# What Should We Do About Unusual Observations?
+
+
+```{r}
+compareCoefs(lmod, lmod2)
+```
+
+
+```{r}
+plot(dfbeta(lmod)[,5], ylab = "Change in ddpi coef")
+abline(h=0)
+text(dfbeta(lmod)[,5], labels=rownames(savings), cex=0.6, font=0.5)
+```
+
+
+## Should We Correct or Delete the Observation(s)?
+
+- **If they’re data entry errors**, either correct the problem or remove them if they can't be corrected. 
+  - They’re wrong, so they don’t tell us anything useful!
+- **If they are NOT part of the population of interest**, remove them.
+  - For example, you are studying dogs, but this observation is a cat.
+- **Removing them just because they break the model is a really bad idea!**
+  - If you do, make sure to indicate that you removed them from the data set and explain why.
+  - Be warned, it is generally going to be a bad idea to remove.
+- The best solution is to try to **understand influential observations**.
+
+## Should We Keep Them and Fit a Different Model?
+
+- An outlier/influential point for one model may not be for another.
+- Examine the physical context, why did it happen?
+  - An outlier/influential point may be interesting in itself. 
+  - For example, an outlier in a statistical analysis of credit card transactions may indicate fraud.
+- Applying a square root or (natural) log transformation to a strategically selected regressor(s) might help.
+  - This may lead to another (better) model.
+- Use **robust regression**, which is not as affected by outliers/influential observations.
+
+
+## Summary
+
+- Never automatically remove outliers/influential points!
+- They may provide important information that may otherwise be missed.
+- Fit the model with and without the influential observation(s).
+- Do your results substantively change?
+
+# Practice: SAT Example
+
+Using the `sat ` data set in the faraway package by running the command 
+
+```{r}
+data(sat, package = "faraway")
+```
+
+## Part 1
+
+Fit a model with the total SAT score as the response and expend, salary, ratio, and takers as regressors.
+
+### Solution to Part 1
+
+
+<br>  
+<br>  
+
+## Part 2
+
+Perform regression diagnostics on this model to answer the following questions. 
+
+### Solution to Part 2
+
+
+<br>  
+<br>  
+
+
+
+# Appendix: Properties of Leverage Values {#sec-append}
+
+## Proof that $0 \leq h_{ii} \leq 1$
+
+Since the hat matrix $H$ is idempotent ($H^2 = H$) and symmetric, we have:
+
+$$h_{ii} = h_{ii}^2 + \sum_{i \ne j} h_{ij}^2.$$
+
+Thus, $h_{ii} \geq h_{ii}^2$, which implies $0 \leq h_{ii} < 1$. 
+
+
+## Proof that $\sum h_{ii} = p$
+
+We have 
+
+$$\begin{align}
+\sum h_{ii} &= \text{Tr}(H) \tag{def. of trace}\\
+& = \text{Tr}(X(X^T X)^{-1} X^T) \tag{def. of hat matrix}\\
+&= \text{Tr}(X^T X (X^T X)^{-1} ) \tag{cyclic property of trace}\\
+&= \text{Tr}(\mathbf{I}_p) \tag{product of inverses}\\
+&= p.
+\end{align}$$
+
+# Methods for Identifying Unusual Observations
+
+## Leverage points:
+
+- Half-normal plot of leverage values
+- Index plot of leverage values
+
+## Outliers
+
+- Bonferonni outlier test
+- Index plot of studentized residuals
+
+## Influential observations:
+
+- Half-normal plot of Cook’s distances
+- Index plot of Cook’s distances
+- Index plot of DFBETA or DFBETAS.
+- Influence plot
+
+# Useful R functions for Identifying Unusual Observations
+
+## Leverage points
+
+- `hatvalues` extracts the leverage values from a fitted model.
+- `faraway::halfnorm` constructs a half-normal plot
+- `infIndexPlot(lmod, vars = "hat")` creates an index plot of the leverage values.
+
+## Outliers
+
+- `car::outlierTest` performs a Bonferonni outlier test
+- `infIndexPlot(lmod, vars = "Studentized")` creates an index plot of the studentized residuals.
+
+## Influential observations
+
+- `cooks.distance` extracts the Cook’s distances from a fitted model.
+- `faraway::halfnorm` constructs a half-normal plot
+- `infIndexPlot(lmod, vars = "Cook")` constructs an index plot of the Cook’s distances.
+- `plot(lmod, which = 4)` constructs an index plot of the Cook’s statistics.
+- `car::dfbetaPlots` and `car::dfbetasPlots` construct index plots of DFBETA and DFBETAS, respectively.
+- `car::influencePlot` constructs an influence plot of the studentized residuals versus the leverage values.
+- `plot(lmod, which = 4)` constructs an influence plot of the standardized residuals versus the leverage values.
+- `influence(lmod)` computes a number of leave-one-out-related measures of observational influence.
+
+
+
+
+
+
