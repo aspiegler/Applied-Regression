@@ -240,7 +240,7 @@ An [**outlier**]{style="color:blue"} is a point that does not fit the current mo
 
 - $\widehat{\boldsymbol\beta}_{(i)}$ is the vector of leave-one-out estimated coefficients.
 - $\widehat{y}_{(i)}$ is the leave-one-out fitted value for the $i^{\text{th}}$ observation.
-- $\widehat{\epsilon}_{(i)} = y_{(i)} - \widehat{y}_{(i)}$ is the leave-one-out residual for the $i^{\text{th}}$ observation.
+- $\widehat{\epsilon}_{(i)} = y_{i} - \widehat{y}_{(i)}$ is the leave-one-out residual for the $i^{\text{th}}$ observation.
 - $\widehat{\sigma}_{(i)}$ is the leave-one-out estimate of the standard deviation of the leave-one-out error.  
   - $\displaystyle \widehat{\sigma}_{(i)} = \sqrt{\frac{\text{RSS}_{(i)} }{n-p-1}}$
 
