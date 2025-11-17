@@ -475,7 +475,7 @@ dfbetasPlots(lmod, id.n = 3, lab = countries) # Standardized
 
 ## Cook's Distance
 
-The [**Cook’s distance**]{style:"color:blue"} is a popular inferential tool because it reduces influence information to a single value for each observation.
+The [**Cook’s distance**]{style="color:blue"} is a popular inferential tool because it reduces influence information to a single value for each observation.
 
 The Cook’s distance for the $i^{\text{th}}$ observation is
 
