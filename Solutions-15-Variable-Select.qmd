@@ -510,14 +510,24 @@ $$C_{p_{\mathcal{M}}} = \frac{\mbox{RSS}_{\mathcal{M}}}{\hat{\sigma}^2} + 2p_{\m
 cp <- best_sum$cp # Display the C_p for each value of p
 plot(cp ~ p, ylab = expression({C_p}), 
      xlab = "Number of Predictors", pch = 16)
-abline(0,1) # plots line y=x
+abline(1,1) # plots line y=x + 1 (add 1 since p does not include intercept)
+```
+
+```{r}
+# another way to plot
+# now x-axis includes intercept in count for p
+cp <- best_sum$cp # Display the C_p for each value of p
+plot(cp ~ I(2:8), ylab = expression({C_p}), # include intercept
+     xlab = "Number of Predictors", pch = 16)
+abline(0,1) # plots line y= p  (since p now includes intercept)
 ```
 
 
 ```{r}
 subsets(best, statistic = "cp", legend = FALSE)
-abline(1,1)  # use line C_p = p + 1 since here intercept not included in p 
+abline(1,1)  # plots line y=x + 1 (add 1 since p does not include intercept)
 ```
+
 
 ## Question 8  {#sec-q8}
 
@@ -527,12 +537,13 @@ Interpret the output from the $C_p$ plot above. What is the best model according
 ### Solution to Question 8
 
 
-- Three predictors (excluding the intercept) seems about right.
-- Five predictors could be a suitable choice too.
+- Three predictors (excluding the intercept, 4 including the intercept) seems about right.
+- If we include all 7 predictors plus the intercept, we see $C_p = p$, but since three predictors is close to the reference line and a smaller $p$ value, we choose three predictors plus the intercept for our model.
+- For the model with three predictors, the best subset is `Murder`, `HS.Grad`, and `Frost`.
 
 
 ```{r}
-best_mod <- lm(Life.Exp ~ Population + Murder + HS.Grad + Frost, data = statedata)
+best_mod <- lm(Life.Exp ~  Murder + HS.Grad + Frost, data = statedata)
 ```
 
 

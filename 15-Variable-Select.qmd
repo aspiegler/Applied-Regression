@@ -471,13 +471,22 @@ $$C_{p_{\mathcal{M}}} = \frac{\mbox{RSS}_{\mathcal{M}}}{\hat{\sigma}^2} + 2p_{\m
 cp <- best_sum$cp # Display the C_p for each value of p
 plot(cp ~ p, ylab = expression({C_p}), 
      xlab = "Number of Predictors", pch = 16)
-abline(0,1) # plots line y=x
+abline(1,1) # plots line y=x + 1 (add 1 since p does not include intercept)
+```
+
+```{r}
+# another way to plot
+# now x-axis includes intercept in count for p
+cp <- best_sum$cp # Display the C_p for each value of p
+plot(cp ~ I(2:8), ylab = expression({C_p}), # include intercept
+     xlab = "Number of Predictors", pch = 16)
+abline(0,1) # plots line y= p  (since p now includes intercept)
 ```
 
 
 ```{r}
 subsets(best, statistic = "cp", legend = FALSE)
-abline(0,1) 
+abline(1,1)  # plots line y=x + 1 (add 1 since p does not include intercept)
 ```
 
 ## Question 8  {#sec-q8}
