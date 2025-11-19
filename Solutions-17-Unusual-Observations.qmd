@@ -484,11 +484,11 @@ The [**Cook’s distance**]{style="color:blue"} is a popular inferential tool be
 
 The Cook’s distance for the $i^{\text{th}}$ observation is
 
-$$D_i=\frac{(\widehat{\mathbf{y}} - \widehat{\mathbf{y}}_{(i)})^T(\widehat{\mathbf{y}} - \widehat{\mathbf{y}}_{(i)})}{p \widehat{\sigma}^2} = \frac{1}{p} r_i^2 \frac{h_{ii}}{1-h_{ii}}$$
+$$D_i=\frac{(\widehat{\mathbf{y}} - \widehat{\mathbf{y}}_{(i)})^T(\widehat{\mathbf{y}} - \widehat{\mathbf{y}}_{(i)})}{p \widehat{\sigma}^2} = \frac{1}{p} r_i^2 \frac{h_{ii}}{(1-h_{ii})^2}$$
 
 where $r_i$ the **standardized residual** or observation $i$ (has mean 0 and variance 1):
 
-$$r_i = \frac{y_i - \widehat{y}_i}{\widehat{\sigma}(1-h_i)}.$$
+$$r_i = \frac{y_i - \widehat{y}_i}{\widehat{\sigma}(\sqrt{1-h_{ii}})}.$$
 
 Notice that the statistic considers both:
 

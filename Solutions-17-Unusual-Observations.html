@@ -3682,9 +3682,9 @@ SE              0.196     0.269
 <h2 class="anchored" data-anchor-id="cooks-distance">Cook’s Distance</h2>
 <p>The <span style="color:blue"><strong>Cook’s distance</strong></span> is a popular inferential tool because it reduces influence information to a single value for each observation.</p>
 <p>The Cook’s distance for the <span class="math inline">\(i^{\text{th}}\)</span> observation is</p>
-<p><span class="math display">\[D_i=\frac{(\widehat{\mathbf{y}} - \widehat{\mathbf{y}}_{(i)})^T(\widehat{\mathbf{y}} - \widehat{\mathbf{y}}_{(i)})}{p \widehat{\sigma}^2} = \frac{1}{p} r_i^2 \frac{h_{ii}}{1-h_{ii}}\]</span></p>
+<p><span class="math display">\[D_i=\frac{(\widehat{\mathbf{y}} - \widehat{\mathbf{y}}_{(i)})^T(\widehat{\mathbf{y}} - \widehat{\mathbf{y}}_{(i)})}{p \widehat{\sigma}^2} = \frac{1}{p} r_i^2 \frac{h_{ii}}{(1-h_{ii})^2}\]</span></p>
 <p>where <span class="math inline">\(r_i\)</span> the <strong>standardized residual</strong> or observation <span class="math inline">\(i\)</span> (has mean 0 and variance 1):</p>
-<p><span class="math display">\[r_i = \frac{y_i - \widehat{y}_i}{\widehat{\sigma}(1-h_i)}.\]</span></p>
+<p><span class="math display">\[r_i = \frac{y_i - \widehat{y}_i}{\widehat{\sigma}(\sqrt{1-h_{ii}})}.\]</span></p>
 <p>Notice that the statistic considers both:</p>
 <ul>
 <li>The standardized residual (measurement of outlier).</li>
