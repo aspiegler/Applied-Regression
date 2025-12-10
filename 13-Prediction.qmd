@@ -509,14 +509,14 @@ We pull multiplication by the constant matrix $(X^TX)^{-1}$ on the left inside t
 
 $$\begin{align}
 \mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( \mathbf{y}^TX\big) \big( (X^TX)^{-1} \big)^T \mathbf{x}_0 && \text{(property of variance)}\\
-&= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big){\color{blue}{((X^TX)^T)^{-1}}} \mathbf{x}_0 && \text{(inverse and transpose commute)} \\
-&= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big){\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 && \text{(prop of transpose of product)}\\
+&= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)((X^TX)^T)^{-1} \mathbf{x}_0 && \text{(inverse and transpose commute)} \\
+&= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)(X^TX)^{-1}\mathbf{x}_0 && \text{(prop of transpose of product)}\\
 \end{align}$$
 
 Next pull multiplication by the constant matrix $X^T$ on the left inside the variance out, and use properties of transpose and inverse of matrix products:
 
 $$\begin{align}
-\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &= \mathbf{x}_0^T(X^TX)^{-1} X^T\mbox{Var}\big( \mathbf{y}\big) X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 
+\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &= \mathbf{x}_0^T(X^TX)^{-1} X^T\mbox{Var}\big( \mathbf{y}\big) X(X^TX)^{-1}\mathbf{x}_0 
 \end{align}$$
 
 Finally, let $\sigma^2 = \mbox{Var}\big( \boldsymbol{\epsilon}\big)$, and we use matrix arithmetic to simplify:
@@ -524,8 +524,8 @@ Finally, let $\sigma^2 = \mbox{Var}\big( \boldsymbol{\epsilon}\big)$, and we use
 
 $$\begin{align}
 \mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) 
-&= \mathbf{x}_0^T(X^TX)^{-1}X^T \mbox{Var}\big( \mathbf{y}\big)X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 \\
-&= \mathbf{x}_0^T(X^TX)^{-1}X^T \sigma^2 X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0\\
-&= \mathbf{x}_0^T(X^TX)^{-1}(X^T X){\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 \sigma^2\\
+&= \mathbf{x}_0^T(X^TX)^{-1}X^T \mbox{Var}\big( \mathbf{y}\big)X(X^TX)^{-1}\mathbf{x}_0 \\
+&= \mathbf{x}_0^T(X^TX)^{-1}X^T \sigma^2 X(X^TX)^{-1}\mathbf{x}_0\\
+&= \mathbf{x}_0^T(X^TX)^{-1}(X^T X)(X^TX)^{-1}\mathbf{x}_0 \sigma^2\\
 &=\mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2.
 \end{align}$$

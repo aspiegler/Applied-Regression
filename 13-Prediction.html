@@ -3613,19 +3613,19 @@ $ gamble &lt;dbl&gt; 0.00, 0.00, 0.00, 7.30, 19.60, 0.10, 1.45, 6.60, 1.70, 0.10
 <p>We pull multiplication by the constant matrix <span class="math inline">\((X^TX)^{-1}\)</span> on the left inside the variance out, and use properties of transpose and inverse of matrix products:</p>
 <p><span class="math display">\[\begin{align}
 \mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( \mathbf{y}^TX\big) \big( (X^TX)^{-1} \big)^T \mathbf{x}_0 &amp;&amp; \text{(property of variance)}\\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big){\color{blue}{((X^TX)^T)^{-1}}} \mathbf{x}_0 &amp;&amp; \text{(inverse and transpose commute)} \\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big){\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 &amp;&amp; \text{(prop of transpose of product)}\\
+&amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)((X^TX)^T)^{-1} \mathbf{x}_0 &amp;&amp; \text{(inverse and transpose commute)} \\
+&amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)(X^TX)^{-1}\mathbf{x}_0 &amp;&amp; \text{(prop of transpose of product)}\\
 \end{align}\]</span></p>
 <p>Next pull multiplication by the constant matrix <span class="math inline">\(X^T\)</span> on the left inside the variance out, and use properties of transpose and inverse of matrix products:</p>
 <p><span class="math display">\[\begin{align}
-\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &amp;= \mathbf{x}_0^T(X^TX)^{-1} X^T\mbox{Var}\big( \mathbf{y}\big) X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0
+\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &amp;= \mathbf{x}_0^T(X^TX)^{-1} X^T\mbox{Var}\big( \mathbf{y}\big) X(X^TX)^{-1}\mathbf{x}_0
 \end{align}\]</span></p>
 <p>Finally, let <span class="math inline">\(\sigma^2 = \mbox{Var}\big( \boldsymbol{\epsilon}\big)\)</span>, and we use matrix arithmetic to simplify:</p>
 <p><span class="math display">\[\begin{align}
 \mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta})
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}X^T \mbox{Var}\big( \mathbf{y}\big)X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 \\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}X^T \sigma^2 X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0\\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}(X^T X){\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 \sigma^2\\
+&amp;= \mathbf{x}_0^T(X^TX)^{-1}X^T \mbox{Var}\big( \mathbf{y}\big)X(X^TX)^{-1}\mathbf{x}_0 \\
+&amp;= \mathbf{x}_0^T(X^TX)^{-1}X^T \sigma^2 X(X^TX)^{-1}\mathbf{x}_0\\
+&amp;= \mathbf{x}_0^T(X^TX)^{-1}(X^T X)(X^TX)^{-1}\mathbf{x}_0 \sigma^2\\
 &amp;=\mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2.
 \end{align}\]</span></p>
 </section>

@@ -3488,16 +3488,15 @@ Caution
 1 354.9733 353.611 356.3356</code></pre>
 </div>
 </div>
-<p>As we move away from the observed data:</p>
+<p>As we move away from the observed data and give estimates for more extreme values of the predictors:</p>
 <ul>
-<li>Prediction intervals become wider .</li>
-<li>Confidence intervals also become wider.</li>
-<li>The widths of the confidence and prediction intervals are closer to each other (since there are less individuals collectively with these characteristics).</li>
-<li>Prediction interval is only slightly wider than the confidence interval.
+<li><span style="color:blue">Prediction intervals stay the same width.</span></li>
+<li><span style="color:red">Confidence intervals become wider.</span>
 <ul>
-<li>The uncertainty of the prediction error depends on the new error <span class="math inline">\(\epsilon\)</span> in the individual prediction.</li>
-<li>The uncertainty of the confidence interval is due to the estimate for <span class="math inline">\(\boldsymbol\beta\)</span>, which is the same for typical and exceptional observations.</li>
+<li>Widths of prediction and confidence intervals are more similar at extreme observations and more distinct at typical observations.</li>
 </ul></li>
+<li>The uncertainty of the prediction error depends on the new error <span class="math inline">\(\epsilon\)</span> in the individual prediction.</li>
+<li>The uncertainty of the confidence intervalis due to the estimate for <span class="math inline">\(\boldsymbol\beta\)</span>, which is the same for typical and exceptional observations.</li>
 </ul>
 </section>
 </section>
@@ -3704,32 +3703,19 @@ $ gamble &lt;dbl&gt; 0.00, 0.00, 0.00, 7.30, 19.60, 0.10, 1.45, 6.60, 1.70, 0.10
 <p>We pull multiplication by the constant matrix <span class="math inline">\((X^TX)^{-1}\)</span> on the left inside the variance out, and use properties of transpose and inverse of matrix products:</p>
 <p><span class="math display">\[\begin{align}
 \mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( \mathbf{y}^TX\big) \big( (X^TX)^{-1} \big)^T \mathbf{x}_0 &amp;&amp; \text{(property of variance)}\\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big){\color{blue}{((X^TX)^T)^{-1}}} \mathbf{x}_0 &amp;&amp; \text{(inverse and transpose commute)} \\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big){\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 &amp;&amp; \text{(prop of transpose of product)}\\
+&amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)((X^TX)^T)^{-1} \mathbf{x}_0 &amp;&amp; \text{(inverse and transpose commute)} \\
+&amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)(X^TX)^{-1}\mathbf{x}_0 &amp;&amp; \text{(prop of transpose of product)}\\
 \end{align}\]</span></p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>sdfsda</p>
-</div>
-</div>
 <p>Next pull multiplication by the constant matrix <span class="math inline">\(X^T\)</span> on the left inside the variance out, and use properties of transpose and inverse of matrix products:</p>
 <p><span class="math display">\[\begin{align}
-\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &amp;= \mathbf{x}_0^T(X^TX)^{-1} X^T\mbox{Var}\big( \mathbf{y}\big) X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0
+\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &amp;= \mathbf{x}_0^T(X^TX)^{-1} X^T\mbox{Var}\big( \mathbf{y}\big) X(X^TX)^{-1}\mathbf{x}_0
 \end{align}\]</span></p>
 <p>Finally, let <span class="math inline">\(\sigma^2 = \mbox{Var}\big( \boldsymbol{\epsilon}\big)\)</span>, and we use matrix arithmetic to simplify:</p>
 <p><span class="math display">\[\begin{align}
 \mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta})
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}X^T \mbox{Var}\big( \mathbf{y}\big)X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 \\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}X^T \sigma^2 X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0\\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}(X^T X){\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 \sigma^2\\
+&amp;= \mathbf{x}_0^T(X^TX)^{-1}X^T \mbox{Var}\big( \mathbf{y}\big)X(X^TX)^{-1}\mathbf{x}_0 \\
+&amp;= \mathbf{x}_0^T(X^TX)^{-1}X^T \sigma^2 X(X^TX)^{-1}\mathbf{x}_0\\
+&amp;= \mathbf{x}_0^T(X^TX)^{-1}(X^T X)(X^TX)^{-1}\mathbf{x}_0 \sigma^2\\
 &amp;=\mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2.
 \end{align}\]</span></p>
 </section>

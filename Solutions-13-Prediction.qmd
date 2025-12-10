@@ -370,14 +370,13 @@ predict(lmod, new=soobahroo_95, interval = "prediction")
 predict(lmod, new=soobahroo_95, interval = "confidence") 
 ```
 
-As we move away from the observed data:
+As we move away from the observed data and give estimates for more extreme values of the predictors:
 
-- Prediction intervals become wider .
-- Confidence intervals also become wider.
-- The widths of the confidence and prediction intervals are closer to each other (since there are less individuals collectively with these characteristics).
-- Prediction interval is only slightly wider than the confidence interval.
-  - The uncertainty of the prediction error depends on the new error $\epsilon$ in the individual prediction.
-  - The uncertainty of the confidence interval is due to the estimate for $\boldsymbol\beta$, which is the same for typical and exceptional observations.
+- [Prediction intervals stay the same width.]{style="color:blue"}
+- [Confidence intervals become wider.]{style="color:red"}
+  - Widths of prediction and confidence intervals are more similar at extreme observations and more distinct at typical observations.
+- The uncertainty of the prediction error depends on the new error $\epsilon$ in the individual prediction.
+- The uncertainty of the confidence intervalis due to the estimate for $\boldsymbol\beta$, which is the same for typical and exceptional observations.
 
 
 # Sources of Uncertainty
@@ -555,14 +554,14 @@ We pull multiplication by the constant matrix $(X^TX)^{-1}$ on the left inside t
 
 $$\begin{align}
 \mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( \mathbf{y}^TX\big) \big( (X^TX)^{-1} \big)^T \mathbf{x}_0 && \text{(property of variance)}\\
-&= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big){\color{blue}{((X^TX)^T)^{-1}}} \mathbf{x}_0 && \text{(inverse and transpose commute)} \\
-&= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big){\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 && \text{(prop of transpose of product)}\\
+&= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)((X^TX)^T)^{-1} \mathbf{x}_0 && \text{(inverse and transpose commute)} \\
+&= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)(X^TX)^{-1}\mathbf{x}_0 && \text{(prop of transpose of product)}\\
 \end{align}$$
 
 Next pull multiplication by the constant matrix $X^T$ on the left inside the variance out, and use properties of transpose and inverse of matrix products:
 
 $$\begin{align}
-\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &= \mathbf{x}_0^T(X^TX)^{-1} X^T\mbox{Var}\big( \mathbf{y}\big) X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 
+\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &= \mathbf{x}_0^T(X^TX)^{-1} X^T\mbox{Var}\big( \mathbf{y}\big) X(X^TX)^{-1}\mathbf{x}_0 
 \end{align}$$
 
 Finally, let $\sigma^2 = \mbox{Var}\big( \boldsymbol{\epsilon}\big)$, and we use matrix arithmetic to simplify:
@@ -570,10 +569,8 @@ Finally, let $\sigma^2 = \mbox{Var}\big( \boldsymbol{\epsilon}\big)$, and we use
 
 $$\begin{align}
 \mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) 
-&= \mathbf{x}_0^T(X^TX)^{-1}X^T \mbox{Var}\big( \mathbf{y}\big)X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 \\
-&= \mathbf{x}_0^T(X^TX)^{-1}X^T \sigma^2 X{\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0\\
-&= \mathbf{x}_0^T(X^TX)^{-1}(X^T X){\color{blue}{(X^TX)^{-1}}}\mathbf{x}_0 \sigma^2\\
+&= \mathbf{x}_0^T(X^TX)^{-1}X^T \mbox{Var}\big( \mathbf{y}\big)X(X^TX)^{-1}\mathbf{x}_0 \\
+&= \mathbf{x}_0^T(X^TX)^{-1}X^T \sigma^2 X(X^TX)^{-1}\mathbf{x}_0\\
+&= \mathbf{x}_0^T(X^TX)^{-1}(X^T X)(X^TX)^{-1}\mathbf{x}_0 \sigma^2\\
 &=\mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2.
 \end{align}$$
-
-
