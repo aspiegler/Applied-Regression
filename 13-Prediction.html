@@ -3584,49 +3584,51 @@ $ gamble &lt;dbl&gt; 0.00, 0.00, 0.00, 7.30, 19.60, 0.10, 1.45, 6.60, 1.70, 0.10
 </section>
 <section id="sec-appenda" class="level1">
 <h1>Appendix A: Standard Errors</h1>
+<p>We have previously shown the OLS estimator for <span class="math inline">\(\widehat{\boldsymbol{\beta}}\)</span> is <span class="math inline">\((X^TX)^{-1}X^T \mathbf{y}\)</span>, and thus</p>
+<p><span class="math display">\[\begin{align}
+\mbox{Var} (\widehat{\boldsymbol\beta}) &amp;= \mbox{Var} ( (X^T X)^{-1} X^T \mathbf{y}) \\
+&amp;= \bigg( (X^T X)^{-1} X^T \bigg) \mbox{Var} ( \mathbf{y}) \bigg( (X^T X)^{-1} X^T  \bigg)^T\\
+&amp;= (X^T X)^{-1} X^T \ \mbox{Var} \ ( X \boldsymbol{\beta} + \boldsymbol{\epsilon} ) X (X^T X)^{-1} \\
+&amp;= (X^T X)^{-1} X^T \ \mbox{Var} ( \boldsymbol{\epsilon} ) \ X (X^T X)^{-1} \\
+&amp;= (X^TX)^{-1} X^T \sigma^2 X (X^T X)^{-1}\\
+&amp;= (X^TX)^{-1} X^T X (X^T X)^{-1} \sigma^2\\
+&amp;= (X^T X)^{-1} \sigma^2,
+\end{align}\]</span></p>
+<p>where <span class="math inline">\(\mbox{Var}( \boldsymbol{\epsilon} ) = \sigma^2\)</span> denotes the variance of the error which is a scalar. Thus, <span class="math inline">\(\mbox{Var} (\widehat{\boldsymbol\beta}) = (X^T X)^{-1} \sigma^2\)</span> is a <span class="math inline">\(p \times p\)</span> symmetric matrix.</p>
+<ul>
+<li>The <span class="math inline">\(i^{\mbox{th}}\)</span> diagonal entry of <span class="math inline">\(\mbox{Var} (\widehat{\boldsymbol\beta})\)</span> gives <span class="math inline">\(\mbox{Var}(\widehat{\beta}_i)\)</span>.</li>
+<li>The <span class="math inline">\(ij^{\mbox{th}}\)</span> off-diagonal entry of <span class="math inline">\(\mbox{Var} (\widehat{\boldsymbol\beta})\)</span> gives <span class="math inline">\(\mbox{Cov}(\widehat{\beta}_i, \widehat{\beta}_j)\)</span>.</li>
+</ul>
+<p>We apply the result that <span class="math inline">\({\color{blue}{\mbox{Var} (\widehat{\boldsymbol\beta}) = (X^T X)^{-1} \sigma^2}}\)</span> in the proofs below.</p>
 <section id="sec-append-pred" class="level2">
 <h2 class="anchored" data-anchor-id="sec-append-pred">Prediction Interval Standard Error</h2>
 <p>Taking the variance of a difference of two random variables (which we do not assume are independent), we have</p>
 <p><span class="math display">\[\mbox{Var}(y_0-\widehat{y}_0) = \mbox{Var}(y_0) + \mbox{Var}(\widehat{y}_0) - 2 \mbox{Cov}(y_0, \widehat{y}_0)\]</span></p>
 <p>We have <span class="math inline">\(\mbox{Cov}(y_0, \widehat{y}_0)=0\)</span> because <span class="math inline">\(y_0\)</span> and <span class="math inline">\(\widehat{y}_0\)</span> are independent. They are independent because <span class="math inline">\(\widehat{y}_0\)</span> is estimated using <span class="math inline">\(y_1, \ldots , y_n\)</span> and <span class="math inline">\(y_0\)</span> is a new observation independent of them. Thus,</p>
-<p><span class="math display">\[\mbox{Var}(y_0-\widehat{y}_0) = \mbox{Var}(y_0) +\mbox{Var}(\widehat{y}_0).\]</span></p>
+<p><span class="math display">\[\mbox{Var}(y_0-\widehat{y}_0) = \mbox{Var}(y_0) +\mbox{Var}(\widehat{y}_0),\]</span></p>
 <p>Since <span class="math inline">\(\mathbf{x}_0^T \boldsymbol{\beta}\)</span> is a constant, we have</p>
 <p><span class="math display">\[\mbox{Var} (y_0) = \mbox{Var} (\mathbf{x}_0^T \boldsymbol\beta + \epsilon) = \mbox{Var} (\epsilon) = \sigma^2 .\]</span> Taking the variance of the predicted value, we have</p>
 <p><span class="math display">\[\mbox{Var} (\widehat{y}_0) = \mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) = \mathbf{x}_0^T \mbox{Var} (\widehat{\boldsymbol\beta}) \mathbf{x}_0.\]</span></p>
-<p>We have previously shown</p>
-<p><span class="math display">\[\mbox{Var} (\widehat{\boldsymbol\beta}) = \mbox{Var} ( (X^T X)^{-1} X^T \mathbf{y}) = (X^TX)^{-1} \sigma^2.\]</span></p>
-<p>Thus, we have</p>
-<p><span class="math display">\[\mbox{Var} (\widehat{y}_0) = \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2 ,\]</span></p>
-<p>which finally gives</p>
+<p>Using the result <span class="math inline">\(\mbox{Var} (\widehat{\boldsymbol\beta}) = (X^T X)^{-1} \sigma^2\)</span>, we have</p>
+<p><span class="math display">\[\begin{align}
+\mbox{Var} (\widehat{y}_0) &amp;=  \mathbf{x}_0^T {\color{blue}{\mbox{Var} (\widehat{\boldsymbol\beta})}} \mathbf{x}_0 \\
+&amp;= \mathbf{x}_0^T {\color{blue}{(X^T X)^{-1} \sigma^2 }} \mathbf{x}_0 \\
+&amp;= \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2.
+\end{align}\]</span></p>
+<p>This finally gives</p>
 <p><span class="math display">\[\mbox{Var}(y_0-\widehat{y}_0) = \mbox{Var}(y_0) + \mbox{Var}(\widehat{y}_0) = \sigma^2 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2 .\]</span></p>
 <p>We can simplify and summarize the result above as:</p>
-<p><span class="math display">\[\mbox{Var}(y_0-\widehat{y}_0) = (1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0) \sigma^2  \quad \text{or} \quad \mbox{sd}(y_0-\widehat{y}_0) = \sigma \ \sqrt{1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0)} .\]</span></p>
+<p><span class="math display">\[\mbox{Var}(y_0-\widehat{y}_0) = (1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0) \sigma^2  \quad \text{or} \quad \mbox{sd}(y_0-\widehat{y}_0) = \sigma \ \sqrt{1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0} .\]</span></p>
 </section>
 <section id="confidence-interval-standard-error" class="level2">
 <h2 class="anchored" data-anchor-id="confidence-interval-standard-error">Confidence Interval Standard Error</h2>
 <p>We want to determine how much variability is the estimate for the mean response <span class="math inline">\(\widehat{E}( y | \mathbb{X} = \mathbf{x}_0) = \mathbf{x}_0^T \widehat{\boldsymbol\beta}\)</span>. We have</p>
 <p><span class="math display">\[\mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) = \mathbf{x}_0^T \mbox{Var}(\widehat{\boldsymbol\beta})\mathbf{x}_0 .\]</span></p>
-<p>Again, recall we have previously shown</p>
-<p><span class="math display">\[\mbox{Var} (\widehat{\boldsymbol\beta}) = \mbox{Var} ( (X^T X)^{-1} X^T \mathbf{y}) = (X^TX)^{-1} \sigma^2,\]</span></p>
-<p>which gives</p>
-<p><span class="math display">\[\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) = \mathbf{x}_0^T\mbox{Var}\big((X^TX)^{-1} \mathbf{y}^TX\big)\mathbf{x}_0.\]</span></p>
-<p>We pull multiplication by the constant matrix <span class="math inline">\((X^TX)^{-1}\)</span> on the left inside the variance out, and use properties of transpose and inverse of matrix products:</p>
+<p>Again, using the result <span class="math inline">\(\mbox{Var} (\widehat{\boldsymbol\beta}) = (X^T X)^{-1} \sigma^2\)</span>, we have</p>
 <p><span class="math display">\[\begin{align}
-\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( \mathbf{y}^TX\big) \big( (X^TX)^{-1} \big)^T \mathbf{x}_0 &amp;&amp; \text{(property of variance)}\\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)((X^TX)^T)^{-1} \mathbf{x}_0 &amp;&amp; \text{(inverse and transpose commute)} \\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)(X^TX)^{-1}\mathbf{x}_0 &amp;&amp; \text{(prop of transpose of product)}\\
-\end{align}\]</span></p>
-<p>Next pull multiplication by the constant matrix <span class="math inline">\(X^T\)</span> on the left inside the variance out, and use properties of transpose and inverse of matrix products:</p>
-<p><span class="math display">\[\begin{align}
-\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &amp;= \mathbf{x}_0^T(X^TX)^{-1} X^T\mbox{Var}\big( \mathbf{y}\big) X(X^TX)^{-1}\mathbf{x}_0
-\end{align}\]</span></p>
-<p>Finally, let <span class="math inline">\(\sigma^2 = \mbox{Var}\big( \boldsymbol{\epsilon}\big)\)</span>, and we use matrix arithmetic to simplify:</p>
-<p><span class="math display">\[\begin{align}
-\mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta})
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}X^T \mbox{Var}\big( \mathbf{y}\big)X(X^TX)^{-1}\mathbf{x}_0 \\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}X^T \sigma^2 X(X^TX)^{-1}\mathbf{x}_0\\
-&amp;= \mathbf{x}_0^T(X^TX)^{-1}(X^T X)(X^TX)^{-1}\mathbf{x}_0 \sigma^2\\
-&amp;=\mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2.
+\mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) &amp;= \mathbf{x}_0^T {\color{blue}{\mbox{Var}(\widehat{\boldsymbol\beta})}}\mathbf{x}_0 \\
+&amp;= \mathbf{x}_0^T {\color{blue}{(X^T X)^{-1} \sigma^2}} \mathbf{x}_0 \\
+&amp;= \mathbf{x}_0^T (X^T X)^{-1} \mathbf{x}_0 \sigma^2
 \end{align}\]</span></p>
 </section>
 </section>

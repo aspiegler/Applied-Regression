@@ -456,6 +456,25 @@ female_05 <- as.data.frame(t(female_05_temp))
 
 # Appendix A: Standard Errors {#sec-appenda}
 
+We have previously shown the OLS estimator for $\widehat{\boldsymbol{\beta}}$ is $(X^TX)^{-1}X^T \mathbf{y}$, and thus
+
+$$\begin{align}
+\mbox{Var} (\widehat{\boldsymbol\beta}) &= \mbox{Var} ( (X^T X)^{-1} X^T \mathbf{y}) \\
+&= \bigg( (X^T X)^{-1} X^T \bigg) \mbox{Var} ( \mathbf{y}) \bigg( (X^T X)^{-1} X^T  \bigg)^T\\
+&= (X^T X)^{-1} X^T \ \mbox{Var} \ ( X \boldsymbol{\beta} + \boldsymbol{\epsilon} ) X (X^T X)^{-1} \\
+&= (X^T X)^{-1} X^T \ \mbox{Var} ( \boldsymbol{\epsilon} ) \ X (X^T X)^{-1} \\
+&= (X^TX)^{-1} X^T \sigma^2 X (X^T X)^{-1}\\
+&= (X^TX)^{-1} X^T X (X^T X)^{-1} \sigma^2\\
+&= (X^T X)^{-1} \sigma^2,
+\end{align}$$
+
+
+where $\mbox{Var}( \boldsymbol{\epsilon} ) = \sigma^2$ denotes the variance of the error which is a scalar. Thus, $\mbox{Var} (\widehat{\boldsymbol\beta}) = (X^T X)^{-1} \sigma^2$ is a $p \times p$ symmetric matrix.
+
+- The $i^{\mbox{th}}$ diagonal entry of $\mbox{Var} (\widehat{\boldsymbol\beta})$ gives $\mbox{Var}(\widehat{\beta}_i)$.
+- The $ij^{\mbox{th}}$ off-diagonal entry of $\mbox{Var} (\widehat{\boldsymbol\beta})$ gives $\mbox{Cov}(\widehat{\beta}_i, \widehat{\beta}_j)$.
+
+We apply the result that ${\color{blue}{\mbox{Var} (\widehat{\boldsymbol\beta}) = (X^T X)^{-1} \sigma^2}}$ in the proofs below.
 
 ## Prediction Interval Standard Error {#sec-append-pred}
 
@@ -465,7 +484,7 @@ $$\mbox{Var}(y_0-\widehat{y}_0) = \mbox{Var}(y_0) + \mbox{Var}(\widehat{y}_0) - 
 
 We have $\mbox{Cov}(y_0, \widehat{y}_0)=0$ because $y_0$ and $\widehat{y}_0$ are independent. They are independent because $\widehat{y}_0$ is estimated using $y_1, \ldots , y_n$ and $y_0$ is a new observation independent of them. Thus, 
 
-$$\mbox{Var}(y_0-\widehat{y}_0) = \mbox{Var}(y_0) +\mbox{Var}(\widehat{y}_0).$$ 
+$$\mbox{Var}(y_0-\widehat{y}_0) = \mbox{Var}(y_0) +\mbox{Var}(\widehat{y}_0),$$ 
 
 Since $\mathbf{x}_0^T \boldsymbol{\beta}$ is a constant, we have
 
@@ -474,21 +493,21 @@ Taking the variance of the predicted value, we have
 
 $$\mbox{Var} (\widehat{y}_0) = \mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) = \mathbf{x}_0^T \mbox{Var} (\widehat{\boldsymbol\beta}) \mathbf{x}_0.$$
 
-We have previously shown
+Using the result $\mbox{Var} (\widehat{\boldsymbol\beta}) = (X^T X)^{-1} \sigma^2$, we have
 
-$$\mbox{Var} (\widehat{\boldsymbol\beta}) = \mbox{Var} ( (X^T X)^{-1} X^T \mathbf{y}) = (X^TX)^{-1} \sigma^2.$$
+$$\begin{align}
+\mbox{Var} (\widehat{y}_0) &=  \mathbf{x}_0^T {\color{blue}{\mbox{Var} (\widehat{\boldsymbol\beta})}} \mathbf{x}_0 \\
+&= \mathbf{x}_0^T {\color{blue}{(X^T X)^{-1} \sigma^2 }} \mathbf{x}_0 \\
+&= \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2.
+\end{align}$$
 
-Thus, we have 
-
-$$\mbox{Var} (\widehat{y}_0) = \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2 ,$$
-
-which finally gives
+This finally gives
 
 $$\mbox{Var}(y_0-\widehat{y}_0) = \mbox{Var}(y_0) + \mbox{Var}(\widehat{y}_0) = \sigma^2 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2 .$$
 
 We can simplify and summarize the result above as:
 
-$$\mbox{Var}(y_0-\widehat{y}_0) = (1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0) \sigma^2  \quad \text{or} \quad \mbox{sd}(y_0-\widehat{y}_0) = \sigma \ \sqrt{1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0)} .$$
+$$\mbox{Var}(y_0-\widehat{y}_0) = (1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0) \sigma^2  \quad \text{or} \quad \mbox{sd}(y_0-\widehat{y}_0) = \sigma \ \sqrt{1 + \mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0} .$$
 
 
 ## Confidence Interval Standard Error
@@ -497,35 +516,11 @@ We want to determine how much variability is the estimate for the mean response 
 
 $$\mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) = \mathbf{x}_0^T \mbox{Var}(\widehat{\boldsymbol\beta})\mathbf{x}_0 .$$
 
-Again, recall we have previously shown
-
-$$\mbox{Var} (\widehat{\boldsymbol\beta}) = \mbox{Var} ( (X^T X)^{-1} X^T \mathbf{y}) = (X^TX)^{-1} \sigma^2,$$
-
-which gives
-
-$$\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) = \mathbf{x}_0^T\mbox{Var}\big((X^TX)^{-1} \mathbf{y}^TX\big)\mathbf{x}_0.$$
-
-We pull multiplication by the constant matrix $(X^TX)^{-1}$ on the left inside the variance out, and use properties of transpose and inverse of matrix products:
-
-$$\begin{align}
-\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( \mathbf{y}^TX\big) \big( (X^TX)^{-1} \big)^T \mathbf{x}_0 && \text{(property of variance)}\\
-&= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)((X^TX)^T)^{-1} \mathbf{x}_0 && \text{(inverse and transpose commute)} \\
-&= \mathbf{x}_0^T(X^TX)^{-1}\mbox{Var}\big( X^T\mathbf{y}\big)(X^TX)^{-1}\mathbf{x}_0 && \text{(prop of transpose of product)}\\
-\end{align}$$
-
-Next pull multiplication by the constant matrix $X^T$ on the left inside the variance out, and use properties of transpose and inverse of matrix products:
-
-$$\begin{align}
-\mbox{Var}(\mathbf{x}_0^T  \widehat{\boldsymbol\beta}) &= \mathbf{x}_0^T(X^TX)^{-1} X^T\mbox{Var}\big( \mathbf{y}\big) X(X^TX)^{-1}\mathbf{x}_0 
-\end{align}$$
-
-Finally, let $\sigma^2 = \mbox{Var}\big( \boldsymbol{\epsilon}\big)$, and we use matrix arithmetic to simplify:
+Again, using the result $\mbox{Var} (\widehat{\boldsymbol\beta}) = (X^T X)^{-1} \sigma^2$, we have
 
 
 $$\begin{align}
-\mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) 
-&= \mathbf{x}_0^T(X^TX)^{-1}X^T \mbox{Var}\big( \mathbf{y}\big)X(X^TX)^{-1}\mathbf{x}_0 \\
-&= \mathbf{x}_0^T(X^TX)^{-1}X^T \sigma^2 X(X^TX)^{-1}\mathbf{x}_0\\
-&= \mathbf{x}_0^T(X^TX)^{-1}(X^T X)(X^TX)^{-1}\mathbf{x}_0 \sigma^2\\
-&=\mathbf{x}_0^T(X^TX)^{-1}\mathbf{x}_0 \sigma^2.
+\mbox{Var}(\mathbf{x}_0^T \widehat{\boldsymbol\beta}) &= \mathbf{x}_0^T {\color{blue}{\mbox{Var}(\widehat{\boldsymbol\beta})}}\mathbf{x}_0 \\
+&= \mathbf{x}_0^T {\color{blue}{(X^T X)^{-1} \sigma^2}} \mathbf{x}_0 \\
+&= \mathbf{x}_0^T (X^T X)^{-1} \mathbf{x}_0 \sigma^2
 \end{align}$$
