@@ -95,7 +95,10 @@ Two aspects to variable selection are:
 - The *strategy* used to search for the "optimal" model.
 - The *criterion* used to compare models.
 
-# Strategies
+# Search Methods
+
+In regression analysis, [**greedy**]{style="color:blue"} search methods are a class of algorithms that make a sequence of locally optimal choices in the hope of finding a good (often not globally optimal) solution for the overall problem. They are widely used for tasks like variable selection. 
+
 
 ## Backward Elimination
 
@@ -181,7 +184,9 @@ We must respect hierarchy in models when it is naturally present.
   - For the model $y=\beta_0+\beta_1 X+\beta_2 X^2+\epsilon$, the maximum/minimum value can occur anywhere along the real line (depending on what the data suggest).
 - If we fit the model $y=\beta_0+\beta_1 X+\beta_2 X^2+\epsilon$ and $\beta_1$ is not significant, it would NOT make sense to remove $X$ from the model but still keep $X^2$.
 
-# Akaike’s Information Criterion (AIC)
+# Search Criteria 
+
+## Akaike’s Information Criterion (AIC)
 
 [**Akaike’s Information Criterion (AIC)**]{style="color:blue"} and the [**Bayesian Information Criterion (BIC)**]{style="color:blue"} are two information-based criteria for variable selection.
 
@@ -206,7 +211,7 @@ where:
 - $\mbox{RSS}_{\mathcal{M}}$ is the RSS of model $\mathcal{M}$. 
 
 
-## Interpreting AIC
+### Interpreting AIC
 
 The formula for AIC is derived from a metric that can be used to measure how far a model is from the "true" model.
 
@@ -220,7 +225,7 @@ The formula for AIC is derived from a metric that can be used to measure how far
   - AIC provides a balance between fit and simplicity!
 - We choose the model the **minimizes the AIC**.
 
-# Exhaustive Model Searches
+
 
 ## The `step()` Function`
 
@@ -307,9 +312,14 @@ step_reg$anova$AIC
 ```
 
 
+
+# Exhaustive Model Searches
+
+[**Exhaustive search**]{style="color:blue"} in regression is a brute-force variable selection technique that evaluates every possible combination of predictors (consider all possible $2^{p}-1$ subsets given $p$ predictors) to guarantee finding the optimal model based on criteria. 
+
 ## The `regsubsets` Function from `leaps` 
 
-The `leaps` package searches all possible combinations of predictors. 
+The `leaps` package performs an exhaustive searches on all possible combinations of predictors. 
 
 - For each value of $p$ (number of predictors), it finds the variables that give the minimum RSS.
 - For each value of $p$, the model that minimizes the RSS will have the smallest AIC, BIC, adjusted $R_a^2$, and Mallow’s $C_p$ (we'll discuss these soon).

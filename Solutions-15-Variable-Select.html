@@ -3056,7 +3056,7 @@ vertical-align: -.125em;
   <li><a href="#sec-q2" id="toc-sec-q2" class="nav-link" data-scroll-target="#sec-q2">Question 2</a></li>
   </ul></li>
   <li><a href="#variable-selection" id="toc-variable-selection" class="nav-link" data-scroll-target="#variable-selection">Variable Selection</a></li>
-  <li><a href="#strategies" id="toc-strategies" class="nav-link" data-scroll-target="#strategies">Strategies</a>
+  <li><a href="#search-methods" id="toc-search-methods" class="nav-link" data-scroll-target="#search-methods">Search Methods</a>
   <ul class="collapse">
   <li><a href="#backward-elimination" id="toc-backward-elimination" class="nav-link" data-scroll-target="#backward-elimination">Backward Elimination</a></li>
   <li><a href="#sec-q3" id="toc-sec-q3" class="nav-link" data-scroll-target="#sec-q3">Question 3</a></li>
@@ -3064,14 +3064,14 @@ vertical-align: -.125em;
   <li><a href="#stepwise-regression" id="toc-stepwise-regression" class="nav-link" data-scroll-target="#stepwise-regression">Stepwise Regression</a></li>
   <li><a href="#model-hierarchy" id="toc-model-hierarchy" class="nav-link" data-scroll-target="#model-hierarchy">Model Hierarchy</a></li>
   </ul></li>
-  <li><a href="#akaikes-information-criterion-aic" id="toc-akaikes-information-criterion-aic" class="nav-link" data-scroll-target="#akaikes-information-criterion-aic">Akaike’s Information Criterion (AIC)</a>
+  <li><a href="#search-criteria" id="toc-search-criteria" class="nav-link" data-scroll-target="#search-criteria">Search Criteria</a>
   <ul class="collapse">
-  <li><a href="#interpreting-aic" id="toc-interpreting-aic" class="nav-link" data-scroll-target="#interpreting-aic">Interpreting AIC</a></li>
+  <li><a href="#akaikes-information-criterion-aic" id="toc-akaikes-information-criterion-aic" class="nav-link" data-scroll-target="#akaikes-information-criterion-aic">Akaike’s Information Criterion (AIC)</a></li>
+  <li><a href="#the-step-function" id="toc-the-step-function" class="nav-link" data-scroll-target="#the-step-function">The <code>step()</code> Function`</a></li>
+  <li><a href="#sec-q4" id="toc-sec-q4" class="nav-link" data-scroll-target="#sec-q4">Question 4</a></li>
   </ul></li>
   <li><a href="#exhaustive-model-searches" id="toc-exhaustive-model-searches" class="nav-link" data-scroll-target="#exhaustive-model-searches">Exhaustive Model Searches</a>
   <ul class="collapse">
-  <li><a href="#the-step-function" id="toc-the-step-function" class="nav-link" data-scroll-target="#the-step-function">The <code>step()</code> Function`</a></li>
-  <li><a href="#sec-q4" id="toc-sec-q4" class="nav-link" data-scroll-target="#sec-q4">Question 4</a></li>
   <li><a href="#the-regsubsets-function-from-leaps" id="toc-the-regsubsets-function-from-leaps" class="nav-link" data-scroll-target="#the-regsubsets-function-from-leaps">The <code>regsubsets</code> Function from <code>leaps</code></a></li>
   <li><a href="#sec-q5" id="toc-sec-q5" class="nav-link" data-scroll-target="#sec-q5">Question 5</a></li>
   <li><a href="#sec-q6" id="toc-sec-q6" class="nav-link" data-scroll-target="#sec-q6">Question 6</a></li>
@@ -3213,8 +3213,9 @@ vertical-align: -.125em;
 <li>The <em>criterion</em> used to compare models.</li>
 </ul>
 </section>
-<section id="strategies" class="level1">
-<h1>Strategies</h1>
+<section id="search-methods" class="level1">
+<h1>Search Methods</h1>
+<p>In regression analysis, <span style="color:blue"><strong>greedy</strong></span> search methods are a class of algorithms that make a sequence of locally optimal choices in the hope of finding a good (often not globally optimal) solution for the overall problem. They are widely used for tasks like variable selection.</p>
 <section id="backward-elimination" class="level2">
 <h2 class="anchored" data-anchor-id="backward-elimination">Backward Elimination</h2>
 <p><span style="color:blue"><strong>Backward elimination</strong></span> is the simplest of all variable selection procedures. We start with all predictors and remove the least significant predictor. Stop once all the noise has been removed.</p>
@@ -3437,8 +3438,10 @@ F-statistic: 25.43 on 1 and 48 DF,  p-value: 6.969e-06</code></pre>
 </ul>
 </section>
 </section>
-<section id="akaikes-information-criterion-aic" class="level1">
-<h1>Akaike’s Information Criterion (AIC)</h1>
+<section id="search-criteria" class="level1">
+<h1>Search Criteria</h1>
+<section id="akaikes-information-criterion-aic" class="level2">
+<h2 class="anchored" data-anchor-id="akaikes-information-criterion-aic">Akaike’s Information Criterion (AIC)</h2>
 <p><span style="color:blue"><strong>Akaike’s Information Criterion (AIC)</strong></span> and the <span style="color:blue"><strong>Bayesian Information Criterion (BIC)</strong></span> are two information-based criteria for variable selection.</p>
 <p>First we will take a look at AIC. Let <span class="math inline">\(\mathcal{M}\)</span> is denote the model. We have</p>
 <p><span class="math display">\[\mbox{AIC}(\mathcal{M})=-2L(\mathcal{M})+2p_{\mathcal{M}},\]</span></p>
@@ -3457,8 +3460,8 @@ F-statistic: 25.43 on 1 and 48 DF,  p-value: 6.969e-06</code></pre>
 </ul></li>
 <li><span class="math inline">\(\mbox{RSS}_{\mathcal{M}}\)</span> is the RSS of model <span class="math inline">\(\mathcal{M}\)</span>.</li>
 </ul>
-<section id="interpreting-aic" class="level2">
-<h2 class="anchored" data-anchor-id="interpreting-aic">Interpreting AIC</h2>
+<section id="interpreting-aic" class="level3">
+<h3 class="anchored" data-anchor-id="interpreting-aic">Interpreting AIC</h3>
 <p>The formula for AIC is derived from a metric that can be used to measure how far a model is from the “true” model.</p>
 <ul>
 <li>As <span class="math inline">\(\mbox{RSS}_{\mathcal{M}}\)</span> gets smaller (better fit), <span class="math inline">\(n\log{(\mbox{RSS}_{\mathcal{M}}/n)}\)</span> gets smaller (becomes more negative).
@@ -3479,8 +3482,6 @@ F-statistic: 25.43 on 1 and 48 DF,  p-value: 6.969e-06</code></pre>
 </ul>
 </section>
 </section>
-<section id="exhaustive-model-searches" class="level1">
-<h1>Exhaustive Model Searches</h1>
 <section id="the-step-function" class="level2">
 <h2 class="anchored" data-anchor-id="the-step-function">The <code>step()</code> Function`</h2>
 <p>In <code>base</code> R, we can use the function <code>step(object, scope, direction = &quot;both&quot;)</code> to find the variables that give the minimum AIC using backward, forward, and stepwise elimination methods.</p>
@@ -3686,9 +3687,13 @@ Coefficients:
 </div>
 </section>
 </section>
+</section>
+<section id="exhaustive-model-searches" class="level1">
+<h1>Exhaustive Model Searches</h1>
+<p><span style="color:blue"><strong>Exhaustive search</strong></span> in regression is a brute-force variable selection technique that evaluates every possible combination of predictors (consider all possible <span class="math inline">\(2^{p}-1\)</span> subsets given <span class="math inline">\(p\)</span> predictors) to guarantee finding the optimal model based on criteria.</p>
 <section id="the-regsubsets-function-from-leaps" class="level2">
 <h2 class="anchored" data-anchor-id="the-regsubsets-function-from-leaps">The <code>regsubsets</code> Function from <code>leaps</code></h2>
-<p>The <code>leaps</code> package searches all possible combinations of predictors.</p>
+<p>The <code>leaps</code> package performs an exhaustive searches on all possible combinations of predictors.</p>
 <ul>
 <li>For each value of <span class="math inline">\(p\)</span> (number of predictors), it finds the variables that give the minimum RSS.</li>
 <li>For each value of <span class="math inline">\(p\)</span>, the model that minimizes the RSS will have the smallest AIC, BIC, adjusted <span class="math inline">\(R_a^2\)</span>, and Mallow’s <span class="math inline">\(C_p\)</span> (we’ll discuss these soon).</li>
@@ -4088,11 +4093,11 @@ Area                  A</code></pre>
 
 No pre-processing
 Resampling: Cross-Validated (10 fold) 
-Summary of sample sizes: 44, 45, 46, 44, 45, 46, ... 
+Summary of sample sizes: 44, 44, 45, 45, 45, 45, ... 
 Resampling results:
 
   RMSE       Rsquared   MAE      
-  0.8640118  0.6398721  0.7310294
+  0.8625758  0.7023877  0.7145175
 
 Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 </div>
@@ -4107,11 +4112,11 @@ Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code>
 
 No pre-processing
 Resampling: Cross-Validated (10 fold) 
-Summary of sample sizes: 45, 44, 44, 45, 45, 46, ... 
+Summary of sample sizes: 45, 45, 45, 46, 45, 45, ... 
 Resampling results:
 
   RMSE       Rsquared   MAE      
-  0.7579319  0.8120796  0.6522352
+  0.7136655  0.7411554  0.6140345
 
 Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 </div>
@@ -4470,11 +4475,11 @@ Coefficients:
 
 No pre-processing
 Resampling: Cross-Validated (5 fold) 
-Summary of sample sizes: 38, 38, 38, 37, 37 
+Summary of sample sizes: 36, 38, 38, 38, 38 
 Resampling results:
 
   RMSE      Rsquared   MAE     
-  20.60333  0.4901794  15.43568
+  22.23231  0.4965765  16.65762
 
 Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 </div>
@@ -4487,11 +4492,11 @@ Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code>
 
 No pre-processing
 Resampling: Cross-Validated (5 fold) 
-Summary of sample sizes: 39, 36, 38, 37, 38 
+Summary of sample sizes: 37, 39, 36, 38, 38 
 Resampling results:
 
-  RMSE     Rsquared   MAE     
-  21.2798  0.5515829  15.06867
+  RMSE      Rsquared   MAE     
+  23.04037  0.5461218  16.27202
 
 Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 </div>
@@ -4512,11 +4517,11 @@ Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code>
 
 No pre-processing
 Resampling: Cross-Validated (5 fold) 
-Summary of sample sizes: 36, 39, 37, 37, 39 
+Summary of sample sizes: 38, 38, 37, 37, 38 
 Resampling results:
 
   RMSE      Rsquared   MAE     
-  18.62324  0.6562408  12.18368
+  20.39883  0.6214745  13.41028
 
 Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 </div>
@@ -4548,11 +4553,11 @@ Tukey test   -0.7371           0.4610</code></pre>
 
 No pre-processing
 Resampling: Cross-Validated (5 fold) 
-Summary of sample sizes: 36, 37, 38, 39, 38 
+Summary of sample sizes: 36, 39, 39, 36, 38 
 Resampling results:
 
   RMSE      Rsquared   MAE     
-  2.184542  0.6573276  1.768642
+  2.042732  0.5061962  1.621179
 
 Tuning parameter &#39;intercept&#39; was held constant at a value of TRUE</code></pre>
 </div>
